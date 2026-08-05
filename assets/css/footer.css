@@ -1,0 +1,121 @@
+/*
+ * Queer Ink Theme footer styles.
+ *
+ * @package Queer_Ink_Theme
+ */
+
+.site-footer {
+    background: #ffffff;
+    border-top: 1px solid #e5e2e2;
+    padding: 3rem 0;
+}
+
+.site-footer-inner {
+    width: min(100%, 1400px);
+    margin: 0 auto;
+    padding: 0 8px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    text-align: left;
+    min-height: 120px;
+}
+
+.footer-branding {
+    display: flex;
+    justify-content: flex-start;
+    transform: translateX(-32px);
+}
+
+footer .footer-branding img,
+footer .footer-logo {
+    display: block;
+    height: 50px !important;
+    max-height: 50px !important;
+    width: auto !important;
+}
+
+.footer-logo-link {
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-copy {
+    max-width: 280px;
+    align-self: flex-start;
+    transform: translateX(-32px);
+}
+
+.footer-copy p {
+    margin: 0;
+    color: #4a4a4a;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    font-weight: 400;
+}
+
+.footer-links-grid {
+    flex: 1 1 0;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2rem;
+    margin-top: 0;
+}
+
+.footer-links-column h3 {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #c0185b;
+    font-weight: 700;
+}
+
+.footer-links-column ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+}
+
+.footer-links-column li a {
+    color: #4a4a4a;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.footer-links-column li a:hover,
+.footer-links-column li a:focus {
+    color: #c0185b;
+}
+
+.footer-social-icons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.footer-social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: #f3f0f0;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.footer-social-icon img {
+    width: 28px;
+    height: auto;
+}
+
+.footer-social-icon:hover,
+.footer-social-icon:focus {
+    background: #e6d3de;
+}

@@ -1,0 +1,122 @@
+/*
+====================================================
+Queer Ink Header
+====================================================
+*/
+
+.site-header{
+    width:100%;
+    background:#fff;
+    border-bottom:1px solid #e6e6e6;
+}
+
+.site-header__inner{
+    height:82px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:relative;
+}
+
+/* ---------------- Logo ---------------- */
+
+.site-branding{
+    flex-shrink:0;
+}
+
+.site-logo img,
+.custom-logo-link img{
+    display:block;
+    height:50px;
+    width:auto;
+}
+
+/* ---------------- Navigation ---------------- */
+
+.primary-navigation{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:1;
+    gap: 36px;
+}
+
+.primary-menu{
+    list-style:none;
+    display:flex;
+    align-items:center;
+    gap:36px;
+    margin:0;
+    padding:0;
+}
+
+.primary-menu li{
+    margin:0;
+}
+
+.primary-menu a{
+    text-decoration:none;
+    color:#111;
+    font-size:15px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.primary-menu a:hover{
+    color:#d81b60;
+}
+
+/* ---------------- Search ---------------- */
+
+.header-search{
+    width:42px;
+    height:42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid #111;
+    border-radius:50%;
+}
+
+.header-search svg{
+    width:20px;
+    height:20px;
+}
+
+/* ---------------- Tablet ---------------- */
+
+@media(max-width:992px){
+
+.site-header__inner{
+
+height:76px;
+
+}
+
+.primary-menu{
+
+gap:26px;
+
+}
+
+}
+
+/* ---------------- Mobile ---------------- */
+
+@media(max-width:768px){
+
+.site-header__inner{
+
+height:72px;
+
+}
+
+.primary-menu{
+
+display:none;
+
+}
+
+}

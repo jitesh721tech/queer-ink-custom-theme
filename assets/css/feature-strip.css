@@ -1,0 +1,130 @@
+/*
+ * Queer Ink Theme feature strip styles.
+ *
+ * @package Queer_Ink_Theme
+ */
+
+.feature-strip {
+    padding: 3.2rem 0;
+    background-color: #ffffff;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    border-top: 1px solid #e5e2e2;
+    border-bottom: 1px solid #e5e2e2;
+}
+
+.feature-strip__inner {
+    display: grid;
+    gap: 2rem;
+    width: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
+    box-sizing: border-box;
+}
+
+.feature-strip__title {
+    margin: 0 0 1.5rem;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #1a1a1a;
+}
+
+.feature-strip__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.6rem;
+    align-items: stretch;
+}
+
+.feature-card {
+    border: 1px solid #e5e2e2;
+    border-radius: 12px;
+    padding: 0;
+    background-color: #ffffff;
+    display: grid;
+    grid-template-columns: 45% 55%;
+    gap: 0;
+    min-height: auto;
+    overflow: hidden;
+}
+
+
+.feature-card__media {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+.feature-card__media-img {
+    width: 100%;
+    height: auto;
+    max-width: 110px;
+    max-height: 79px;
+    display: block;
+    object-fit: contain;
+}
+
+.feature-card__icon-img--raster {
+    width: 64px;
+    height: 64px;
+    border-radius: 6px;
+}
+
+.feature-card__body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.feature-card__title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #c0185b;
+}
+
+.feature-card__text {
+    margin: 0;
+    color: #4a4a4a;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.feature-card__link {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #c0185b;
+}
+
+@media (max-width: 980px) {
+    .feature-strip__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .feature-card {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-card__media-img {
+        height: 79px;
+        object-fit: cover;
+    }
+}
+
+@media (max-width: 680px) {
+    .feature-strip__grid {
+        grid-template-columns: 1fr;
+    }
+}
