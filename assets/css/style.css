@@ -24,6 +24,7 @@ body {
     padding: 0;
     line-height: 1.5;
     background-color: var(--background-color, #fafafa);
+    overflow-x: hidden;
 }
 
 img, picture, svg {
@@ -71,4 +72,45 @@ button {
 .site-content {
     width: 100%;
     padding: 0;
+}
+
+/* ---------------- WordPress Page entry content ---------------- */
+/* Used by page.php and page-{slug}.php templates via content-page.php. */
+
+.entry-header {
+    padding: 3.2rem 0 2rem;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+    margin-bottom: 2.5rem;
+}
+
+.entry-title {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #1a1a1a;
+}
+
+.entry-content {
+    max-width: 44rem;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #4a4a4a;
+}
+
+.entry-content p {
+    margin: 0 0 1.25rem;
+}
+
+.entry-content p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 680px) {
+    .entry-header {
+        padding: 2.5rem 0 1.5rem;
+        margin-bottom: 2rem;
+    }
 }

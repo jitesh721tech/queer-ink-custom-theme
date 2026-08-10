@@ -32,11 +32,12 @@
                 wp_nav_menu( array(
                     'theme_location' => 'primary',
                     'menu_class'     => 'primary-menu',
+                    'menu_id'        => 'primary-menu-list',
                     'container'      => false,
                 ) );
                 ?>
             <?php else : ?>
-                <ul class="primary-menu">
+                <ul class="primary-menu" id="primary-menu-list">
                     <li><a href="<?php echo esc_url( home_url( '/publishing' ) ); ?>"><?php esc_html_e( 'Publishing', 'queer-ink-theme' ); ?></a></li>
                     <li><a href="<?php echo esc_url( home_url( '/archiving' ) ); ?>"><?php esc_html_e( 'Archiving', 'queer-ink-theme' ); ?></a></li>
                     <li><a href="<?php echo esc_url( home_url( '/digital-library' ) ); ?>"><?php esc_html_e( 'Digital Library', 'queer-ink-theme' ); ?></a></li>
@@ -51,6 +52,11 @@
                     <line x1="15" y1="15" x2="21" y2="21" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" />
                 </svg>
             </a>
+            <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="primary-menu-list" aria-label="<?php esc_attr_e( 'Toggle menu', 'queer-ink-theme' ); ?>">
+                <span class="menu-toggle__bar"></span>
+                <span class="menu-toggle__bar"></span>
+                <span class="menu-toggle__bar"></span>
+            </button>
         </nav>
     </div>
 </header>
