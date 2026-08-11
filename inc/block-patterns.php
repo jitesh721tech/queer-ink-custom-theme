@@ -20,6 +20,15 @@ if ( ! function_exists( 'queer_ink_icon' ) ) {
             'heart'      => '<path d="M12 20s-7-4.4-9.3-9A5 5 0 0 1 12 6a5 5 0 0 1 9.3 5c-2.3 4.6-9.3 9-9.3 9Z"/>',
             'star'       => '<path d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.2-5.4 3.2 1.3-6-4.6-4.1 6.1-.6L12 3Z"/>',
             'users'      => '<circle cx="9" cy="8" r="3"/><path d="M2.5 19c0-3 3-5 6.5-5s6.5 2 6.5 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c2.6.3 4.5 2 4.5 4.5"/>',
+            'book'       => '<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H12v18H5.5A1.5 1.5 0 0 1 4 19.5v-15Z"/><path d="M20 4.5A1.5 1.5 0 0 0 18.5 3H12v18h6.5a1.5 1.5 0 0 0 1.5-1.5v-15Z"/>',
+            'sun'        => '<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/>',
+            'clock'      => '<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/>',
+            'search'     => '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.35-4.35"/>',
+            'globe'      => '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.4 3.8 5.4 3.8 8.5s-1.3 6.1-3.8 8.5c-2.5-2.4-3.8-5.4-3.8-8.5S9.5 5.9 12 3.5Z"/>',
+            'infinity'   => '<path d="M7 9.5a3.3 3.3 0 1 0 0 5c1.2 0 2-.6 3-1.7l1-1.1 1-1.1c1-1.1 1.8-1.7 3-1.7a3.3 3.3 0 1 1 0 5c-1.2 0-2-.6-3-1.7l-1-1.1-1-1.1c-1-1.1-1.8-1.7-3-1.7Z"/>',
+            'bookmark'   => '<path d="M6 3.5h12a1 1 0 0 1 1 1V21l-7-4-7 4V4.5a1 1 0 0 1 1-1Z"/>',
+            'download'   => '<path d="M12 3.5v11M8 11l4 4 4-4"/><path d="M4.5 17v2.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V17"/>',
+            'message'    => '<path d="M4 5.5h16a1 1 0 0 1 1 1V16a1 1 0 0 1-1 1H9l-4.5 4V17H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1Z"/>',
         );
 
         if ( ! isset( $icons[ $name ] ) ) {
@@ -43,6 +52,22 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
     function queer_ink_register_block_patterns() {
 
         $placeholder_image = esc_url( get_theme_file_uri( 'assets/images/hero/hero_page_image.jpeg' ) );
+        $publishing_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/publishing_hero.png' ) );
+        $archiving_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/archiving_hero.png' ) );
+        $digital_library_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/digital_library_hero.png' ) );
+        $qi_journal_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/qi_journal_hero.png' ) );
+
+        // Site-relative destination URLs, resolved through home_url() so links
+        // still work when WordPress is installed in a subdirectory (e.g. /queer-ink/).
+        $url_books           = esc_url( home_url( '/books/' ) );
+        $url_connect         = esc_url( home_url( '/connect/' ) );
+        $url_journal         = esc_url( home_url( '/journal/' ) );
+        $url_qi_journal      = esc_url( home_url( '/qi-journal/' ) );
+        $url_about           = esc_url( home_url( '/about/' ) );
+        $url_publishing      = esc_url( home_url( '/publishing/' ) );
+        $url_archiving       = esc_url( home_url( '/archiving/' ) );
+        $url_digital_library = esc_url( home_url( '/digital-library/' ) );
+        $url_home            = esc_url( home_url( '/' ) );
 
         register_block_pattern(
             'queer-ink/publishing-hero',
@@ -71,7 +96,7 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/books/">Explore Publications</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{$url_books}">Explore Publications</a></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"className":"is-style-outline"} -->
@@ -82,7 +107,7 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
 
 <!-- wp:column -->
 <div class="wp-block-column"><!-- wp:image {"className":"qi-pub-hero__image"} -->
-<figure class="wp-block-image qi-pub-hero__image"><img src="{$placeholder_image}" alt="Placeholder — replace with a photo of Queer Ink published books"/></figure>
+<figure class="wp-block-image qi-pub-hero__image"><img src="{$publishing_hero_image}" alt="Queer Ink published books"/></figure>
 <!-- /wp:image --></div>
 <!-- /wp:column --></div>
 <!-- /wp:columns --></div>
@@ -109,7 +134,7 @@ HTML
         <h3>From the Archives</h3>
         <p>We transform carefully curated archival collections into books that preserve and share the histories of queer lives, communities, and movements in India.</p>
         <p>These publications draw on oral histories, manuscripts, photographs, correspondence, organisational records, and other archival materials—making them accessible to readers, educators, researchers, and future generations.</p>
-        <a class="qi-pathway-card__link" href="/books/">Explore Archive Publications →</a>
+        <a class="qi-pathway-card__link" href="' . $url_books . '">Explore Archive Publications →</a>
         <div class="qi-pathway-card__media"><img src="' . $placeholder_image . '" alt="Placeholder — replace with a photo of archival material"/></div>
     </div>
     <div class="qi-pathway-card qi-pathway-card--process">
@@ -154,7 +179,7 @@ HTML
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"qi-current-list__view-all"} -->
-<p class="qi-current-list__view-all"><a href="/books/">View all books →</a></p>
+<p class="qi-current-list__view-all"><a href="' . $url_books . '">View all books →</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -222,12 +247,643 @@ HTML
         <h2>Ready to begin?</h2>
         <p>Whether you are an author or a reader, your story and your books help us preserve the past and imagine a better future.</p>
         <div class="qi-cta-band__actions">
-            <a class="button button--primary" href="/books/">Explore Our Books</a>
+            <a class="button button--primary" href="' . $url_books . '">Explore Our Books</a>
             <a class="button button--outline" href="#pathways">Start Your Publishing Journey</a>
         </div>
     </div>
     <div class="qi-cta-band__decor qi-cta-band__decor--right" aria-hidden="true">
         <span></span><span></span><span></span>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/archiving-hero',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Archiving Hero', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => <<<HTML
+<!-- wp:group {"className":"qi-pub-hero qi-arc-hero"} -->
+<div class="wp-block-group qi-pub-hero qi-arc-hero"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
+<p class="hero__eyebrow">ARCHIVING PATHWAY</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Preserve your story. Protect your history. <span style="color:#c0185b">Build our collective memory.</span></h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The Archiving Pathway helps individuals, families, organisations and communities preserve the stories, records and memories that shape our collective history. Through ethical, relationship-centred archiving, we ensure today's lives remain discoverable for future generations.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"qi-arc-hero__note"} -->
+<p class="qi-arc-hero__note"><em>Established 2023. Oral histories, photographs, correspondence, organisational records, zines, newsletters, ephemera, legal documents, and creative work — held in trust for the future.</em></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#connections">Explore the Archive</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"className":"is-style-outline"} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="{$url_connect}">Contribute to the Archive</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:image {"className":"qi-pub-hero__image"} -->
+<figure class="wp-block-image qi-pub-hero__image"><img src="{$archiving_hero_image}" alt="Queer India Archives"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+HTML
+                ,
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/archiving-timeline',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Journey Through Time', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-timeline">
+    <div class="qi-timeline__header">
+        <div>
+            <h2>Our Journey Through Time</h2>
+            <p class="qi-timeline__intro">' . queer_ink_icon( 'clock' ) . ' Milestones of queer lives, movements and memories in India.</p>
+        </div>
+        <a class="button button--outline" href="' . $url_journal . '">View Full Timeline →</a>
+    </div>
+    <div class="qi-timeline__track">
+        <button type="button" class="qi-timeline__nav qi-timeline__nav--prev" data-scroll-prev aria-label="Scroll to earlier milestones">‹</button>
+        <div class="qi-timeline__scroller" data-scroller>
+            <div class="qi-timeline__item">
+                <span class="qi-timeline__year">1994</span>
+                <div class="qi-timeline__dot" aria-hidden="true"></div>
+                <div class="qi-timeline__card">
+                    <div class="qi-icon-circle">' . queer_ink_icon( 'book' ) . '</div>
+                    <h3>Bombay Dost is launched</h3>
+                    <p>India\'s first queer magazine creates a space where people discover they are not alone.</p>
+                    <a class="qi-pathway-card__link" href="' . $url_journal . '">Explore →</a>
+                </div>
+            </div>
+            <div class="qi-timeline__item">
+                <span class="qi-timeline__year">2001</span>
+                <div class="qi-timeline__dot" aria-hidden="true"></div>
+                <div class="qi-timeline__card">
+                    <div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div>
+                    <h3>Humsafar Trust is formed</h3>
+                    <p>Community-led organisation advances health, rights and dignity for LGBTQIA+ people.</p>
+                    <a class="qi-pathway-card__link" href="' . $url_journal . '">Explore →</a>
+                </div>
+            </div>
+            <div class="qi-timeline__item">
+                <span class="qi-timeline__year">2003</span>
+                <div class="qi-timeline__dot" aria-hidden="true"></div>
+                <div class="qi-timeline__card">
+                    <div class="qi-icon-circle">' . queer_ink_icon( 'heart' ) . '</div>
+                    <h3>Sangini begins peer support meetings</h3>
+                    <p>A safe space for queer women to share experiences and support one another.</p>
+                    <a class="qi-pathway-card__link" href="' . $url_journal . '">Explore →</a>
+                </div>
+            </div>
+            <div class="qi-timeline__item">
+                <span class="qi-timeline__year">2009</span>
+                <div class="qi-timeline__dot" aria-hidden="true"></div>
+                <div class="qi-timeline__card">
+                    <div class="qi-icon-circle">' . queer_ink_icon( 'shield' ) . '</div>
+                    <h3>Delhi High Court reads down Section 377</h3>
+                    <p>A landmark moment in the legal fight for equality and human rights.</p>
+                    <a class="qi-pathway-card__link" href="' . $url_journal . '">Explore →</a>
+                </div>
+            </div>
+            <div class="qi-timeline__item">
+                <span class="qi-timeline__year">2014</span>
+                <div class="qi-timeline__dot" aria-hidden="true"></div>
+                <div class="qi-timeline__card">
+                    <div class="qi-icon-circle">' . queer_ink_icon( 'star' ) . '</div>
+                    <h3>Delhi Queer Pride begins</h3>
+                    <p>A powerful celebration of visibility, community and collective pride.</p>
+                    <a class="qi-pathway-card__link" href="' . $url_journal . '">Explore →</a>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="qi-timeline__nav qi-timeline__nav--next" data-scroll-next aria-label="Scroll to later milestones">›</button>
+    </div>
+    <p class="qi-timeline__footer">' . queer_ink_icon( 'heart' ) . ' Many more stories. Many more connections. Our journey continues.</p>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/archiving-why',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Why Archive', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-why-archive">
+    <div class="qi-why-archive__intro">
+        <h2>Why Archive?</h2>
+        <p>Stories disappear every day. Photographs fade. Letters are discarded. Digital files become inaccessible. Memories are lost.</p>
+        <p class="qi-why-archive__callout">Archiving is how we honour our lives, our relationships, our movements—and make sure future generations can understand where they came from.</p>
+    </div>
+    <div class="qi-why-archive__grid">
+        <div class="qi-why-archive__card">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div>
+            <h3>Lives are lived.</h3>
+            <p>Every life holds memories worth preserving.</p>
+        </div>
+        <div class="qi-why-archive__card">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'book' ) . '</div>
+            <h3>Histories are made.</h3>
+            <p>Communities create knowledge, culture and change.</p>
+        </div>
+        <div class="qi-why-archive__card">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'archive' ) . '</div>
+            <h3>Records are fragile.</h3>
+            <p>Without care, they can be lost forever.</p>
+        </div>
+        <div class="qi-why-archive__card">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'sun' ) . '</div>
+            <h3>Futures are possible.</h3>
+            <p>Archives connect us to those who come next.</p>
+        </div>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/archiving-connections',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Our Connections', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:group {"className":"qi-current-list qi-connections","anchor":"connections"} -->
+<div class="wp-block-group qi-current-list qi-connections" id="connections"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column {"width":"66%"} -->
+<div class="wp-block-column" style="flex-basis:66%"><!-- wp:heading -->
+<h2 class="wp-block-heading">Our Connections</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Collections are built in relationship with individuals and communities. As archival material is processed and consent is confirmed, the books and articles that grow out of it appear here.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"34%"} -->
+<div class="wp-block-column qi-connections__request" style="flex-basis:34%"><!-- wp:html -->
+<div class="qi-connections__request-card">
+    <h3>Request to View a Collection</h3>
+    <p>Some collections are sensitive or restricted. You can request access by filling out a short form. We will respond as soon as possible.</p>
+    <a class="button button--primary" href="' . $url_connect . '">Request Access</a>
+</div>
+<!-- /wp:html --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->
+
+<!-- wp:heading {"level":3,"className":"qi-connections__subhead"} -->
+<h3 class="wp-block-heading qi-connections__subhead">Books from the Archive</h3>
+<!-- /wp:heading -->
+
+<!-- wp:shortcode -->
+[qi_latest_books count="4"]
+<!-- /wp:shortcode -->
+
+<!-- wp:heading {"level":3,"className":"qi-connections__subhead"} -->
+<h3 class="wp-block-heading qi-connections__subhead">Articles from the Archive</h3>
+<!-- /wp:heading -->
+
+<!-- wp:shortcode -->
+[qi_latest_articles count="4"]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/archiving-model',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Relationship-Centred Archiving', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-model">
+    <div class="qi-model__intro">
+        <h2>Relationship-Centred Archiving</h2>
+        <p>Archives are not built from collections. They are built from relationships.</p>
+        <p>Every item in our archive carries relationships—between individuals, families, communities, organisations, movements and moments in time.</p>
+        <p>We work collaboratively with contributors to ensure that context, consent, identity and future access remain connected to every story.</p>
+        <a class="qi-pathway-card__link" href="' . $url_connect . '">Our Principles →</a>
+    </div>
+    <div class="qi-model__diagram">
+        <p class="qi-model__diagram-lead">Instead of asking &ldquo;What should we collect?&rdquo; we begin by asking, &ldquo;Whose relationships are we preserving, and for whom?&rdquo;</p>
+        <div class="qi-model__steps">
+            <div class="qi-model__step">
+                <div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div>
+                <h4>1. Relationship</h4>
+                <p class="qi-model__step-caption">The human context.</p>
+                <ul>
+                    <li>People</li>
+                    <li>Communities</li>
+                    <li>Families</li>
+                    <li>Organisations</li>
+                    <li>Places</li>
+                    <li>Moments in time</li>
+                </ul>
+            </div>
+            <div class="qi-model__arrow" aria-hidden="true">→</div>
+            <div class="qi-model__step">
+                <div class="qi-icon-circle">' . queer_ink_icon( 'archive' ) . '</div>
+                <h4>2. Evidence</h4>
+                <p class="qi-model__step-caption">The tangible record.</p>
+                <ul>
+                    <li>Documents &amp; letters</li>
+                    <li>Diaries</li>
+                    <li>Photographs</li>
+                    <li>Publications</li>
+                    <li>Audio &amp; video</li>
+                    <li>Digital files &amp; records</li>
+                    <li>Ephemera</li>
+                </ul>
+            </div>
+            <div class="qi-model__arrow" aria-hidden="true">→</div>
+            <div class="qi-model__step">
+                <div class="qi-icon-circle">' . queer_ink_icon( 'search' ) . '</div>
+                <h4>3. Discovery</h4>
+                <p class="qi-model__step-caption">The future.</p>
+                <ul>
+                    <li>Metadata &amp; search</li>
+                    <li>Research &amp; education</li>
+                    <li>Digital preservation</li>
+                    <li>Ethical access</li>
+                </ul>
+            </div>
+        </div>
+        <p class="qi-model__diagram-footer">When evidence is preserved within relationships—and made discoverable for the future—archives become living sources of knowledge, connection and change.</p>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/archiving-cta-band',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Archiving Ready CTA', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-cta-band">
+    <div class="qi-cta-band__decor qi-cta-band__decor--left" aria-hidden="true">
+        <span></span><span></span><span></span>
+    </div>
+    <div class="qi-cta-band__body">
+        <h2>Ready to preserve your story?</h2>
+        <p>Whether you hold a single letter or a lifetime of records, your story helps build our collective memory.</p>
+        <div class="qi-cta-band__actions">
+            <a class="button button--primary" href="' . $url_connect . '">Contribute to the Archive</a>
+            <a class="button button--outline" href="#connections">Explore the Collections</a>
+        </div>
+    </div>
+    <div class="qi-cta-band__decor qi-cta-band__decor--right" aria-hidden="true">
+        <span></span><span></span><span></span>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/digital-library-hero',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Digital Library Hero', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => <<<HTML
+<!-- wp:group {"className":"qi-pub-hero"} -->
+<div class="wp-block-group qi-pub-hero"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
+<p class="hero__eyebrow">DIGITAL LIBRARY</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Queer knowledge. Open access. <span style="color:#c0185b">Shared futures.</span></h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The Queer Ink Digital Library (QIDL) is a curated space for queer Indian writings, histories, art, and ideas. Read, research, learn and be inspired — anytime, anywhere.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#featured-books">Browse the Library</a></div>
+<!-- /wp:button -->
+
+<!-- wp:button {"className":"is-style-outline"} -->
+<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="{$url_about}">About the Library</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:image {"className":"qi-pub-hero__image"} -->
+<figure class="wp-block-image qi-pub-hero__image"><img src="{$digital_library_hero_image}" alt="Queer Ink Digital Library"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+HTML
+                ,
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/digital-library-pillars',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Digital Library Pillars', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-dl-pillars">
+    <div class="qi-dl-pillar">
+        <div class="qi-icon-circle">' . queer_ink_icon( 'book' ) . '</div>
+        <h3>Curated with Care</h3>
+        <p>Thoughtfully curated content from archives, publishers, researchers and communities.</p>
+    </div>
+    <div class="qi-dl-pillar">
+        <div class="qi-icon-circle">' . queer_ink_icon( 'shield' ) . '</div>
+        <h3>Ethical &amp; Inclusive</h3>
+        <p>We uphold consent, privacy and community ownership in every resource we share.</p>
+    </div>
+    <div class="qi-dl-pillar">
+        <div class="qi-icon-circle">' . queer_ink_icon( 'globe' ) . '</div>
+        <h3>Accessible for All</h3>
+        <p>Multi-format, multi-language resources that you can access from anywhere.</p>
+    </div>
+    <div class="qi-dl-pillar">
+        <div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div>
+        <h3>Community Powered</h3>
+        <p>Built through collaborations and contributions from across our communities.</p>
+    </div>
+    <div class="qi-dl-pillar">
+        <div class="qi-icon-circle">' . queer_ink_icon( 'star' ) . '</div>
+        <h3>For Today, For Tomorrow</h3>
+        <p>Preserving our past and creating knowledge for future generations.</p>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/digital-library-featured-books',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Featured Books', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:group {"className":"qi-current-list","anchor":"featured-books"} -->
+<div class="wp-block-group qi-current-list" id="featured-books"><!-- wp:group {"className":"qi-current-list__header"} -->
+<div class="wp-block-group qi-current-list__header"><!-- wp:heading -->
+<h2 class="wp-block-heading">Featured Books</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"className":"qi-current-list__view-all"} -->
+<p class="qi-current-list__view-all"><a href="' . $url_books . '">View all books →</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:html -->
+<div class="qi-dl-scroller-track">
+    <button type="button" class="qi-timeline__nav qi-timeline__nav--prev" data-scroll-prev aria-label="Scroll to previous books">‹</button>
+    <div class="qi-dl-books-scroller" data-scroller>
+    <!-- /wp:html -->
+
+<!-- wp:shortcode -->
+[qi_latest_books count="8"]
+<!-- /wp:shortcode -->
+
+<!-- wp:html -->
+    </div>
+    <button type="button" class="qi-timeline__nav qi-timeline__nav--next" data-scroll-next aria-label="Scroll to more books">›</button>
+</div>
+<!-- /wp:html --></div>
+<!-- /wp:group -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/digital-library-subjects',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Browse by Subjects', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:group {"className":"qi-current-list"} -->
+<div class="wp-block-group qi-current-list"><!-- wp:group {"className":"qi-current-list__header"} -->
+<div class="wp-block-group qi-current-list__header"><!-- wp:heading -->
+<h2 class="wp-block-heading">Browse by Subjects</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"className":"qi-current-list__view-all"} -->
+<p class="qi-current-list__view-all"><a href="' . $url_books . '">View all books →</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:shortcode -->
+[qi_subjects]
+<!-- /wp:shortcode --></div>
+<!-- /wp:group -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/digital-library-reading-room',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Join the Reading Room', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-reading-room">
+    <div class="qi-reading-room__media" aria-hidden="true">
+        <div class="qi-reading-room__media-circle"></div>
+        <div class="qi-reading-room__media-books">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+    <div class="qi-reading-room__body">
+        <p class="hero__eyebrow">READ WITHOUT BARRIERS</p>
+        <h2>Join the <span style="color:#c0185b">Reading Room</span></h2>
+        <p>Unlock unlimited access to the Digital Library, exclusive content, early releases and members-only resources.</p>
+        <div class="qi-reading-room__features">
+            <div class="qi-reading-room__feature"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'infinity' ) . '</div><span>Unlimited access to the library</span></div>
+            <div class="qi-reading-room__feature"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'bookmark' ) . '</div><span>Save, bookmark and organise</span></div>
+            <div class="qi-reading-room__feature"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'download' ) . '</div><span>Download to read offline</span></div>
+            <div class="qi-reading-room__feature"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'star' ) . '</div><span>New content added regularly</span></div>
+        </div>
+        <div class="qi-reading-room__actions">
+            <a class="button button--primary" href="' . $url_connect . '">Choose a Plan</a>
+            <a class="button button--outline" href="' . $url_about . '">Learn More</a>
+        </div>
+    </div>
+    <div class="qi-reading-room__quote">
+        <p>&ldquo;The archive is not just where we keep our history — it is where we shape our futures.&rdquo;</p>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/digital-library-tagline',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Digital Library Tagline', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-dl-tagline">
+    <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'heart' ) . '</div>
+    <div>
+        <h2>Your stories. Our archive. Our future.</h2>
+        <p>Every resource, every contribution, every read — keeps our history alive.</p>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/qi-journal-hero',
+            array(
+                'title'      => esc_html__( 'Queer Ink: QI Journal Hero', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => <<<HTML
+<!-- wp:group {"className":"qi-pub-hero"} -->
+<div class="wp-block-group qi-pub-hero"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
+<p class="hero__eyebrow">QI JOURNAL</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Stories. Ideas. Voices that <span style="color:#c0185b">move us.</span></h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Reflections, research, conversations and resources from the Queer Ink community and beyond.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:buttons -->
+<div class="wp-block-buttons"><!-- wp:button -->
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{$url_connect}">Share Your Story</a></div>
+<!-- /wp:button --></div>
+<!-- /wp:buttons --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:image {"className":"qi-pub-hero__image"} -->
+<figure class="wp-block-image qi-pub-hero__image"><img src="{$qi_journal_hero_image}" alt="Queer Ink Journal"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+HTML
+                ,
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/qi-journal-filter-bar',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Journal Filter Bar', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-filter-bar">
+    <div class="qi-filter-bar__tabs">[qi_article_sections]</div>
+    <div class="qi-filter-bar__controls">
+        [qi_subjects_dropdown]
+        <form class="qi-search-form" role="search" method="get" action="' . $url_home . '">
+            <input type="hidden" name="post_type" value="qi_article" />
+            <label class="screen-reader-text" for="qi-journal-search">' . esc_html__( 'Search articles', 'queer-ink-theme' ) . '</label>
+            <input id="qi-journal-search" type="search" name="s" placeholder="' . esc_attr__( 'Search articles...', 'queer-ink-theme' ) . '" />
+            <button type="submit" aria-label="' . esc_attr__( 'Search', 'queer-ink-theme' ) . '">' . queer_ink_icon( 'search' ) . '</button>
+        </form>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/qi-journal-content',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Journal Articles + Sidebar', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:columns {"className":"qi-journal-layout"} -->
+<div class="wp-block-columns qi-journal-layout"><!-- wp:column {"width":"68%","className":"qi-journal-main"} -->
+<div class="wp-block-column qi-journal-main" style="flex-basis:68%"><!-- wp:shortcode -->
+[qi_latest_articles count="6"]
+<!-- /wp:shortcode -->
+
+<!-- wp:html -->
+<p class="qi-journal-load-more"><a class="button button--outline" href="' . $url_journal . '">Load More Articles</a></p>
+<!-- /wp:html --></div>
+<!-- /wp:column -->
+
+<!-- wp:column {"width":"32%","className":"qi-journal-sidebar"} -->
+<div class="wp-block-column qi-journal-sidebar" style="flex-basis:32%"><!-- wp:html -->
+<div class="qi-journal-widget">
+    <h3>About QI Journal</h3>
+    <p>QI Journal is a space for queer perspectives, research, community voices and resources that deepen our understanding of our pasts and imagine our futures.</p>
+    <a class="qi-pathway-card__link" href="' . $url_about . '">Learn more about our work →</a>
+</div>
+<div class="qi-journal-widget">
+    <h3>Popular Topics</h3>
+    [qi_subjects style="list" count="6"]
+</div>
+<div class="qi-journal-widget">
+    <h3>Stay in the Loop</h3>
+    <p>Get updates on books, archives, events and more.</p>
+    <div class="qi-journal-channel">
+        <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'message' ) . '</div>
+        <div>
+            <strong>WhatsApp Channel</strong>
+            <p>Short updates. High signal. Stay connected easily.</p>
+            <a class="qi-journal-channel__link" href="' . $url_connect . '">Join on WhatsApp ↗</a>
+        </div>
+    </div>
+    <div class="qi-journal-channel">
+        <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'message' ) . '</div>
+        <div>
+            <strong>Telegram Channel</strong>
+            <p>In-depth updates. Searchable. For readers and archives.</p>
+            <a class="qi-journal-channel__link" href="' . $url_connect . '">Join on Telegram ↗</a>
+        </div>
+    </div>
+    <p class="qi-journal-widget__note">No newsletters. No spam. Just what matters.</p>
+</div>
+<!-- /wp:html --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/qi-journal-cta-band',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Journal CTA', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-journal-cta">
+    <div class="qi-journal-cta__body">
+        <h2>Your experiences strengthen our archive.</h2>
+        <p>Share your story, research or reflections with a community that listens, learns and builds together.</p>
+        <a class="button button--primary" href="' . $url_connect . '">Write for QI Journal</a>
+    </div>
+    <div class="qi-journal-cta__icons">
+        <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'pencil' ) . '</div><span>Share your story</span></div>
+        <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'book' ) . '</div><span>Expand our knowledge</span></div>
+        <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'users' ) . '</div><span>Build our future</span></div>
     </div>
 </div>
 <!-- /wp:html -->',

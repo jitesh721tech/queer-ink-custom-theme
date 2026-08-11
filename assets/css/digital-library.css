@@ -1,0 +1,336 @@
+/*
+ * Queer Ink Digital Library page styles.
+ * Targets the block content rendered inside the Digital Library page
+ * (see inc/block-patterns.php for the editable building blocks).
+ *
+ * @package Queer_Ink_Theme
+ */
+
+/* ---------------- Pillars ---------------- */
+
+.qi-dl-pillars {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.5rem;
+    padding: 2.5rem 2rem;
+    margin: 0 0 3rem;
+    background-color: #fbdce6;
+    border-radius: 16px;
+}
+
+.qi-dl-pillar {
+    text-align: center;
+}
+
+.qi-dl-pillar .qi-icon-circle {
+    margin: 0 auto 0.9rem;
+    background-color: #ffffff;
+}
+
+.qi-dl-pillar h3 {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    color: #1a1a1a;
+}
+
+.qi-dl-pillar p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: #4a4a4a;
+}
+
+/* ---------------- Featured Books scroller ---------------- */
+
+.qi-dl-scroller-track {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.qi-dl-books-scroller {
+    flex: 1;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+}
+
+.qi-dl-books-scroller .publishing-grid--current-list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(160px, 200px);
+    gap: 1.5rem;
+}
+
+.qi-dl-books-scroller .book-card {
+    scroll-snap-align: start;
+}
+
+/* ---------------- Browse by subjects ---------------- */
+
+.qi-subjects-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.qi-subject-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid #e5e2e2;
+    border-radius: 12px;
+    background-color: #fff8fa;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.qi-subject-pill:hover,
+.qi-subject-pill:focus-visible {
+    border-color: #c0185b;
+    background-color: #fbdce6;
+}
+
+.qi-subject-pill .qi-icon-circle {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.qi-subject-pill .qi-icon-circle .qi-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.qi-subject-pill__label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+}
+
+/* ---------------- Reading Room ---------------- */
+
+.qi-reading-room {
+    display: grid;
+    grid-template-columns: minmax(0, 22%) minmax(0, 48%) minmax(0, 30%);
+    gap: 2rem;
+    align-items: center;
+    padding: 3rem;
+    margin: 3rem 0;
+    background-color: #fbdce6;
+    border-radius: 16px;
+}
+
+.qi-reading-room__media {
+    position: relative;
+    height: 220px;
+}
+
+.qi-reading-room__media-circle {
+    position: absolute;
+    left: 10%;
+    top: 0;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background-color: #c0185b;
+}
+
+.qi-reading-room__media-books {
+    position: absolute;
+    left: 15%;
+    bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.qi-reading-room__media-books span {
+    display: block;
+    width: 130px;
+    height: 26px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: 1px solid #e5e2e2;
+}
+
+.qi-reading-room__media-books span:nth-child(2) {
+    width: 120px;
+    background-color: #1a1a1a;
+}
+
+.qi-reading-room__body .hero__eyebrow {
+    margin-bottom: 0.5rem;
+}
+
+.qi-reading-room__body h2 {
+    margin: 0 0 0.75rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.9rem;
+    color: #1a1a1a;
+}
+
+.qi-reading-room__body > p {
+    margin: 0 0 1.5rem;
+    color: #4a4a4a;
+    line-height: 1.65;
+    max-width: 32rem;
+}
+
+.qi-reading-room__features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+}
+
+.qi-reading-room__feature {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.qi-reading-room__feature .qi-icon-circle {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.qi-reading-room__feature .qi-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.qi-reading-room__feature span:last-child {
+    font-size: 0.82rem;
+    color: #1a1a1a;
+    line-height: 1.3;
+}
+
+.qi-reading-room__actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.qi-reading-room__quote {
+    align-self: center;
+}
+
+.qi-reading-room__quote p {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #1a1a1a;
+}
+
+/* ---------------- Closing tagline ---------------- */
+
+.qi-dl-tagline {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.75rem 2rem;
+    margin: 0 0 3rem;
+    background-color: #fff8fa;
+    border: 1px solid #e5e2e2;
+    border-radius: 16px;
+}
+
+.qi-dl-tagline .qi-icon-circle {
+    flex-shrink: 0;
+}
+
+.qi-dl-tagline h2 {
+    margin: 0 0 0.35rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.3rem;
+    color: #1a1a1a;
+}
+
+.qi-dl-tagline p {
+    margin: 0;
+    color: #4a4a4a;
+    font-size: 0.92rem;
+}
+
+/* ---------------- Tablet landscape ---------------- */
+
+@media (max-width: 1200px) and (min-width: 981px) {
+    .qi-dl-pillars {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .qi-reading-room {
+        grid-template-columns: minmax(0, 30%) minmax(0, 70%);
+    }
+
+    .qi-reading-room__quote {
+        display: none;
+    }
+}
+
+/* ---------------- Tablet ---------------- */
+
+@media (max-width: 980px) {
+    .qi-dl-pillars {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 2rem;
+    }
+
+    .qi-reading-room {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+    }
+
+    .qi-reading-room__media {
+        height: 160px;
+    }
+
+    .qi-reading-room__quote {
+        order: 3;
+    }
+}
+
+/* ---------------- Mobile ---------------- */
+
+@media (max-width: 680px) {
+    .qi-dl-pillars {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .qi-dl-scroller-track .qi-timeline__nav {
+        display: none;
+    }
+
+    .qi-dl-books-scroller .publishing-grid--current-list {
+        grid-auto-columns: minmax(0, 60%);
+    }
+
+    .qi-subject-pill {
+        width: 100%;
+    }
+
+    .qi-reading-room {
+        padding: 1.5rem;
+    }
+
+    .qi-reading-room__features {
+        grid-template-columns: 1fr;
+    }
+
+    .qi-reading-room__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .qi-dl-tagline {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+}

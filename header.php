@@ -41,7 +41,7 @@
                     <li><a href="<?php echo esc_url( home_url( '/publishing' ) ); ?>"><?php esc_html_e( 'Publishing', 'queer-ink-theme' ); ?></a></li>
                     <li><a href="<?php echo esc_url( home_url( '/archiving' ) ); ?>"><?php esc_html_e( 'Archiving', 'queer-ink-theme' ); ?></a></li>
                     <li><a href="<?php echo esc_url( home_url( '/digital-library' ) ); ?>"><?php esc_html_e( 'Digital Library', 'queer-ink-theme' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( home_url( '/journal' ) ); ?>"><?php esc_html_e( 'QI Journal', 'queer-ink-theme' ); ?></a></li>
+                    <li><a href="<?php echo esc_url( home_url( '/qi-journal' ) ); ?>"><?php esc_html_e( 'QI Journal', 'queer-ink-theme' ); ?></a></li>
                     <li><a href="<?php echo esc_url( home_url( '/about' ) ); ?>"><?php esc_html_e( 'About', 'queer-ink-theme' ); ?></a></li>
                     <li><a href="<?php echo esc_url( home_url( '/connect' ) ); ?>"><?php esc_html_e( 'Connect', 'queer-ink-theme' ); ?></a></li>
                 </ul>

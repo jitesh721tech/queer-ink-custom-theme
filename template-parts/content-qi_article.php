@@ -19,11 +19,25 @@
         </div>
     </a>
     <div class="article-card__body">
+        <?php
+        $qi_sections = get_the_terms( get_the_ID(), 'qi_article_section' );
+        if ( $qi_sections && ! is_wp_error( $qi_sections ) ) :
+            ?>
+            <p class="article-card__meta">
+                <span class="article-card__section"><?php echo esc_html( $qi_sections[0]->name ); ?></span>
+                <span class="article-card__date"><?php echo esc_html( get_the_date() ); ?></span>
+            </p>
+        <?php else : ?>
+            <p class="article-card__meta">
+                <span class="article-card__date"><?php echo esc_html( get_the_date() ); ?></span>
+            </p>
+        <?php endif; ?>
         <h3 class="article-card__title">
             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         </h3>
         <?php if ( has_excerpt() ) : ?>
             <p class="article-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
         <?php endif; ?>
+        <a class="article-card__link" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read More', 'queer-ink-theme' ); ?> →</a>
     </div>
 </article>

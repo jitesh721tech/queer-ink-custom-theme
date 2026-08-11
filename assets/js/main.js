@@ -44,4 +44,28 @@
             closeMenu();
         }
     } );
+
+    document.querySelectorAll( '[data-scroll-prev], [data-scroll-next]' ).forEach( function ( button ) {
+        var scroller = button.parentElement.querySelector( '[data-scroller]' );
+
+        if ( ! scroller ) {
+            return;
+        }
+
+        button.addEventListener( 'click', function () {
+            var amount = scroller.clientWidth * 0.8;
+            scroller.scrollBy( {
+                left: button.hasAttribute( 'data-scroll-prev' ) ? -amount : amount,
+                behavior: 'smooth',
+            } );
+        } );
+    } );
+
+    document.querySelectorAll( '[data-nav-select]' ).forEach( function ( select ) {
+        select.addEventListener( 'change', function () {
+            if ( select.value ) {
+                window.location = select.value;
+            }
+        } );
+    } );
 })();
