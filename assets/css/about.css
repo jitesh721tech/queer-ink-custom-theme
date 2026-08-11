@@ -1,0 +1,510 @@
+/*
+ * Queer Ink About page styles.
+ * Targets the block content rendered inside the About page
+ * (see inc/block-patterns.php for the editable building blocks).
+ * The hero reuses .qi-pub-hero (publishing.css); icon circles reuse
+ * .qi-icon-circle (publishing.css).
+ *
+ * @package Queer_Ink_Theme
+ */
+
+/* ---------------- Hero ---------------- */
+
+.qi-about-hero .wp-block-columns {
+    align-items: center;
+}
+
+.qi-about-hero__image {
+    position: relative;
+}
+
+.qi-about-hero__image img {
+    border-radius: 20px;
+}
+
+.qi-about-hero__image::after {
+    content: 'We exist.';
+    position: absolute;
+    right: -0.5rem;
+    bottom: -1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background-color: #fbdce6;
+    color: #c0185b;
+    font-weight: 700;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 0.85rem;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(26, 26, 26, 0.12);
+}
+
+/* ---------------- What We Do ---------------- */
+
+.qi-about-wwd {
+    padding: 3rem 0;
+    border-top: 1px solid #e5e2e2;
+}
+
+.qi-about-wwd__intro {
+    max-width: 30rem;
+    margin-bottom: 2rem;
+}
+
+.qi-about-wwd__intro h2 {
+    margin: 0 0 0.75rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.75rem;
+    color: #1a1a1a;
+    position: relative;
+    padding-bottom: 0.9rem;
+}
+
+.qi-about-wwd__intro h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background-color: #c0185b;
+}
+
+.qi-about-wwd__intro p {
+    margin: 0;
+    color: #4a4a4a;
+    line-height: 1.7;
+}
+
+.qi-about-wwd__grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.qi-about-wwd__col {
+    display: block;
+    text-decoration: none;
+    padding-right: 0.5rem;
+    border-right: 1px solid #e5e2e2;
+}
+
+.qi-about-wwd__col:last-child {
+    border-right: none;
+}
+
+.qi-about-wwd__col .qi-icon-circle {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+}
+
+.qi-about-wwd__col h3 {
+    margin: 0 0 0.6rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.qi-about-wwd__col p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: #4a4a4a;
+}
+
+/* ---------------- Why We Work This Way ---------------- */
+
+.qi-about-why {
+    display: grid;
+    grid-template-columns: minmax(0, 64%) minmax(0, 36%);
+    gap: 2rem;
+    align-items: start;
+    padding: 3rem 0;
+    border-top: 1px solid #e5e2e2;
+}
+
+.qi-about-why__body h2 {
+    margin: 0 0 1.25rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.75rem;
+    color: #1a1a1a;
+    position: relative;
+    padding-bottom: 0.9rem;
+}
+
+.qi-about-why__body h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background-color: #c0185b;
+}
+
+.qi-about-why__body p {
+    margin: 0 0 1rem;
+    color: #4a4a4a;
+    line-height: 1.75;
+}
+
+.qi-about-why__quote {
+    padding: 2rem;
+    background-color: #fbdce6;
+    border-radius: 16px;
+}
+
+.qi-about-why__quote .qi-icon-circle {
+    background-color: transparent;
+    color: #c0185b;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 1rem;
+}
+
+.qi-about-why__quote p {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    line-height: 1.55;
+    color: #7b1d47;
+}
+
+/* ---------------- Founder ---------------- */
+
+.qi-about-founder {
+    display: grid;
+    grid-template-columns: minmax(0, 26%) minmax(0, 74%);
+    gap: 2.5rem;
+    align-items: center;
+    padding: 2.5rem;
+    margin: 1rem 0 3rem;
+    background-color: #fff8fa;
+    border: 1px solid #e5e2e2;
+    border-radius: 16px;
+}
+
+.qi-about-founder__media {
+    position: relative;
+    height: 220px;
+}
+
+.qi-about-founder__media-circle {
+    position: absolute;
+    left: 8%;
+    top: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #fbdce6;
+}
+
+.qi-about-founder__media-frame {
+    position: absolute;
+    left: 20%;
+    top: 20px;
+    width: 150px;
+    height: 190px;
+    border-radius: 12px;
+    background-color: #c0185b;
+    box-shadow: 0 10px 24px rgba(26, 26, 26, 0.15);
+}
+
+.qi-about-founder__body h2 {
+    margin: 0 0 1rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.4rem;
+    color: #1a1a1a;
+}
+
+.qi-about-founder__body p {
+    margin: 0 0 0.9rem;
+    color: #4a4a4a;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.qi-about-founder__body p:last-child {
+    margin-bottom: 0;
+}
+
+.qi-about-founder__body a {
+    color: #c0185b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* ---------------- Team / Press / Annual report ---------------- */
+
+.qi-about-info-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    background-color: #fff8fa;
+    border: 1px solid #c0185b;
+    border-radius: 16px;
+}
+
+.qi-about-info-col {
+    padding-right: 1rem;
+    border-right: 1px solid #e5e2e2;
+}
+
+.qi-about-info-col:last-child {
+    padding-right: 0;
+    border-right: none;
+}
+
+.qi-about-info-col .qi-icon-circle {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 1rem;
+}
+
+.qi-about-info-col h3 {
+    margin: 0 0 0.75rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    color: #1a1a1a;
+}
+
+.qi-about-info-col p {
+    margin: 0 0 0.75rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: #4a4a4a;
+}
+
+.qi-about-info-col p:last-child {
+    margin-bottom: 0;
+}
+
+.qi-about-info-col a {
+    color: #c0185b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.qi-about-info-col__reports {
+    font-size: 0.85rem;
+}
+
+/* ---------------- Stay in the Loop ---------------- */
+
+.qi-stay-loop {
+    display: grid;
+    grid-template-columns: minmax(0, 22%) minmax(0, 56%) minmax(0, 22%);
+    gap: 2rem;
+    align-items: center;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    background-color: #fbdce6;
+    border-radius: 16px;
+}
+
+.qi-stay-loop__intro {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+}
+
+.qi-stay-loop__intro h3 {
+    margin: 0 0 0.35rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    color: #1a1a1a;
+}
+
+.qi-stay-loop__intro p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #4a4a4a;
+}
+
+.qi-stay-loop__channels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.qi-stay-loop__channel {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+}
+
+.qi-stay-loop__channel strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: #1a1a1a;
+    font-size: 0.95rem;
+}
+
+.qi-stay-loop__channel p {
+    margin: 0 0 0.75rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #4a4a4a;
+}
+
+.qi-stay-loop__join {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+}
+
+.qi-stay-loop__note {
+    text-align: center;
+}
+
+.qi-stay-loop__note p {
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+    color: #7b1d47;
+    line-height: 1.5;
+}
+
+.qi-stay-loop__note .qi-icon-circle {
+    margin: 0 auto;
+    background-color: transparent;
+}
+
+/* ---------------- Tablet landscape ---------------- */
+
+@media (max-width: 1200px) and (min-width: 981px) {
+    .qi-about-wwd__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        row-gap: 2rem;
+    }
+
+    .qi-about-wwd__col:nth-child(3) {
+        border-right: none;
+    }
+
+    .qi-about-info-row {
+        grid-template-columns: 1fr;
+    }
+
+    .qi-about-info-col {
+        border-right: none;
+        border-bottom: 1px solid #e5e2e2;
+        padding-bottom: 1.5rem;
+    }
+
+    .qi-about-info-col:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .qi-stay-loop {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .qi-stay-loop__intro {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+/* ---------------- Tablet ---------------- */
+
+@media (max-width: 980px) {
+    .qi-about-hero__image::after {
+        width: 80px;
+        height: 80px;
+        font-size: 0.75rem;
+    }
+
+    .qi-about-wwd__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 2rem;
+    }
+
+    .qi-about-wwd__col {
+        border-right: none;
+    }
+
+    .qi-about-why {
+        grid-template-columns: 1fr;
+    }
+
+    .qi-about-founder {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .qi-about-founder__media {
+        height: 180px;
+        max-width: 240px;
+        margin: 0 auto;
+    }
+
+    .qi-about-info-row {
+        grid-template-columns: 1fr;
+    }
+
+    .qi-about-info-col {
+        border-right: none;
+        border-bottom: 1px solid #e5e2e2;
+        padding-bottom: 1.5rem;
+    }
+
+    .qi-about-info-col:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .qi-stay-loop {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .qi-stay-loop__intro {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .qi-stay-loop__channels {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------------- Mobile ---------------- */
+
+@media (max-width: 680px) {
+    .qi-about-wwd {
+        padding: 2.5rem 0;
+    }
+
+    .qi-about-wwd__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .qi-about-why {
+        padding: 2.5rem 0;
+    }
+
+    .qi-about-founder {
+        padding: 1.75rem;
+    }
+
+    .qi-about-info-row {
+        padding: 1.75rem;
+    }
+
+    .qi-stay-loop {
+        padding: 1.75rem;
+    }
+}

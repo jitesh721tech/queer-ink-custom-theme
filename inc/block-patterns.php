@@ -29,6 +29,9 @@ if ( ! function_exists( 'queer_ink_icon' ) ) {
             'bookmark'   => '<path d="M6 3.5h12a1 1 0 0 1 1 1V21l-7-4-7 4V4.5a1 1 0 0 1 1-1Z"/>',
             'download'   => '<path d="M12 3.5v11M8 11l4 4 4-4"/><path d="M4.5 17v2.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V17"/>',
             'message'    => '<path d="M4 5.5h16a1 1 0 0 1 1 1V16a1 1 0 0 1-1 1H9l-4.5 4V17H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1Z"/>',
+            'chart'      => '<path d="M4 20V10M10 20V4M16 20v-7M3 20h18"/>',
+            'paper-plane' => '<path d="M21 3 3 10.5l7 2.5m11-10L13.5 21l-3-8m0 0 10.5-10Z"/>',
+            'quote'      => '<path d="M7 8.5c-2 1-3 2.7-3 5.2 0 1.9 1.2 3.3 3 3.3s3-1.3 3-3.1c0-1.6-1-2.7-2.4-2.9.2-1.3 1.2-2.6 2.9-3.3L7 8.5Zm10 0c-2 1-3 2.7-3 5.2 0 1.9 1.2 3.3 3 3.3s3-1.3 3-3.1c0-1.6-1-2.7-2.4-2.9.2-1.3 1.2-2.6 2.9-3.3L17 8.5Z"/>',
         );
 
         if ( ! isset( $icons[ $name ] ) ) {
@@ -56,6 +59,7 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
         $archiving_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/archiving_hero.png' ) );
         $digital_library_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/digital_library_hero.png' ) );
         $qi_journal_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/qi_journal_hero.png' ) );
+        $about_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/about_hero.png' ) );
 
         // Site-relative destination URLs, resolved through home_url() so links
         // still work when WordPress is installed in a subdirectory (e.g. /queer-ink/).
@@ -884,6 +888,200 @@ HTML
         <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'pencil' ) . '</div><span>Share your story</span></div>
         <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'book' ) . '</div><span>Expand our knowledge</span></div>
         <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'users' ) . '</div><span>Build our future</span></div>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+        register_block_pattern(
+            'queer-ink/about-hero',
+            array(
+                'title'      => esc_html__( 'Queer Ink: About Hero', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => <<<HTML
+<!-- wp:group {"className":"qi-pub-hero qi-about-hero"} -->
+<div class="wp-block-group qi-pub-hero qi-about-hero"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
+<p class="hero__eyebrow">ABOUT QUEER INK</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">An independent publisher, archive, and library, in Mumbai, <span style="color:#c0185b">since 2010.</span></h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Founded by Shobhna S Kumar in 2010 as India's first online queer bookstore. Today, a five-part ecosystem holding queer Indian lives in print, on record, in conversation, and in the writing happening now.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:image {"className":"qi-pub-hero__image qi-about-hero__image"} -->
+<figure class="wp-block-image qi-pub-hero__image qi-about-hero__image"><img src="{$about_hero_image}" alt="Queer Ink — publisher, archive and library since 2010"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+HTML
+                ,
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/about-what-we-do',
+            array(
+                'title'      => esc_html__( 'Queer Ink: What We Do', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-about-wwd">
+    <div class="qi-about-wwd__intro">
+        <h2>What we do.</h2>
+        <p>We hold queer Indian lives — through publishing, archives, a digital library, a public knowledge exchange, and editorial writing.</p>
+    </div>
+    <div class="qi-about-wwd__grid">
+        <a class="qi-about-wwd__col" href="' . $url_publishing . '">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'book' ) . '</div>
+            <h3>The Publishing Imprint</h3>
+            <p>Issues books drawn from the Queer India Archives — anthologies, edited collections, and oral histories shaped into book form. A self-publishing accelerator, the Storytellers Studio, also supports independent authors to publish their own work through mentorship and crowdfund-led publication.</p>
+        </a>
+        <a class="qi-about-wwd__col" href="' . $url_archiving . '">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'archive' ) . '</div>
+            <h3>The Queer India Archives</h3>
+            <p>Preserves oral histories, photographs, correspondence, organisational records, zines, ephemera and material culture from queer Indian lives and movements — held in trust, on terms set by contributors.</p>
+        </a>
+        <a class="qi-about-wwd__col" href="' . $url_digital_library . '">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'globe' ) . '</div>
+            <h3>The Queer Ink Digital Library</h3>
+            <p>Makes queer Indian literature and history searchable, public-facing and openly accessible — books, documents, oral histories, films and curated collections, for readers, researchers, students and community members anywhere.</p>
+        </a>
+        <a class="qi-about-wwd__col" href="' . $url_qi_journal . '">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'message' ) . '</div>
+            <h3>Qblog</h3>
+            <p>Is the editorial writing space — Shobhna\'s reflections, essays, and notes from inside the work.</p>
+        </a>
+        <a class="qi-about-wwd__col" href="' . $url_connect . '">
+            <div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div>
+            <h3>QConversations</h3>
+            <p>Is the public knowledge exchange — a sustained practice of public posts, free engagement on social platforms, and paid private consultations for focused thinking.</p>
+        </a>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/about-why',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Why We Work This Way', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-about-why">
+    <div class="qi-about-why__body">
+        <h2>Why we work this way.</h2>
+        <p>Queer Indian lives have been documented sporadically, preserved occasionally, and included in the country\'s official record almost never. What has been kept has often been kept by chance.</p>
+        <p>Queer Ink exists to change that — not through any single act, but through sustained, considered, long-horizon work. Books that take years to produce. Archives built on terms set by the communities they record. A library designed to be findable in a world that is narrowing access. A blog that adds the missing perspective. Conversations that keep getting asked.</p>
+        <p>The work is small, slow, and independent by choice. It is funded, in part, by readers, patrons, and reciprocity — never by advertising, never by sources that would compromise contributor trust. It is produced by one person, for now, with collaborators when the work calls for them.</p>
+        <p>It is, deliberately, the kind of cultural work that serves a generation rather than a season.</p>
+    </div>
+    <div class="qi-about-why__quote">
+        <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'quote' ) . '</div>
+        <p>Our voices shatter the silence we inherited, so the future must never know the choice of the closet.</p>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/about-founder',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Founder', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-about-founder">
+    <div class="qi-about-founder__media" aria-hidden="true">
+        <div class="qi-about-founder__media-circle"></div>
+        <div class="qi-about-founder__media-frame"></div>
+    </div>
+    <div class="qi-about-founder__body">
+        <h2>Shobhna S Kumar — founder.</h2>
+        <p>Shobhna S Kumar founded Queer Ink in 2010 as India\'s first online queer bookstore. In 2012 she published <em>Out! Stories from the New Queer India</em>, edited by Minal Hajratwala — Queer Ink\'s first book, the foundational anthology of contemporary queer Indian writing.</p>
+        <p>Born in Fiji and raised partly in Australia, she settled in India in 2002. She is a publisher, archivist, and editor whose work over fifteen years has held queer Indian lives in print, on record, and in conversation.</p>
+        <p>She lives and works in Mumbai. Contact: <a href="mailto:shobhna@queer-ink.com">shobhna@queer-ink.com</a></p>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/about-info-row',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Team, Press & Annual Report', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-about-info-row">
+    <div class="qi-about-info-col">
+        <div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div>
+        <h3>Team.</h3>
+        <p>Queer Ink is a sole-trader practice — Shobhna at its centre, with collaborators brought in for specific work. Editors, designers, translators, researchers, and archival specialists work with the imprint and the Archives on a project basis. The work is small by design.</p>
+        <p>If you would like to work with Queer Ink in a specialist capacity — editorial, archival, design, translation, research — write to <a href="mailto:shobhna@queer-ink.com">shobhna@queer-ink.com</a> with a brief note about your work and what calls you to ours.</p>
+    </div>
+    <div class="qi-about-info-col">
+        <div class="qi-icon-circle">' . queer_ink_icon( 'megaphone' ) . '</div>
+        <h3>Press and media.</h3>
+        <p>Press inquiries, interview requests, photograph requests, and media partnerships: please write to <a href="mailto:shobhna@queer-ink.com">shobhna@queer-ink.com</a> with the subject line PRESS — (your publication).</p>
+        <p>A press kit, including high-resolution photographs of Shobhna, the Queer Ink logo files, and brief organisational descriptions in a range of lengths, is available on request.</p>
+        <p>For book reviews, please contact us for review copies of any titles in the catalogue.</p>
+    </div>
+    <div class="qi-about-info-col">
+        <div class="qi-icon-circle">' . queer_ink_icon( 'chart' ) . '</div>
+        <h3>Annual report.</h3>
+        <p>Queer Ink publishes an annual report each April, marking the imprint\'s founding date. The report covers the year\'s work — books published, archive collections expanded, library growth, QConversations engagement, and finances at a level appropriate to a small independent organisation.</p>
+        <p class="qi-about-info-col__reports">Read the annual reports: <a href="mailto:shobhna@queer-ink.com">2025 (PDF)</a> &middot; <a href="mailto:shobhna@queer-ink.com">2024 (PDF)</a> &middot; <a href="mailto:shobhna@queer-ink.com">2023 (PDF)</a></p>
+        <p><a href="mailto:shobhna@queer-ink.com">Earlier reports on request</a></p>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/about-stay-loop',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Stay in the Loop', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-stay-loop">
+    <div class="qi-stay-loop__intro">
+        <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'paper-plane' ) . '</div>
+        <div>
+            <h3>Stay in the loop</h3>
+            <p>Updates on books, archives, events and more.</p>
+        </div>
+    </div>
+    <div class="qi-stay-loop__channels">
+        <div class="qi-stay-loop__channel">
+            <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'message' ) . '</div>
+            <div>
+                <strong>WhatsApp Channel</strong>
+                <p>Short updates. High signal. Stay connected easily.</p>
+                <a class="button button--primary qi-stay-loop__join" href="' . $url_connect . '">Join on WhatsApp ↗</a>
+            </div>
+        </div>
+        <div class="qi-stay-loop__channel">
+            <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'message' ) . '</div>
+            <div>
+                <strong>Telegram Channel</strong>
+                <p>In-depth updates. Searchable. For readers and archives.</p>
+                <a class="button button--primary qi-stay-loop__join" href="' . $url_connect . '">Join on Telegram ↗</a>
+            </div>
+        </div>
+    </div>
+    <div class="qi-stay-loop__note">
+        <p>No newsletters.<br>No spam.<br>Just what matters.</p>
+        <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'heart' ) . '</div>
     </div>
 </div>
 <!-- /wp:html -->',
