@@ -1,0 +1,144 @@
+/*
+Single Book / Single Article
+Supports single-qi_book.php and single-qi_article.php.
+*/
+
+/* ---------------- Single Book ---------------- */
+
+.qi-single-book {
+    padding: 3rem 0 4rem;
+}
+
+.qi-single-book__layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.qi-single-book__cover {
+    position: sticky;
+    top: 2rem;
+}
+
+.qi-single-book__cover-img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    box-shadow: 0 12px 24px rgba(26, 26, 26, 0.12);
+}
+
+.qi-single-book__cover-placeholder {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background-color: #fbdce6;
+    border-radius: 8px;
+}
+
+.qi-single-book__download {
+    display: block;
+    text-align: center;
+    margin-top: 1.25rem;
+}
+
+.qi-single-book__authors,
+.qi-single-article__authors {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    color: #4a4a4a;
+}
+
+.qi-single-book__authors a,
+.qi-single-article__authors a {
+    color: #c0185b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.qi-single-book__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem;
+}
+
+.qi-single-book__tag {
+    display: inline-block;
+    padding: 0.3rem 0.85rem;
+    border: 1px solid #e5e2e2;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: #1a1a1a;
+    text-decoration: none;
+    background-color: #fafafa;
+}
+
+.qi-single-book__tag--language {
+    background-color: #fbdce6;
+    border-color: #fbdce6;
+}
+
+.qi-single-book__back {
+    margin-top: 2rem;
+}
+
+.qi-single-book__back a {
+    color: #c0185b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+@media ( max-width: 780px ) {
+    .qi-single-book__layout {
+        grid-template-columns: 1fr;
+    }
+
+    .qi-single-book__cover {
+        position: static;
+        max-width: 280px;
+    }
+}
+
+/* ---------------- Single Article ---------------- */
+
+.qi-single-article {
+    padding: 3rem 0 4rem;
+}
+
+.qi-single-article__media {
+    margin-bottom: 2rem;
+}
+
+.qi-single-article__media-img {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+.qi-single-article__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    color: #4a4a4a;
+}
+
+.qi-single-article__section {
+    color: #c0185b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.qi-single-article__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}

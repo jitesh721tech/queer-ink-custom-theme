@@ -115,3 +115,120 @@ if ( ! function_exists( 'queer_ink_save_form_field_meta' ) ) {
     }
 }
 add_action( 'save_post_qi_form_field', 'queer_ink_save_form_field_meta' );
+
+if ( ! function_exists( 'queer_ink_enqueue_book_media_uploader' ) ) {
+    /**
+     * Loads the WP media library JS only on the qi_book edit screen, so the
+     * PDF meta box's "Select PDF" button can open the native uploader.
+     */
+    function queer_ink_enqueue_book_media_uploader( $hook ) {
+        if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
+            return;
+        }
+
+        $screen = get_current_screen();
+        if ( ! $screen || 'qi_book' !== $screen->post_type ) {
+            return;
+        }
+
+        wp_enqueue_media();
+
+        // Depend on 'media-editor' explicitly (not just 'jquery') so
+        // WordPress's dependency graph *guarantees* wp.media is loaded
+        // before this script runs, instead of relying on wp_enqueue_media()
+        // happening to have queued it first — the latter is not a real
+        // ordering guarantee and is exactly the kind of thing that can
+        // start failing intermittently under a different WP core version,
+        // hook priority, or once another plugin also touches this screen.
+        wp_enqueue_script( 'queer-ink-book-meta', get_theme_file_uri( 'assets/js/admin-book-meta.js' ), array( 'jquery', 'media-editor' ), wp_get_theme()->get( 'Version' ), true );
+    }
+}
+add_action( 'admin_enqueue_scripts', 'queer_ink_enqueue_book_media_uploader' );
+
+if ( ! function_exists( 'queer_ink_register_book_meta_box' ) ) {
+    function queer_ink_register_book_meta_box( $post_type ) {
+        add_meta_box(
+            'qi_book_pdf',
+            esc_html__( 'Book PDF', 'queer-ink-theme' ),
+            'queer_ink_render_book_meta_box',
+            'qi_book',
+            'side',
+            'default'
+        );
+    }
+}
+// Scoped to add_meta_boxes_qi_book (not the generic add_meta_boxes hook)
+// so this only ever runs on the Book screen, not on every post/page/CPT
+// edit screen in the admin.
+add_action( 'add_meta_boxes_qi_book', 'queer_ink_register_book_meta_box' );
+
+if ( ! function_exists( 'queer_ink_render_book_meta_box' ) ) {
+    function queer_ink_render_book_meta_box( $post ) {
+        wp_nonce_field( 'queer_ink_save_book_meta', 'queer_ink_book_meta_nonce' );
+
+        $pdf_id  = absint( get_post_meta( $post->ID, '_qi_book_pdf_id', true ) );
+        $pdf_url = $pdf_id ? wp_get_attachment_url( $pdf_id ) : '';
+        ?>
+        <p class="description"><?php esc_html_e( 'The PDF is stored publicly (same as the site\'s book downloads) and linked directly on the book\'s page.', 'queer-ink-theme' ); ?></p>
+        <p>
+            <input type="hidden" id="qi_book_pdf_id" name="qi_book_pdf_id" value="<?php echo esc_attr( $pdf_id ); ?>">
+            <span id="qi_book_pdf_filename"><?php echo $pdf_url ? esc_html( basename( $pdf_url ) ) : esc_html__( 'No PDF selected.', 'queer-ink-theme' ); ?></span>
+        </p>
+        <p>
+            <button type="button" class="button" id="qi_book_pdf_select"><?php esc_html_e( 'Select PDF', 'queer-ink-theme' ); ?></button>
+            <button type="button" class="button" id="qi_book_pdf_remove" <?php echo $pdf_id ? '' : 'style="display:none;"'; ?>><?php esc_html_e( 'Remove', 'queer-ink-theme' ); ?></button>
+        </p>
+        <?php
+    }
+}
+
+if ( ! function_exists( 'queer_ink_save_book_meta' ) ) {
+    function queer_ink_save_book_meta( $post_id ) {
+        if ( ! isset( $_POST['queer_ink_book_meta_nonce'] ) || ! wp_verify_nonce( $_POST['queer_ink_book_meta_nonce'], 'queer_ink_save_book_meta' ) ) {
+            return;
+        }
+
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
+        }
+
+        if ( isset( $_POST['qi_book_pdf_id'] ) ) {
+            update_post_meta( $post_id, '_qi_book_pdf_id', absint( $_POST['qi_book_pdf_id'] ) );
+        }
+    }
+}
+add_action( 'save_post_qi_book', 'queer_ink_save_book_meta' );
+
+if ( ! function_exists( 'queer_ink_book_admin_columns' ) ) {
+    function queer_ink_book_admin_columns( $columns ) {
+        $columns['qi_book_pdf'] = esc_html__( 'PDF', 'queer-ink-theme' );
+        return $columns;
+    }
+}
+add_filter( 'manage_qi_book_posts_columns', 'queer_ink_book_admin_columns' );
+
+if ( ! function_exists( 'queer_ink_book_admin_column_content' ) ) {
+    function queer_ink_book_admin_column_content( $column, $post_id ) {
+        if ( 'qi_book_pdf' !== $column ) {
+            return;
+        }
+
+        $pdf_id = absint( get_post_meta( $post_id, '_qi_book_pdf_id', true ) );
+        if ( ! $pdf_id ) {
+            esc_html_e( '—', 'queer-ink-theme' );
+            return;
+        }
+
+        $pdf_url = wp_get_attachment_url( $pdf_id );
+        if ( $pdf_url ) {
+            printf( '<a href="%1$s" target="_blank" rel="noopener">%2$s</a>', esc_url( $pdf_url ), esc_html__( 'View', 'queer-ink-theme' ) );
+        } else {
+            esc_html_e( '—', 'queer-ink-theme' );
+        }
+    }
+}
+add_action( 'manage_qi_book_posts_custom_column', 'queer_ink_book_admin_column_content', 10, 2 );
