@@ -345,6 +345,18 @@
     color: #c0185b;
 }
 
+.article-card__author {
+    margin: -0.2rem 0 0;
+    font-size: 0.82rem;
+    color: #4a4a4a;
+}
+
+.article-card__author a {
+    color: #c0185b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
 .article-card__excerpt {
     margin: 0;
     font-size: 0.9rem;

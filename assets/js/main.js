@@ -68,4 +68,46 @@
             }
         } );
     } );
+
+    var searchToggle = document.querySelector( '.header-search' );
+    var searchPanel = document.querySelector( '.header-search-panel' );
+
+    if ( searchToggle && searchPanel ) {
+        var searchInput = searchPanel.querySelector( 'input[type="search"]' );
+
+        var closeSearch = function () {
+            searchPanel.hidden = true;
+            searchToggle.setAttribute( 'aria-expanded', 'false' );
+        };
+
+        var openSearch = function () {
+            searchPanel.hidden = false;
+            searchToggle.setAttribute( 'aria-expanded', 'true' );
+            if ( searchInput ) {
+                searchInput.focus();
+            }
+        };
+
+        searchToggle.addEventListener( 'click', function ( event ) {
+            event.stopPropagation();
+            if ( searchPanel.hidden ) {
+                openSearch();
+            } else {
+                closeSearch();
+            }
+        } );
+
+        document.addEventListener( 'keydown', function ( event ) {
+            if ( event.key === 'Escape' && ! searchPanel.hidden ) {
+                closeSearch();
+                searchToggle.focus();
+            }
+        } );
+
+        document.addEventListener( 'click', function ( event ) {
+            if ( ! searchPanel.hidden && ! searchPanel.contains( event.target ) && event.target !== searchToggle ) {
+                closeSearch();
+            }
+        } );
+    }
 })();

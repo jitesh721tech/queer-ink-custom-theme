@@ -46,12 +46,26 @@
                     <li><a href="<?php echo esc_url( home_url( '/connect' ) ); ?>"><?php esc_html_e( 'Connect', 'queer-ink-theme' ); ?></a></li>
                 </ul>
             <?php endif; ?>
-            <a class="header-search" href="<?php echo esc_url( home_url( '/?s=' ) ); ?>" aria-label="<?php esc_attr_e( 'Search', 'queer-ink-theme' ); ?>">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <circle cx="10" cy="10" r="6" stroke="#1A1A1A" stroke-width="2" fill="none" />
-                    <line x1="15" y1="15" x2="21" y2="21" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" />
-                </svg>
-            </a>
+            <div class="header-search-wrap">
+                <button type="button" class="header-search" aria-expanded="false" aria-controls="header-search-panel" aria-label="<?php esc_attr_e( 'Search', 'queer-ink-theme' ); ?>">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="10" cy="10" r="6" stroke="#1A1A1A" stroke-width="2" fill="none" />
+                        <line x1="15" y1="15" x2="21" y2="21" stroke="#1A1A1A" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+                <div class="header-search-panel" id="header-search-panel" hidden>
+                    <form class="qi-search-form header-search-panel__form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+                        <label class="screen-reader-text" for="header-search-input"><?php esc_html_e( 'Search the site', 'queer-ink-theme' ); ?></label>
+                        <input id="header-search-input" type="search" name="s" placeholder="<?php esc_attr_e( 'Search books, articles, authors…', 'queer-ink-theme' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" />
+                        <button type="submit" aria-label="<?php esc_attr_e( 'Submit search', 'queer-ink-theme' ); ?>">
+                            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="2" fill="none" />
+                                <line x1="15" y1="15" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
             <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="primary-menu-list" aria-label="<?php esc_attr_e( 'Toggle menu', 'queer-ink-theme' ); ?>">
                 <span class="menu-toggle__bar"></span>
                 <span class="menu-toggle__bar"></span>

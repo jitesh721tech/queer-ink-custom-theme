@@ -181,3 +181,120 @@ if ( ! function_exists( 'queer_ink_subjects_dropdown_shortcode' ) ) {
     }
 }
 add_shortcode( 'qi_subjects_dropdown', 'queer_ink_subjects_dropdown_shortcode' );
+
+if ( ! function_exists( 'queer_ink_render_form_field' ) ) {
+    /**
+     * Renders a single qi_form_field post as its configured input.
+     */
+    function queer_ink_render_form_field( $field_post ) {
+        $type        = get_post_meta( $field_post->ID, '_qi_field_type', true ) ?: 'text';
+        $required    = (bool) get_post_meta( $field_post->ID, '_qi_field_required', true );
+        $placeholder = get_post_meta( $field_post->ID, '_qi_field_placeholder', true );
+        $options_raw = get_post_meta( $field_post->ID, '_qi_field_options', true );
+
+        $label       = get_the_title( $field_post );
+        $placeholder = '' !== $placeholder ? $placeholder : $label;
+        $field_name  = $field_post->post_name ? $field_post->post_name : 'field-' . $field_post->ID;
+        $field_id    = 'qi-field-' . $field_name;
+
+        ob_start();
+        ?>
+        <div class="qi-connect-form__field">
+            <label class="screen-reader-text" for="<?php echo esc_attr( $field_id ); ?>"><?php echo esc_html( $label ); ?></label>
+            <?php if ( 'textarea' === $type ) : ?>
+                <textarea id="<?php echo esc_attr( $field_id ); ?>" name="<?php echo esc_attr( $field_name ); ?>" rows="5" placeholder="<?php echo esc_attr( $placeholder ); ?>" <?php echo $required ? 'required aria-required="true"' : ''; ?>></textarea>
+            <?php elseif ( 'select' === $type ) : ?>
+                <select id="<?php echo esc_attr( $field_id ); ?>" name="<?php echo esc_attr( $field_name ); ?>" <?php echo $required ? 'required aria-required="true"' : ''; ?>>
+                    <option value=""><?php echo esc_html( $placeholder ); ?></option>
+                    <?php
+                    $options = preg_split( '/\r\n|\r|\n/', (string) $options_raw );
+                    foreach ( $options as $option ) {
+                        $option = trim( $option );
+                        if ( '' === $option ) {
+                            continue;
+                        }
+                        printf( '<option value="%1$s">%2$s</option>', esc_attr( sanitize_title( $option ) ), esc_html( $option ) );
+                    }
+                    ?>
+                </select>
+            <?php else : ?>
+                <input type="<?php echo esc_attr( $type ); ?>" id="<?php echo esc_attr( $field_id ); ?>" name="<?php echo esc_attr( $field_name ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" <?php echo $required ? 'required aria-required="true"' : ''; ?>>
+            <?php endif; ?>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+}
+
+if ( ! function_exists( 'queer_ink_contact_form_shortcode' ) ) {
+    /**
+     * Renders the "Send us a message" form from qi_form_field posts, so
+     * fields (type, label, required, select options, order, half/full
+     * width) are entirely admin-editable from wp-admin → Contact Form
+     * Fields, with no field structure hard-coded in the template.
+     */
+    function queer_ink_contact_form_shortcode( $atts ) {
+        $atts = shortcode_atts( array(
+            'action' => '',
+        ), $atts, 'qi_contact_form' );
+
+        $fields = get_posts( array(
+            'post_type'      => 'qi_form_field',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+        ) );
+
+        ob_start();
+        ?>
+        <form class="qi-connect-form__form" method="post" action="<?php echo esc_url( $atts['action'] ); ?>">
+            <?php
+            if ( empty( $fields ) ) {
+                if ( current_user_can( 'edit_theme_options' ) || current_user_can( 'manage_options' ) ) {
+                    echo '<p class="qi-connect-form__admin-notice">' . esc_html__( 'No form fields configured yet. Add some under Contact Form Fields in wp-admin.', 'queer-ink-theme' ) . '</p>';
+                }
+            }
+
+            $pending_half = null;
+
+            foreach ( $fields as $field_post ) {
+                $width = get_post_meta( $field_post->ID, '_qi_field_width', true ) ?: 'full';
+
+                if ( 'half' === $width ) {
+                    if ( null === $pending_half ) {
+                        $pending_half = $field_post;
+                        continue;
+                    }
+
+                    echo '<div class="qi-connect-form__row">';
+                    echo queer_ink_render_form_field( $pending_half ); // phpcs:ignore -- escaped in queer_ink_render_form_field().
+                    echo queer_ink_render_form_field( $field_post ); // phpcs:ignore -- escaped in queer_ink_render_form_field().
+                    echo '</div>';
+                    $pending_half = null;
+                    continue;
+                }
+
+                if ( null !== $pending_half ) {
+                    echo queer_ink_render_form_field( $pending_half ); // phpcs:ignore -- escaped in queer_ink_render_form_field().
+                    $pending_half = null;
+                }
+
+                echo queer_ink_render_form_field( $field_post ); // phpcs:ignore -- escaped in queer_ink_render_form_field().
+            }
+
+            if ( null !== $pending_half ) {
+                echo queer_ink_render_form_field( $pending_half ); // phpcs:ignore -- escaped in queer_ink_render_form_field().
+            }
+            ?>
+            <label class="qi-connect-form__consent">
+                <input type="checkbox" name="consent" required aria-required="true">
+                <span><?php esc_html_e( 'I agree to the', 'queer-ink-theme' ); ?> <a href="#"><?php esc_html_e( 'Privacy Policy', 'queer-ink-theme' ); ?></a></span>
+            </label>
+            <button type="submit" class="button button--primary"><?php esc_html_e( 'Send Message', 'queer-ink-theme' ); ?></button>
+        </form>
+        <?php
+        return ob_get_clean();
+    }
+}
+add_shortcode( 'qi_contact_form', 'queer_ink_contact_form_shortcode' );

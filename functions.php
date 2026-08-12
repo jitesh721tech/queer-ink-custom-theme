@@ -6,9 +6,11 @@
  */
 
 require_once get_theme_file_path( 'inc/post-types.php' );
+require_once get_theme_file_path( 'inc/meta-boxes.php' );
 require_once get_theme_file_path( 'inc/taxonomies.php' );
 require_once get_theme_file_path( 'inc/rewrite.php' );
 require_once get_theme_file_path( 'inc/shortcodes.php' );
+require_once get_theme_file_path( 'inc/search.php' );
 require_once get_theme_file_path( 'inc/block-patterns.php' );
 
 if ( ! function_exists( 'queer_ink_theme_setup' ) ) {
@@ -85,6 +87,7 @@ if ( ! function_exists( 'queer_ink_theme_scripts' ) ) {
         wp_enqueue_style( 'queer-ink-qi-journal', get_theme_file_uri( 'assets/css/qi-journal.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
         wp_enqueue_style( 'queer-ink-about', get_theme_file_uri( 'assets/css/about.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
         wp_enqueue_style( 'queer-ink-connect', get_theme_file_uri( 'assets/css/connect.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
+        wp_enqueue_style( 'queer-ink-search', get_theme_file_uri( 'assets/css/search.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
 
         wp_enqueue_script( 'queer-ink-main', get_theme_file_uri( 'assets/js/main.js' ), array(), wp_get_theme()->get( 'Version' ), true );
     }

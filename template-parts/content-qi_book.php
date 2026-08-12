@@ -22,6 +22,21 @@
         <h3 class="book-card__title">
             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         </h3>
+        <?php
+        $qi_book_authors = get_the_terms( get_the_ID(), 'qi_book_author' );
+        if ( $qi_book_authors && ! is_wp_error( $qi_book_authors ) ) :
+            ?>
+            <p class="book-card__author">
+                <?php esc_html_e( 'By', 'queer-ink-theme' ); ?>
+                <?php
+                $qi_book_author_links = array();
+                foreach ( $qi_book_authors as $qi_book_author ) {
+                    $qi_book_author_links[] = '<a href="' . esc_url( get_term_link( $qi_book_author ) ) . '">' . esc_html( $qi_book_author->name ) . '</a>';
+                }
+                echo wp_kses_post( implode( ', ', $qi_book_author_links ) );
+                ?>
+            </p>
+        <?php endif; ?>
         <?php if ( has_excerpt() ) : ?>
             <p class="book-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
         <?php endif; ?>

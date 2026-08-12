@@ -284,6 +284,18 @@
     color: #c0185b;
 }
 
+.book-card__author {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #4a4a4a;
+}
+
+.book-card__author a {
+    color: #c0185b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
 .book-card__excerpt {
     margin: 0;
     font-size: 0.9rem;

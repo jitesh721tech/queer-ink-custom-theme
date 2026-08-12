@@ -38,6 +38,26 @@ if ( ! function_exists( 'queer_ink_register_post_types' ) ) {
             'menu_icon'    => 'dashicons-media-document',
             'show_in_rest' => true,
         ) );
+
+        register_post_type( 'qi_form_field', array(
+            'labels'       => array(
+                'name'          => esc_html__( 'Contact Form Fields', 'queer-ink-theme' ),
+                'singular_name' => esc_html__( 'Form Field', 'queer-ink-theme' ),
+                'add_new_item'  => esc_html__( 'Add New Form Field', 'queer-ink-theme' ),
+                'edit_item'     => esc_html__( 'Edit Form Field', 'queer-ink-theme' ),
+                'all_items'     => esc_html__( 'Contact Form Fields', 'queer-ink-theme' ),
+            ),
+            'public'             => false,
+            'show_ui'            => true,
+            'show_in_menu'       => true,
+            'exclude_from_search' => true,
+            'rewrite'            => false,
+            'query_var'          => false,
+            'supports'           => array( 'title', 'page-attributes' ),
+            'menu_icon'          => 'dashicons-feedback',
+            'menu_position'      => 26,
+            'show_in_rest'       => false,
+        ) );
     }
 }
 add_action( 'init', 'queer_ink_register_post_types' );

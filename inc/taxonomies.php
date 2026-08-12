@@ -9,6 +9,13 @@
  * qi_article_section is article-only — it groups posts by editorial
  * section (Reflections, Research, Voices...) for the QI Journal page.
  *
+ * qi_book_author and qi_article_author are deliberately separate,
+ * non-hierarchical (tag-style) taxonomies rather than one shared
+ * "author" taxonomy or the native post_author field — a book author and
+ * an article writer are treated as distinct entities, and neither
+ * requires a WordPress user account. Each term gets its own browsable
+ * archive automatically via archive.php.
+ *
  * @package Queer_Ink_Theme
  */
 
@@ -57,6 +64,38 @@ if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
             'show_in_rest'      => true,
             'show_admin_column' => true,
             'rewrite'           => array( 'slug' => 'section', 'with_front' => false ),
+        ) );
+
+        register_taxonomy( 'qi_book_author', array( 'qi_book' ), array(
+            'labels'       => array(
+                'name'          => esc_html__( 'Authors', 'queer-ink-theme' ),
+                'singular_name' => esc_html__( 'Author', 'queer-ink-theme' ),
+                'add_new_item'  => esc_html__( 'Add New Author', 'queer-ink-theme' ),
+                'edit_item'     => esc_html__( 'Edit Author', 'queer-ink-theme' ),
+                'all_items'     => esc_html__( 'All Authors', 'queer-ink-theme' ),
+                'search_items'  => esc_html__( 'Search Authors', 'queer-ink-theme' ),
+            ),
+            'public'            => true,
+            'hierarchical'      => false,
+            'show_in_rest'      => true,
+            'show_admin_column' => true,
+            'rewrite'           => array( 'slug' => 'book-author', 'with_front' => false ),
+        ) );
+
+        register_taxonomy( 'qi_article_author', array( 'qi_article' ), array(
+            'labels'       => array(
+                'name'          => esc_html__( 'Writers', 'queer-ink-theme' ),
+                'singular_name' => esc_html__( 'Writer', 'queer-ink-theme' ),
+                'add_new_item'  => esc_html__( 'Add New Writer', 'queer-ink-theme' ),
+                'edit_item'     => esc_html__( 'Edit Writer', 'queer-ink-theme' ),
+                'all_items'     => esc_html__( 'All Writers', 'queer-ink-theme' ),
+                'search_items'  => esc_html__( 'Search Writers', 'queer-ink-theme' ),
+            ),
+            'public'            => true,
+            'hierarchical'      => false,
+            'show_in_rest'      => true,
+            'show_admin_column' => true,
+            'rewrite'           => array( 'slug' => 'writer', 'with_front' => false ),
         ) );
     }
 }

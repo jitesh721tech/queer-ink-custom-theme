@@ -65,8 +65,17 @@
     margin-bottom: 1rem;
 }
 
-.qi-connect-form input[type="text"],
-.qi-connect-form input[type="email"],
+.qi-connect-form__admin-notice {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px dashed #e5e2e2;
+    border-radius: 8px;
+    background-color: #fafafa;
+    color: #4a4a4a;
+    font-size: 0.85rem;
+}
+
+.qi-connect-form input:not([type="checkbox"]),
 .qi-connect-form select,
 .qi-connect-form textarea {
     width: 100%;

@@ -1135,38 +1135,7 @@ HTML
     <div class="qi-connect-card qi-connect-form">
         <h2>Send us a message</h2>
         <p>We read every message. We\'ll get back to you as soon as we can.</p>
-        <form class="qi-connect-form__form" method="post" action="">
-            <div class="qi-connect-form__row">
-                <div class="qi-connect-form__field">
-                    <label class="screen-reader-text" for="qi-connect-name">Your Name</label>
-                    <input type="text" id="qi-connect-name" name="your-name" placeholder="Your Name" autocomplete="name" required>
-                </div>
-                <div class="qi-connect-form__field">
-                    <label class="screen-reader-text" for="qi-connect-email">Your Email</label>
-                    <input type="email" id="qi-connect-email" name="your-email" placeholder="Your Email" autocomplete="email" required>
-                </div>
-            </div>
-            <div class="qi-connect-form__field">
-                <label class="screen-reader-text" for="qi-connect-subject">What is this regarding?</label>
-                <select id="qi-connect-subject" name="subject">
-                    <option value="">What is this regarding?</option>
-                    <option value="general">General inquiry</option>
-                    <option value="collaboration">Collaboration</option>
-                    <option value="archive">Archive contribution</option>
-                    <option value="press">Press &amp; media</option>
-                    <option value="other">Something else</option>
-                </select>
-            </div>
-            <div class="qi-connect-form__field">
-                <label class="screen-reader-text" for="qi-connect-message">Your Message</label>
-                <textarea id="qi-connect-message" name="message" rows="5" placeholder="Your Message" required></textarea>
-            </div>
-            <label class="qi-connect-form__consent">
-                <input type="checkbox" name="consent" required>
-                <span>I agree to the <a href="#">Privacy Policy</a></span>
-            </label>
-            <button type="submit" class="button button--primary">Send Message</button>
-        </form>
+        [qi_contact_form]
     </div>
     <div class="qi-connect-card qi-connect-info">
         <h2>Other ways to reach us</h2>
