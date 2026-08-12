@@ -84,6 +84,7 @@ if ( ! function_exists( 'queer_ink_theme_scripts' ) ) {
         wp_enqueue_style( 'queer-ink-digital-library', get_theme_file_uri( 'assets/css/digital-library.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
         wp_enqueue_style( 'queer-ink-qi-journal', get_theme_file_uri( 'assets/css/qi-journal.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
         wp_enqueue_style( 'queer-ink-about', get_theme_file_uri( 'assets/css/about.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
+        wp_enqueue_style( 'queer-ink-connect', get_theme_file_uri( 'assets/css/connect.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
 
         wp_enqueue_script( 'queer-ink-main', get_theme_file_uri( 'assets/js/main.js' ), array(), wp_get_theme()->get( 'Version' ), true );
     }

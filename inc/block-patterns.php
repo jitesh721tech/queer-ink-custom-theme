@@ -32,6 +32,8 @@ if ( ! function_exists( 'queer_ink_icon' ) ) {
             'chart'      => '<path d="M4 20V10M10 20V4M16 20v-7M3 20h18"/>',
             'paper-plane' => '<path d="M21 3 3 10.5l7 2.5m11-10L13.5 21l-3-8m0 0 10.5-10Z"/>',
             'quote'      => '<path d="M7 8.5c-2 1-3 2.7-3 5.2 0 1.9 1.2 3.3 3 3.3s3-1.3 3-3.1c0-1.6-1-2.7-2.4-2.9.2-1.3 1.2-2.6 2.9-3.3L7 8.5Zm10 0c-2 1-3 2.7-3 5.2 0 1.9 1.2 3.3 3 3.3s3-1.3 3-3.1c0-1.6-1-2.7-2.4-2.9.2-1.3 1.2-2.6 2.9-3.3L17 8.5Z"/>',
+            'mail'       => '<rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="m4 6.5 8 6 8-6"/>',
+            'location'   => '<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/>',
         );
 
         if ( ! isset( $icons[ $name ] ) ) {
@@ -60,6 +62,8 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
         $digital_library_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/digital_library_hero.png' ) );
         $qi_journal_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/qi_journal_hero.png' ) );
         $about_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/about_hero.png' ) );
+        $about_founder_image = esc_url( get_theme_file_uri( 'assets/images/sections/about_admin_img.jfif' ) );
+        $connect_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/connect_hero.png' ) );
 
         // Site-relative destination URLs, resolved through home_url() so links
         // still work when WordPress is installed in a subdirectory (e.g. /queer-ink/).
@@ -1000,9 +1004,8 @@ HTML
                 'categories' => array( 'queer-ink' ),
                 'content'    => '<!-- wp:html -->
 <div class="qi-about-founder">
-    <div class="qi-about-founder__media" aria-hidden="true">
-        <div class="qi-about-founder__media-circle"></div>
-        <div class="qi-about-founder__media-frame"></div>
+    <div class="qi-about-founder__media">
+        <img src="' . $about_founder_image . '" alt="Shobhna S Kumar, founder of Queer Ink"/>
     </div>
     <div class="qi-about-founder__body">
         <h2>Shobhna S Kumar — founder.</h2>
@@ -1082,6 +1085,164 @@ HTML
     <div class="qi-stay-loop__note">
         <p>No newsletters.<br>No spam.<br>Just what matters.</p>
         <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'heart' ) . '</div>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/connect-hero',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Connect Hero', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => <<<HTML
+<!-- wp:group {"className":"qi-pub-hero qi-connect-hero"} -->
+<div class="wp-block-group qi-pub-hero qi-connect-hero"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
+<p class="hero__eyebrow">CONNECT WITH QUEER INK</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading">Let's connect. Let's create <span style="color:#c0185b">change.</span></h1>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Queer Ink is a relationship-centred initiative. We welcome conversations, collaborations, contributions and community.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:image {"className":"qi-pub-hero__image qi-connect-hero__image"} -->
+<figure class="wp-block-image qi-pub-hero__image qi-connect-hero__image"><img src="{$connect_hero_image}" alt="People connecting with Queer Ink"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
+<!-- /wp:group -->
+HTML
+                ,
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/connect-contact',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Connect Contact', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-connect-contact">
+    <div class="qi-connect-card qi-connect-form">
+        <h2>Send us a message</h2>
+        <p>We read every message. We\'ll get back to you as soon as we can.</p>
+        <form class="qi-connect-form__form" method="post" action="">
+            <div class="qi-connect-form__row">
+                <div class="qi-connect-form__field">
+                    <label class="screen-reader-text" for="qi-connect-name">Your Name</label>
+                    <input type="text" id="qi-connect-name" name="your-name" placeholder="Your Name" autocomplete="name" required>
+                </div>
+                <div class="qi-connect-form__field">
+                    <label class="screen-reader-text" for="qi-connect-email">Your Email</label>
+                    <input type="email" id="qi-connect-email" name="your-email" placeholder="Your Email" autocomplete="email" required>
+                </div>
+            </div>
+            <div class="qi-connect-form__field">
+                <label class="screen-reader-text" for="qi-connect-subject">What is this regarding?</label>
+                <select id="qi-connect-subject" name="subject">
+                    <option value="">What is this regarding?</option>
+                    <option value="general">General inquiry</option>
+                    <option value="collaboration">Collaboration</option>
+                    <option value="archive">Archive contribution</option>
+                    <option value="press">Press &amp; media</option>
+                    <option value="other">Something else</option>
+                </select>
+            </div>
+            <div class="qi-connect-form__field">
+                <label class="screen-reader-text" for="qi-connect-message">Your Message</label>
+                <textarea id="qi-connect-message" name="message" rows="5" placeholder="Your Message" required></textarea>
+            </div>
+            <label class="qi-connect-form__consent">
+                <input type="checkbox" name="consent" required>
+                <span>I agree to the <a href="#">Privacy Policy</a></span>
+            </label>
+            <button type="submit" class="button button--primary">Send Message</button>
+        </form>
+    </div>
+    <div class="qi-connect-card qi-connect-info">
+        <h2>Other ways to reach us</h2>
+        <div class="qi-connect-info__grid">
+            <div class="qi-connect-info__col">
+                <div class="qi-connect-info__item">
+                    <div class="qi-icon-circle">' . queer_ink_icon( 'mail' ) . '</div>
+                    <div>
+                        <strong>Email</strong>
+                        <p><a href="mailto:info@queer-ink.com">info@queer-ink.com</a></p>
+                    </div>
+                </div>
+                <div class="qi-connect-info__item">
+                    <div class="qi-icon-circle"><img src="' . esc_url( get_theme_file_uri( 'assets/images/social/instagram.png' ) ) . '" alt="" aria-hidden="true"></div>
+                    <div>
+                        <strong>Instagram</strong>
+                        <p><a href="https://instagram.com/queer.ink" target="_blank" rel="noreferrer noopener">@queer.ink</a></p>
+                    </div>
+                </div>
+                <div class="qi-connect-info__item">
+                    <div class="qi-icon-circle"><img src="' . esc_url( get_theme_file_uri( 'assets/images/social/facebook.png' ) ) . '" alt="" aria-hidden="true"></div>
+                    <div>
+                        <strong>Facebook</strong>
+                        <p><a href="https://facebook.com/queerinkbooks" target="_blank" rel="noreferrer noopener">@queerinkbooks</a></p>
+                    </div>
+                </div>
+                <div class="qi-connect-info__item">
+                    <div class="qi-icon-circle">' . queer_ink_icon( 'location' ) . '</div>
+                    <div>
+                        <strong>Based in Mumbai, India</strong>
+                        <p>Working with communities across India and beyond.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="qi-connect-info__col">
+                <div class="qi-connect-info__item">
+                    <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'clock' ) . '</div>
+                    <div>
+                        <strong>Our response time</strong>
+                        <p>We usually respond within 2–3 working days.</p>
+                    </div>
+                </div>
+                <div class="qi-connect-info__item">
+                    <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'globe' ) . '</div>
+                    <div>
+                        <strong>Languages</strong>
+                        <p>We communicate in English and Hindi. Some resources are available in other Indian languages.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/connect-together-cta',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Let\'s Build This Together CTA', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-cta-band">
+    <div class="qi-cta-band__decor qi-cta-band__decor--left" aria-hidden="true">
+        <span></span><span></span><span></span>
+    </div>
+    <div class="qi-cta-band__body">
+        <h2>Let\'s build this <span style="color:#c0185b">together.</span></h2>
+        <p>Queer Ink exists because of a community that believes in the power of stories, archives and knowledge to transform lives. Whether you have a story to share, a resource to offer, or an idea to explore — we\'d love to hear from you.</p>
+        <div class="qi-cta-band__actions">
+            <a class="button button--primary" href="mailto:info@queer-ink.com?subject=Share%20Your%20Story">Share Your Story</a>
+        </div>
+    </div>
+    <div class="qi-cta-band__decor qi-cta-band__decor--right" aria-hidden="true">
+        <span></span><span></span><span></span>
     </div>
 </div>
 <!-- /wp:html -->',

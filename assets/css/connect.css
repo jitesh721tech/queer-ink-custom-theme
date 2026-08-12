@@ -1,0 +1,218 @@
+/*
+ * Queer Ink Connect page styles.
+ * Targets the block content rendered inside the Connect page
+ * (see inc/block-patterns.php for the editable building blocks).
+ * The hero reuses .qi-pub-hero (publishing.css); icon circles reuse
+ * .qi-icon-circle (publishing.css); the closing CTA reuses .qi-cta-band
+ * (publishing.css); "Stay in the Loop" reuses the channel-band template
+ * part (template-parts/section-channel-band.php).
+ *
+ * @package Queer_Ink_Theme
+ */
+
+/* ---------------- Contact ---------------- */
+
+.qi-connect-contact {
+    display: grid;
+    grid-template-columns: minmax(0, 46%) minmax(0, 54%);
+    gap: 2rem;
+    padding: 3rem 0;
+    border-top: 1px solid #e5e2e2;
+}
+
+.qi-connect-card {
+    padding: 2.5rem;
+    background-color: #fff8fa;
+    border: 1px solid #e5e2e2;
+    border-radius: 16px;
+}
+
+.qi-connect-card h2 {
+    margin: 0 0 0.5rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.4rem;
+    color: #c0185b;
+    position: relative;
+    padding-bottom: 0.9rem;
+}
+
+.qi-connect-card h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background-color: #c0185b;
+}
+
+.qi-connect-card > p {
+    margin: 0 0 1.5rem;
+    color: #4a4a4a;
+    line-height: 1.6;
+    font-size: 0.92rem;
+}
+
+/* Send us a message */
+
+.qi-connect-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.qi-connect-form__field {
+    margin-bottom: 1rem;
+}
+
+.qi-connect-form input[type="text"],
+.qi-connect-form input[type="email"],
+.qi-connect-form select,
+.qi-connect-form textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e2e2;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #1a1a1a;
+    background-color: #ffffff;
+}
+
+.qi-connect-form textarea {
+    resize: vertical;
+    min-height: 130px;
+}
+
+.qi-connect-form input:focus,
+.qi-connect-form select:focus,
+.qi-connect-form textarea:focus {
+    outline: 2px solid #c0185b;
+    outline-offset: 1px;
+}
+
+.qi-connect-form__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin: 0.25rem 0 1.5rem;
+    font-size: 0.85rem;
+    color: #4a4a4a;
+    cursor: pointer;
+}
+
+.qi-connect-form__consent input {
+    margin-top: 0.2rem;
+}
+
+.qi-connect-form__consent a {
+    color: #c0185b;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* Other ways to reach us */
+
+.qi-connect-info__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 55%) minmax(0, 45%);
+    gap: 1.5rem;
+}
+
+.qi-connect-info__col {
+    padding-right: 1rem;
+    border-right: 1px solid #e5e2e2;
+}
+
+.qi-connect-info__col:last-child {
+    padding-right: 0;
+    padding-left: 1rem;
+    border-right: none;
+}
+
+.qi-connect-info__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.qi-connect-info__item:last-child {
+    margin-bottom: 0;
+}
+
+.qi-connect-info__item .qi-icon-circle {
+    width: 40px;
+    height: 40px;
+}
+
+.qi-connect-info__item .qi-icon-circle img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.qi-connect-info__item strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.92rem;
+    color: #1a1a1a;
+}
+
+.qi-connect-info__item p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: #4a4a4a;
+}
+
+.qi-connect-info__item p a {
+    color: #4a4a4a;
+    text-decoration: none;
+}
+
+.qi-connect-info__item p a:hover {
+    color: #c0185b;
+}
+
+/* ---------------- Tablet ---------------- */
+
+@media (max-width: 980px) {
+    .qi-connect-contact {
+        grid-template-columns: 1fr;
+    }
+
+    .qi-connect-info__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .qi-connect-info__col {
+        padding-right: 0;
+        border-right: none;
+        border-bottom: 1px solid #e5e2e2;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .qi-connect-info__col:last-child {
+        padding-left: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+}
+
+/* ---------------- Mobile ---------------- */
+
+@media (max-width: 680px) {
+    .qi-connect-contact {
+        padding: 2.5rem 0;
+    }
+
+    .qi-connect-card {
+        padding: 1.75rem;
+    }
+
+    .qi-connect-form__row {
+        grid-template-columns: 1fr;
+    }
+}
