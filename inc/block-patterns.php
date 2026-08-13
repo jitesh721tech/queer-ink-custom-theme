@@ -44,6 +44,35 @@ if ( ! function_exists( 'queer_ink_icon' ) ) {
     }
 }
 
+if ( ! function_exists( 'queer_ink_pride_heart_svg' ) ) {
+    /**
+     * Small rainbow-gradient heart used in the Publishing Pathway band's
+     * "Your work. Your legacy..." tagline (matches the stitch-reference
+     * pride-flag heart art).
+     */
+    function queer_ink_pride_heart_svg() {
+        return '<svg viewBox="0 0 32 28" aria-hidden="true" focusable="false"><defs><linearGradient id="qiPrideHeart" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e40303"/><stop offset="16.6%" stop-color="#e40303"/><stop offset="16.6%" stop-color="#ff8c00"/><stop offset="33.3%" stop-color="#ff8c00"/><stop offset="33.3%" stop-color="#ffed00"/><stop offset="50%" stop-color="#ffed00"/><stop offset="50%" stop-color="#008026"/><stop offset="66.6%" stop-color="#008026"/><stop offset="66.6%" stop-color="#004dff"/><stop offset="83.3%" stop-color="#004dff"/><stop offset="83.3%" stop-color="#750787"/><stop offset="100%" stop-color="#750787"/></linearGradient></defs><path fill="url(#qiPrideHeart)" d="M16 26.5C16 26.5 2 17.8 2 8.8 2 4 6 1 10.2 1 13.4 1 15.4 2.9 16 5.4 16.6 2.9 18.6 1 21.8 1 26 1 30 4 30 8.8 30 17.8 16 26.5 16 26.5Z"/></svg>';
+    }
+}
+
+if ( ! function_exists( 'queer_ink_sparkle_svg' ) ) {
+    function queer_ink_sparkle_svg() {
+        return '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 0 14 10 24 12 14 14 12 24 10 14 0 12 10 10Z"/></svg>';
+    }
+}
+
+if ( ! function_exists( 'queer_ink_books_illustration_svg' ) ) {
+    /**
+     * Small flat-style "stack of books + potted plant" illustration used to
+     * bookend the Publishing page's "Ready to begin?" band (matches the
+     * stitch-reference art). The right-hand placement mirrors this same
+     * markup with a CSS scaleX(-1) rather than a second SVG.
+     */
+    function queer_ink_books_illustration_svg() {
+        return '<svg viewBox="0 0 140 110" aria-hidden="true" focusable="false"><ellipse cx="14" cy="101" rx="15" ry="4" fill="#f1d9df"/><path d="M8 78c-3-8 1-16 6-16s9 8 6 16" fill="none" stroke="#7a9e6b" stroke-width="2.5" stroke-linecap="round"/><path d="M14 62c-2-9 3-15 3-15s5 6 3 15" fill="none" stroke="#7a9e6b" stroke-width="2.5" stroke-linecap="round"/><rect x="2" y="76" width="24" height="6" rx="2" fill="#e3355e"/><rect x="4" y="78" width="20" height="19" rx="3" fill="#c4033f"/><rect x="26" y="88" width="46" height="10" rx="2" fill="#f4b183"/><rect x="30" y="78" width="40" height="10" rx="2" fill="#f6d9a6"/><rect x="34" y="68" width="34" height="10" rx="2" fill="#e39ab0"/><rect x="72" y="14" width="34" height="84" rx="3" fill="#8f6fce"/><rect x="72" y="14" width="8" height="84" rx="3" fill="#7658b3"/><circle cx="93" cy="34" r="7" fill="#fbe9c8"/><path d="M89 34l3 3 5-6" stroke="#8f6fce" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    }
+}
+
 if ( ! function_exists( 'queer_ink_kses_allow_icon_svg' ) ) {
     /**
      * Allows the inline <svg> icons emitted by queer_ink_icon() to survive
@@ -74,13 +103,25 @@ if ( ! function_exists( 'queer_ink_kses_allow_icon_svg' ) ) {
             'focusable'         => true,
         );
         $tags['path'] = array(
-            'd'    => true,
-            'fill' => true,
+            'd'                 => true,
+            'fill'              => true,
+            'stroke'            => true,
+            'stroke-width'      => true,
+            'stroke-linecap'    => true,
+            'stroke-linejoin'   => true,
         );
         $tags['circle'] = array(
-            'cx' => true,
-            'cy' => true,
-            'r'  => true,
+            'cx'   => true,
+            'cy'   => true,
+            'r'    => true,
+            'fill' => true,
+        );
+        $tags['ellipse'] = array(
+            'cx'   => true,
+            'cy'   => true,
+            'rx'   => true,
+            'ry'   => true,
+            'fill' => true,
         );
         $tags['rect'] = array(
             'x'      => true,
@@ -88,6 +129,20 @@ if ( ! function_exists( 'queer_ink_kses_allow_icon_svg' ) ) {
             'width'  => true,
             'height' => true,
             'rx'     => true,
+            'fill'   => true,
+        );
+        $tags['defs']         = array();
+        $tags['lineargradient'] = array(
+            'id' => true,
+            'x1' => true,
+            'y1' => true,
+            'x2' => true,
+            'y2' => true,
+        );
+        $tags['stop'] = array(
+            'offset'      => true,
+            'stop-color'  => true,
+            'stop-opacity' => true,
         );
 
         return $tags;
@@ -107,7 +162,6 @@ add_action( 'init', 'queer_ink_register_block_pattern_category' );
 if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
     function queer_ink_register_block_patterns() {
 
-        $placeholder_image = esc_url( get_theme_file_uri( 'assets/images/hero/hero_page_image.jpeg' ) );
         $publishing_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/publishing_hero.png' ) );
         $publishing_hero_bg_image = esc_url( get_theme_file_uri( 'assets/images/hero/publishing_hero_bg.jpg' ) );
         $archiving_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/archiving_hero.png' ) );
@@ -168,48 +222,91 @@ HTML
         );
 
         register_block_pattern(
-            'queer-ink/publishing-pathways',
+            'queer-ink/publishing-from-archives',
             array(
-                'title'      => esc_html__( 'Queer Ink: Two Pathways', 'queer-ink-theme' ),
+                'title'      => esc_html__( 'Queer Ink: From the Archives', 'queer-ink-theme' ),
                 'categories' => array( 'queer-ink' ),
-                'content'    => '<!-- wp:heading {"textAlign":"center","anchor":"pathways"} -->
-<h2 id="pathways" class="wp-block-heading has-text-align-center">Two pathways, <span style="color:#c0185b">One purpose.</span></h2>
+                'content'    => '<!-- wp:heading {"textAlign":"center","anchor":"pathways","className":"qi-pathways-heading"} -->
+<h2 id="pathways" class="wp-block-heading has-text-align-center qi-pathways-heading">Two pathways, <span style="color:#c0185b">One purpose.</span></h2>
 <!-- /wp:heading -->
 
 <!-- wp:html -->
-<div class="qi-pathway-row">
-    <div class="qi-pathway-card qi-pathway-card--archives">
+<div class="qi-archives-band">
+    <div class="qi-archives-band__content">
         <div class="qi-icon-circle">' . queer_ink_icon( 'archive' ) . '</div>
         <p class="hero__eyebrow">PUBLISHING</p>
-        <h3>From the Archives</h3>
+        <h2>From the Archives</h2>
         <p>We transform carefully curated archival collections into books that preserve and share the histories of queer lives, communities, and movements in India.</p>
         <p>These publications draw on oral histories, manuscripts, photographs, correspondence, organisational records, and other archival materials—making them accessible to readers, educators, researchers, and future generations.</p>
-        <a class="qi-pathway-card__link" href="' . $url_books . '">Explore Archive Publications →</a>
-        <div class="qi-pathway-card__media"><img src="' . $placeholder_image . '" alt="Placeholder — replace with a photo of archival material"/></div>
+        <a class="qi-archives-band__link" href="' . $url_books . '">Explore Archive Publications →</a>
     </div>
-    <div class="qi-pathway-card qi-pathway-card--process">
-        <div class="qi-pathway-card__head">
-            <div>
-                <p class="hero__eyebrow">PUBLISHING PATHWAY</p>
-                <h3>Creative Autonomy <em>through</em> Financial Independence</h3>
-                <p>You write. We walk with you. You remain in charge.</p>
+    <div class="qi-archives-band__media">
+        <span class="qi-archives-band__decor qi-archives-band__decor--tr" aria-hidden="true"></span>
+        <span class="qi-archives-band__decor qi-archives-band__decor--bl" aria-hidden="true"></span>
+        <img src="' . $archiving_hero_image . '" alt="Letters, photographs and ephemera from the Queer India Archives"/>
+    </div>
+</div>
+<!-- /wp:html -->',
+            )
+        );
+
+        register_block_pattern(
+            'queer-ink/publishing-pathway-band',
+            array(
+                'title'      => esc_html__( 'Queer Ink: Publishing Pathway', 'queer-ink-theme' ),
+                'categories' => array( 'queer-ink' ),
+                'content'    => '<!-- wp:html -->
+<div class="qi-pathway-band">
+    <span class="qi-pathway-band__dots" aria-hidden="true"></span>
+    <div class="qi-pathway-band__top">
+        <div class="qi-pathway-band__intro">
+            <div class="qi-icon-circle qi-pathway-band__icon">' . queer_ink_icon( 'book' ) . '</div>
+            <div class="qi-pathway-band__intro-text">
+                <p class="qi-pathway-band__eyebrow">PUBLISHING PATHWAY</p>
+                <h2 class="qi-pathway-band__heading">Creative Autonomy <em>through</em> Financial Independence</h2>
+                <p class="qi-pathway-band__subtext">You write. We walk with you. You remain in charge.</p>
             </div>
-            <a class="button button--outline qi-pathway-card__cta" href="#">Start Your Publishing Journey →</a>
         </div>
-        <div class="qi-process-steps">
-            <div class="qi-process-step"><div class="qi-icon-circle">' . queer_ink_icon( 'lightbulb' ) . '</div><h4>Your Story Matters</h4><p>Every story holds value and deserves to be seen.</p></div>
-            <div class="qi-process-step__arrow" aria-hidden="true">→</div>
-            <div class="qi-process-step"><div class="qi-icon-circle">' . queer_ink_icon( 'pencil' ) . '</div><h4>We Shape Your Book</h4><p>Professional editing, design and production that reflect your voice and vision.</p></div>
-            <div class="qi-process-step__arrow" aria-hidden="true">→</div>
-            <div class="qi-process-step"><div class="qi-icon-circle">' . queer_ink_icon( 'shield' ) . '</div><h4>You Own Your Rights</h4><p>You retain full rights to your work. Always.</p></div>
-            <div class="qi-process-step__arrow" aria-hidden="true">→</div>
-            <div class="qi-process-step"><div class="qi-icon-circle">' . queer_ink_icon( 'rupee' ) . '</div><h4>You Earn Your Royalties</h4><p>Transparent royalties, fair terms and financial independence.</p></div>
-            <div class="qi-process-step__arrow" aria-hidden="true">→</div>
-            <div class="qi-process-step"><div class="qi-icon-circle">' . queer_ink_icon( 'megaphone' ) . '</div><h4>You Sustain Your Voice</h4><p>We support your journey so your voice reaches further.</p></div>
+        <a class="qi-pathway-band__cta" href="#">Start Your Publishing Journey <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="qi-pathway-band__row">
+        <div class="qi-pathway-band__steps">
+            <div class="qi-pathway-step">
+                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'lightbulb' ) . '</div>
+                <h3>Your Story Matters</h3>
+                <p>Every story holds value and deserves to be seen.</p>
+            </div>
+            <span class="qi-pathway-step__arrow" aria-hidden="true">→</span>
+            <div class="qi-pathway-step">
+                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'pencil' ) . '</div>
+                <h3>We Shape Your Book</h3>
+                <p>Professional editing, design and production that reflect your voice and vision.</p>
+            </div>
+            <span class="qi-pathway-step__arrow" aria-hidden="true">→</span>
+            <div class="qi-pathway-step">
+                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'shield' ) . '</div>
+                <h3>You Own Your Rights</h3>
+                <p>You retain full rights to your work. Always.</p>
+            </div>
+            <span class="qi-pathway-step__arrow" aria-hidden="true">→</span>
+            <div class="qi-pathway-step">
+                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'rupee' ) . '</div>
+                <h3>You Earn Your Royalties</h3>
+                <p>Transparent royalties, fair terms and financial independence.</p>
+            </div>
+            <span class="qi-pathway-step__arrow" aria-hidden="true">→</span>
+            <div class="qi-pathway-step">
+                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'megaphone' ) . '</div>
+                <h3>You Sustain Your Voice</h3>
+                <p>We support your journey so your voice reaches further.</p>
+            </div>
         </div>
-        <div class="qi-pathway-card__tagline">
-            <div class="qi-icon-circle qi-icon-circle--accent">' . queer_ink_icon( 'heart' ) . '</div>
+        <span class="qi-pathway-band__divider" aria-hidden="true"></span>
+        <div class="qi-pathway-band__tagline">
+            <div class="qi-pathway-band__heart">' . queer_ink_pride_heart_svg() . '</div>
             <p>Your work.<br>Your legacy.<br>Your future.<br><span>On your terms.</span></p>
+            <span class="qi-pathway-band__sparkle qi-pathway-band__sparkle--a">' . queer_ink_sparkle_svg() . '</span>
+            <span class="qi-pathway-band__sparkle qi-pathway-band__sparkle--b">' . queer_ink_sparkle_svg() . '</span>
         </div>
     </div>
 </div>
@@ -223,8 +320,8 @@ HTML
                 'title'      => esc_html__( 'Queer Ink: Our Current List', 'queer-ink-theme' ),
                 'categories' => array( 'queer-ink' ),
                 'content'    => '<!-- wp:group {"className":"qi-current-list"} -->
-<div class="wp-block-group qi-current-list"><!-- wp:group {"className":"qi-current-list__header"} -->
-<div class="wp-block-group qi-current-list__header"><!-- wp:heading -->
+<div class="wp-block-group qi-current-list"><!-- wp:group {"className":"qi-current-list__header qi-current-list__header--centered"} -->
+<div class="wp-block-group qi-current-list__header qi-current-list__header--centered"><!-- wp:heading -->
 <h2 class="wp-block-heading">Our Current List</h2>
 <!-- /wp:heading -->
 
@@ -233,9 +330,19 @@ HTML
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
+<!-- wp:html -->
+<div class="qi-book-carousel">
+    <button type="button" class="qi-book-carousel__nav qi-book-carousel__nav--prev" data-scroll-prev aria-label="Scroll to previous books">‹</button>
+    <!-- /wp:html -->
+
 <!-- wp:shortcode -->
-[qi_latest_books]
-<!-- /wp:shortcode --></div>
+[qi_latest_books count="8" layout="carousel"]
+<!-- /wp:shortcode -->
+
+<!-- wp:html -->
+    <button type="button" class="qi-book-carousel__nav qi-book-carousel__nav--next" data-scroll-next aria-label="Scroll to more books">›</button>
+</div>
+<!-- /wp:html --></div>
 <!-- /wp:group -->',
             )
         );
@@ -289,9 +396,9 @@ HTML
                 'title'      => esc_html__( 'Queer Ink: Ready to Begin CTA', 'queer-ink-theme' ),
                 'categories' => array( 'queer-ink' ),
                 'content'    => '<!-- wp:html -->
-<div class="qi-cta-band">
+<div class="qi-cta-band qi-cta-band--illustrated">
     <div class="qi-cta-band__decor qi-cta-band__decor--left" aria-hidden="true">
-        <span></span><span></span><span></span>
+        <span class="qi-cta-band__illustration">' . queer_ink_books_illustration_svg() . '</span>
     </div>
     <div class="qi-cta-band__body">
         <h2>Ready to begin?</h2>
@@ -302,7 +409,7 @@ HTML
         </div>
     </div>
     <div class="qi-cta-band__decor qi-cta-band__decor--right" aria-hidden="true">
-        <span></span><span></span><span></span>
+        <span class="qi-cta-band__illustration">' . queer_ink_books_illustration_svg() . '</span>
     </div>
 </div>
 <!-- /wp:html -->',

@@ -8,8 +8,15 @@
 if ( ! function_exists( 'queer_ink_latest_books_shortcode' ) ) {
     function queer_ink_latest_books_shortcode( $atts ) {
         $atts = shortcode_atts( array(
-            'count' => 8,
+            'count'  => 8,
+            // 'grid' (default, unchanged) renders the plain teaser grid used
+            // by Digital Library and Archiving. 'carousel' opts a single
+            // placement (the Publishing page) into the horizontal scroller
+            // card design without touching any other usage of this shortcode.
+            'layout' => 'grid',
         ), $atts, 'qi_latest_books' );
+
+        $is_carousel = ( 'carousel' === $atts['layout'] );
 
         $books = new WP_Query( array(
             'post_type'      => 'qi_book',
@@ -22,10 +29,12 @@ if ( ! function_exists( 'queer_ink_latest_books_shortcode' ) ) {
         ob_start();
 
         if ( $books->have_posts() ) {
-            echo '<div class="publishing-grid publishing-grid--current-list">';
+            echo $is_carousel
+                ? '<div class="qi-book-carousel__track" data-scroller>'
+                : '<div class="publishing-grid publishing-grid--current-list">';
             while ( $books->have_posts() ) {
                 $books->the_post();
-                get_template_part( 'template-parts/content', 'qi_book' );
+                get_template_part( 'template-parts/content', $is_carousel ? 'qi_book-carousel' : 'qi_book' );
             }
             echo '</div>';
         } else {
