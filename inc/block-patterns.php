@@ -44,6 +44,57 @@ if ( ! function_exists( 'queer_ink_icon' ) ) {
     }
 }
 
+if ( ! function_exists( 'queer_ink_kses_allow_icon_svg' ) ) {
+    /**
+     * Allows the inline <svg> icons emitted by queer_ink_icon() to survive
+     * wp_kses_post()/wp_filter_post_kses() for editors without the
+     * unfiltered_html capability (e.g. any save that runs without a logged-in
+     * admin user context). Without this, WordPress's default post allowlist
+     * silently strips <svg>/<path>/<circle>/<rect> on save — which is exactly
+     * what happened to every icon on the Publishing page (see the qi-icon-circle
+     * fix in the Publishing UI pass: the saved content matched the source
+     * patterns byte-for-byte except every icon's <svg> was missing).
+     */
+    function queer_ink_kses_allow_icon_svg( $tags, $context ) {
+        if ( 'post' !== $context ) {
+            return $tags;
+        }
+
+        $tags['svg'] = array(
+            'class'             => true,
+            'width'             => true,
+            'height'            => true,
+            'viewbox'           => true,
+            'fill'              => true,
+            'stroke'            => true,
+            'stroke-width'      => true,
+            'stroke-linecap'    => true,
+            'stroke-linejoin'   => true,
+            'aria-hidden'       => true,
+            'focusable'         => true,
+        );
+        $tags['path'] = array(
+            'd'    => true,
+            'fill' => true,
+        );
+        $tags['circle'] = array(
+            'cx' => true,
+            'cy' => true,
+            'r'  => true,
+        );
+        $tags['rect'] = array(
+            'x'      => true,
+            'y'      => true,
+            'width'  => true,
+            'height' => true,
+            'rx'     => true,
+        );
+
+        return $tags;
+    }
+}
+add_filter( 'wp_kses_allowed_html', 'queer_ink_kses_allow_icon_svg', 10, 2 );
+
 if ( ! function_exists( 'queer_ink_register_block_pattern_category' ) ) {
     function queer_ink_register_block_pattern_category() {
         register_block_pattern_category( 'queer-ink', array(
@@ -58,6 +109,7 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
 
         $placeholder_image = esc_url( get_theme_file_uri( 'assets/images/hero/hero_page_image.jpeg' ) );
         $publishing_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/publishing_hero.png' ) );
+        $publishing_hero_bg_image = esc_url( get_theme_file_uri( 'assets/images/hero/publishing_hero_bg.jpg' ) );
         $archiving_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/archiving_hero.png' ) );
         $digital_library_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/digital_library_hero.png' ) );
         $qi_journal_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/qi_journal_hero.png' ) );
@@ -84,9 +136,7 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
                 'categories' => array( 'queer-ink' ),
                 'content'    => <<<HTML
 <!-- wp:group {"className":"qi-pub-hero"} -->
-<div class="wp-block-group qi-pub-hero"><!-- wp:columns -->
-<div class="wp-block-columns"><!-- wp:column -->
-<div class="wp-block-column"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
+<div class="wp-block-group qi-pub-hero" style="background-image:url({$publishing_hero_bg_image})"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
 <p class="hero__eyebrow">PUBLISHING</p>
 <!-- /wp:paragraph -->
 
@@ -111,14 +161,6 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
 <div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="#pathways">Our Publishing Approach</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
-<!-- /wp:column -->
-
-<!-- wp:column -->
-<div class="wp-block-column"><!-- wp:image {"className":"qi-pub-hero__image"} -->
-<figure class="wp-block-image qi-pub-hero__image"><img src="{$publishing_hero_image}" alt="Queer Ink published books"/></figure>
-<!-- /wp:image --></div>
-<!-- /wp:column --></div>
-<!-- /wp:columns --></div>
 <!-- /wp:group -->
 HTML
                 ,

@@ -6,9 +6,53 @@
 
 :root {
     color-scheme: light;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background-color: #fafafa;
-    color: #1a1a1a;
+
+    /* ---------------- Typography (local/system stacks — no external fonts yet) ---------------- */
+    --qi-font-serif: Georgia, 'Times New Roman', serif;
+    --qi-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+    /* ---------------- Color: editorial crimson + warm blush surfaces ---------------- */
+    --qi-color-primary: #7a002a;
+    --qi-color-primary-hover: #63001f;
+    --qi-color-primary-container: #a0153e;
+    --qi-color-on-primary: #ffffff;
+
+    --qi-color-surface: #fff8f7;
+    --qi-color-surface-dim: #edd4d6;
+    --qi-color-surface-lowest: #ffffff;
+    --qi-color-surface-low: #fff0f1;
+    --qi-color-surface-container: #ffe9ea;
+    --qi-color-surface-high: #fbe2e4;
+    --qi-color-surface-highest: #f6ddde;
+
+    --qi-color-ink: #25181a;
+    --qi-color-ink-variant: #584143;
+    --qi-color-outline: #8c7073;
+    --qi-color-outline-variant: #e0bec1;
+
+    --qi-color-inverse-surface: #3c2d2e;
+    --qi-color-inverse-on-surface: #ffeced;
+
+    /* ---------------- Shape ---------------- */
+    --qi-radius-sm: 4px;
+    --qi-radius-md: 8px;
+    --qi-radius-lg: 12px;
+    --qi-radius-xl: 16px;
+    --qi-radius-2xl: 24px;
+    --qi-radius-full: 9999px;
+
+    /* ---------------- Elevation ---------------- */
+    --qi-shadow-card: 0 4px 20px rgba(37, 24, 26, 0.06);
+    --qi-shadow-hover: 0 10px 28px rgba(122, 0, 42, 0.14);
+
+    /* ---------------- Spacing rhythm ---------------- */
+    --qi-space-unit: 8px;
+    --qi-space-section: 5rem;
+    --qi-space-section-sm: 4rem;
+
+    font-family: var(--qi-font-sans);
+    background-color: var(--qi-color-surface);
+    color: var(--qi-color-ink);
 }
 
 html {
@@ -23,7 +67,7 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.5;
-    background-color: var(--background-color, #fafafa);
+    background-color: var(--qi-color-surface);
     overflow-x: hidden;
 }
 
@@ -91,7 +135,7 @@ button {
 
 .entry-header {
     padding: 3.2rem 0 2rem;
-    border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+    border-bottom: 1px solid var(--qi-color-outline-variant);
     margin-bottom: 2.5rem;
 }
 
@@ -101,15 +145,15 @@ button {
     line-height: 1.1;
     font-weight: 700;
     letter-spacing: -0.02em;
-    font-family: Georgia, 'Times New Roman', serif;
-    color: #1a1a1a;
+    font-family: var(--qi-font-serif);
+    color: var(--qi-color-ink);
 }
 
 .entry-content {
     max-width: 44rem;
     font-size: 1rem;
     line-height: 1.8;
-    color: #4a4a4a;
+    color: var(--qi-color-ink-variant);
 }
 
 .entry-content p {
@@ -125,4 +169,88 @@ button {
         padding: 2.5rem 0 1.5rem;
         margin-bottom: 2rem;
     }
+}
+
+/* ================================================================
+   Shared UI primitives
+   Used across the homepage and every editorial landing page's block
+   patterns (Publishing, Archiving, Digital Library, QI Journal,
+   About, Connect). Kept here — not per-page files — since they are
+   genuinely global components.
+   ================================================================ */
+
+/* ---------------- Eyebrow / label ---------------- */
+/* Uppercase category label used above hero headings and section intros. */
+.hero__eyebrow {
+    margin: 0 0 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--qi-color-primary-container);
+}
+
+/* ---------------- Buttons ---------------- */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.95rem 1.75rem;
+    border-radius: var(--qi-radius-full);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    line-height: 1.2;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button--primary {
+    background-color: var(--qi-color-primary);
+    color: var(--qi-color-on-primary);
+    border: 1px solid var(--qi-color-primary);
+}
+
+.button--primary:hover,
+.button--primary:focus-visible {
+    background-color: var(--qi-color-primary-hover);
+    border-color: var(--qi-color-primary-hover);
+}
+
+.button--outline {
+    border: 1px solid var(--qi-color-ink);
+    color: var(--qi-color-ink);
+    background: transparent;
+}
+
+.button--outline:hover,
+.button--outline:focus-visible {
+    border-color: var(--qi-color-primary);
+    color: var(--qi-color-primary);
+    background-color: var(--qi-color-surface-low);
+}
+
+/* ---------------- Icon circle badge ---------------- */
+/* Wraps queer_ink_icon() SVGs across every landing page's card/step components. */
+.qi-icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: var(--qi-radius-full);
+    background-color: var(--qi-color-surface-high);
+    color: var(--qi-color-primary);
+}
+
+.qi-icon-circle--accent {
+    background-color: var(--qi-color-primary);
+    color: var(--qi-color-on-primary);
+}
+
+.qi-icon-circle .qi-icon {
+    width: 22px;
+    height: 22px;
 }

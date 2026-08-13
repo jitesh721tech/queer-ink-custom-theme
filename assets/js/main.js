@@ -82,6 +82,17 @@
 
         var openSearch = function () {
             searchPanel.hidden = false;
+
+            var toggleRect = searchToggle.getBoundingClientRect();
+            var panelWidth = searchPanel.offsetWidth;
+            var spaceRight = window.innerWidth - toggleRect.right;
+
+            if ( spaceRight >= panelWidth + 24 ) {
+                searchPanel.classList.add( 'header-search-panel--right' );
+            } else {
+                searchPanel.classList.remove( 'header-search-panel--right' );
+            }
+
             searchToggle.setAttribute( 'aria-expanded', 'true' );
             if ( searchInput ) {
                 searchInput.focus();
