@@ -232,3 +232,81 @@ if ( ! function_exists( 'queer_ink_book_admin_column_content' ) ) {
     }
 }
 add_action( 'manage_qi_book_posts_custom_column', 'queer_ink_book_admin_column_content', 10, 2 );
+
+/**
+ * Timeline entry "Year" meta box — the one field the qi_timeline CPT
+ * needs that isn't already covered by title/editor/excerpt/thumbnail.
+ * Mirrors the qi_book PDF meta box's nonce/capability/save shape above.
+ */
+
+if ( ! function_exists( 'queer_ink_register_timeline_meta_box' ) ) {
+    function queer_ink_register_timeline_meta_box( $post_type ) {
+        add_meta_box(
+            'qi_timeline_year',
+            esc_html__( 'Year', 'queer-ink-theme' ),
+            'queer_ink_render_timeline_meta_box',
+            'qi_timeline',
+            'side',
+            'default'
+        );
+    }
+}
+// Scoped to add_meta_boxes_qi_timeline (not the generic add_meta_boxes
+// hook) so this only ever runs on the Timeline Entry screen.
+add_action( 'add_meta_boxes_qi_timeline', 'queer_ink_register_timeline_meta_box' );
+
+if ( ! function_exists( 'queer_ink_render_timeline_meta_box' ) ) {
+    function queer_ink_render_timeline_meta_box( $post ) {
+        wp_nonce_field( 'queer_ink_save_timeline_meta', 'queer_ink_timeline_meta_nonce' );
+
+        $year = get_post_meta( $post->ID, '_qi_timeline_year', true );
+        ?>
+        <p>
+            <label for="qi_timeline_year"><strong><?php esc_html_e( 'Year', 'queer-ink-theme' ); ?></strong></label><br>
+            <input type="number" id="qi_timeline_year" name="qi_timeline_year" class="widefat" value="<?php echo esc_attr( $year ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1994', 'queer-ink-theme' ); ?>">
+        </p>
+        <p class="description"><?php esc_html_e( 'Shown as the year marker on the timeline. Entries are ordered by this value.', 'queer-ink-theme' ); ?></p>
+        <?php
+    }
+}
+
+if ( ! function_exists( 'queer_ink_save_timeline_meta' ) ) {
+    function queer_ink_save_timeline_meta( $post_id ) {
+        if ( ! isset( $_POST['queer_ink_timeline_meta_nonce'] ) || ! wp_verify_nonce( $_POST['queer_ink_timeline_meta_nonce'], 'queer_ink_save_timeline_meta' ) ) {
+            return;
+        }
+
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
+        }
+
+        if ( isset( $_POST['qi_timeline_year'] ) ) {
+            update_post_meta( $post_id, '_qi_timeline_year', absint( $_POST['qi_timeline_year'] ) );
+        }
+    }
+}
+add_action( 'save_post_qi_timeline', 'queer_ink_save_timeline_meta' );
+
+if ( ! function_exists( 'queer_ink_timeline_admin_columns' ) ) {
+    function queer_ink_timeline_admin_columns( $columns ) {
+        $columns['qi_timeline_year'] = esc_html__( 'Year', 'queer-ink-theme' );
+        return $columns;
+    }
+}
+add_filter( 'manage_qi_timeline_posts_columns', 'queer_ink_timeline_admin_columns' );
+
+if ( ! function_exists( 'queer_ink_timeline_admin_column_content' ) ) {
+    function queer_ink_timeline_admin_column_content( $column, $post_id ) {
+        if ( 'qi_timeline_year' !== $column ) {
+            return;
+        }
+
+        $year = get_post_meta( $post_id, '_qi_timeline_year', true );
+        echo $year ? esc_html( $year ) : esc_html__( '—', 'queer-ink-theme' );
+    }
+}
+add_action( 'manage_qi_timeline_posts_custom_column', 'queer_ink_timeline_admin_column_content', 10, 2 );

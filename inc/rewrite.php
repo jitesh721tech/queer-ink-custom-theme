@@ -7,7 +7,7 @@
 
 if ( ! function_exists( 'queer_ink_maybe_flush_rewrite_rules' ) ) {
     function queer_ink_maybe_flush_rewrite_rules() {
-        $version = '4';
+        $version = '6';
 
         if ( get_option( 'queer_ink_rewrite_version' ) !== $version ) {
             flush_rewrite_rules();

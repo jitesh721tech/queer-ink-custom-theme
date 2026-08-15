@@ -6,6 +6,17 @@
  * @package Queer_Ink_Theme
  */
 
+/* ---------------- Smooth in-page anchor scroll ---------------- */
+/* Scoped to this page only (WordPress's page-id-11 body class) so the
+   hero's "Explore Publications" -> #current-list jump animates, without
+   changing scroll behavior anywhere else on the site. scroll-behavior
+   must live on the root (html) element to control the viewport's own
+   scrolling — body isn't the scrolling box in standards mode — so this
+   uses :has() to reach html from the page-specific body class. */
+html:has(body.page-id-11) {
+    scroll-behavior: smooth;
+}
+
 /* ---------------- Icon circle ---------------- */
 /* Sizing overrides only, per context — color/background come from the
    shared .qi-icon-circle primitive in style.css. (This file previously
@@ -174,8 +185,7 @@
 .qi-archives-band__media img {
     position: relative;
     z-index: 2;
-    width: 100%;
-    max-width: 420px;
+    width: 80%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
     object-position: 15% 78%;
@@ -505,6 +515,15 @@
 
 .qi-book-carousel__nav {
     flex-shrink: 0;
+    align-self: flex-start;
+    /* .qi-book-carousel used align-items: center, which centers against
+       the whole card (cover + title/author text below it), landing the
+       buttons visibly below the covers' own centre. Pinned to the top
+       and nudged down by roughly half the cover's height instead, so
+       they align with the covers specifically. Re-declared inside the
+       hover-capable media query below since that context adds extra
+       top padding to the track for the hover-zoom effect. */
+    margin-top: 116px;
     width: 40px;
     height: 40px;
     display: flex;
@@ -555,6 +574,20 @@
 /* 3D hover zoom — desktop/hover-capable pointers only, so it never gets
    stuck "on" from a tap on tablet/mobile. */
 @media (hover: hover) and (pointer: fine) {
+    /* Extra breathing room so the scaled cover (below) has space to grow
+       into instead of being clipped by the track's own horizontal
+       scrollbox — overflow-x: auto forces overflow-y to an effective
+       "auto" too, which otherwise clips anything past the track's edge.
+       Scoped to this media query so book spacing on touch devices (where
+       the zoom never triggers) is unaffected. */
+    .qi-book-carousel__track {
+        padding: 2.25rem 1rem 2rem;
+    }
+
+    .qi-book-carousel__nav {
+        margin-top: 136px;
+    }
+
     .qi-book-carousel__item:hover {
         z-index: 2;
     }
@@ -562,11 +595,6 @@
     .qi-book-carousel__item:hover .qi-book-carousel__cover {
         box-shadow: var(--qi-shadow-hover);
         transform: scale(1.08) translateY(-6px);
-    }
-
-    .qi-book-carousel__track:hover .qi-book-carousel__item:not(:hover) {
-        opacity: 0.55;
-        filter: blur(1.5px);
     }
 }
 
@@ -583,15 +611,16 @@
     background-color: var(--qi-color-surface-high);
 }
 
+/* Moved out of .qi-book-carousel__cover (was absolutely positioned over
+   the cover art, risking overlap with cover imagery/text) to a normal
+   block sitting above the title instead. */
 .qi-book-carousel__tag {
-    position: absolute;
-    top: 0.65rem;
-    left: 0.65rem;
-    z-index: 2;
-    max-width: calc(100% - 1.3rem);
+    display: inline-block;
+    max-width: 100%;
+    margin: 0 0 0.4rem;
     padding: 0.3rem 0.6rem;
-    background-color: rgba(255, 255, 255, 0.92);
-    color: var(--qi-color-ink-variant);
+    background-color: var(--qi-color-surface-high);
+    color: var(--qi-color-primary);
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -608,9 +637,13 @@
 }
 
 .qi-book-carousel__title {
-    margin: 0 0 0.25rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin: 0 0 0.3rem;
     font-family: var(--qi-font-serif);
-    font-size: 1rem;
+    font-size: 0.92rem;
     font-weight: 700;
     line-height: 1.35;
     color: var(--qi-color-ink);
@@ -627,7 +660,7 @@
 
 .qi-book-carousel__author {
     margin: 0;
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     color: var(--qi-color-ink-variant);
 }
 
@@ -654,6 +687,41 @@
     background-color: var(--qi-color-surface-low);
     border: 1px dashed var(--qi-color-outline-variant);
     border-radius: var(--qi-radius-lg);
+}
+
+/* Books archive/list page (/books/) — the raw qi_book CPT archive has no
+   grid wrapper of its own (archive.php renders the .book-card loop
+   straight into the shared .site-content used by every page/single/
+   search template), which is why covers rendered full-container-width.
+   Scoped via :has() so only this archive (the one whose direct children
+   include .book-card) picks up the grid — nothing else sharing
+   .site-content is touched. Mirrors the same 4/3/2/1-column pattern
+   already proven on .publishing-grid--current-list below. */
+.site-content:has(> .book-card) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem 1.75rem;
+    align-items: start;
+}
+
+.site-content:has(> .book-card) > .archive-header,
+.site-content:has(> .book-card) > .pagination {
+    grid-column: 1 / -1;
+}
+
+.archive-header {
+    margin: 1.5rem 0 2rem;
+}
+
+.archive-title {
+    margin: 0;
+    font-family: var(--qi-font-serif);
+    font-size: 2rem;
+    color: var(--qi-color-ink);
+}
+
+.archive-title span {
+    color: var(--qi-color-primary);
 }
 
 .book-card {
@@ -919,6 +987,7 @@
    and must not be affected). */
 .qi-cta-band--illustrated {
     background: linear-gradient(135deg, #fdf1f6 0%, #f6e8f5 100%);
+    margin-bottom: 2.5rem;
 }
 
 .qi-cta-band--illustrated .qi-cta-band__decor {
@@ -940,26 +1009,26 @@
 }
 
 .qi-cta-band--illustrated .button--primary {
-    background-color: #c4033f;
-    border-color: #c4033f;
+    background-color: var(--qi-color-primary);
+    border-color: var(--qi-color-primary);
 }
 
 .qi-cta-band--illustrated .button--primary:hover,
 .qi-cta-band--illustrated .button--primary:focus-visible {
-    background-color: #9c0332;
-    border-color: #9c0332;
+    background-color: var(--qi-color-primary-hover);
+    border-color: var(--qi-color-primary-hover);
 }
 
 .qi-cta-band--illustrated .button--outline {
-    border-color: #c4033f;
-    color: #c4033f;
+    border-color: var(--qi-color-primary);
+    color: var(--qi-color-primary);
     background-color: var(--qi-color-surface-lowest);
 }
 
 .qi-cta-band--illustrated .button--outline:hover,
 .qi-cta-band--illustrated .button--outline:focus-visible {
-    background-color: #c4033f;
-    border-color: #c4033f;
+    background-color: var(--qi-color-primary);
+    border-color: var(--qi-color-primary);
     color: var(--qi-color-surface-lowest);
 }
 
@@ -967,6 +1036,10 @@
 
 @media (max-width: 1200px) and (min-width: 981px) {
     .publishing-grid--current-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .site-content:has(> .book-card) {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
@@ -996,7 +1069,10 @@
     }
 
     .qi-book-carousel__track {
-        grid-auto-columns: minmax(0, 42%);
+        /* % inside grid-auto-columns is ambiguous in a horizontally
+           scrolling (overflow-x: auto) grid — same root cause fixed for
+           the Archiving timeline scroller; vw avoids the ambiguity. */
+        grid-auto-columns: minmax(160px, 42vw);
         gap: 1.25rem;
     }
 
@@ -1049,6 +1125,11 @@
 
     .publishing-grid--current-list {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .site-content:has(> .book-card) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
     }
 
     .qi-cta-band {
@@ -1162,7 +1243,8 @@
     }
 
     .qi-book-carousel__track {
-        grid-auto-columns: minmax(0, 58%);
+        /* Same % ambiguity fix as the tablet breakpoint above. */
+        grid-auto-columns: minmax(140px, 58vw);
         gap: 1rem;
     }
 
@@ -1170,11 +1252,21 @@
         width: 34px;
         height: 34px;
         font-size: 1.1rem;
+        margin-top: 124px;
     }
 
     .publishing-grid--current-list {
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
+    }
+
+    .site-content:has(> .book-card) {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .archive-title {
+        font-size: 1.6rem;
     }
 
     .qi-cta-band__actions {
@@ -1185,6 +1277,10 @@
 
 @media (max-width: 480px) {
     .publishing-grid--current-list {
+        grid-template-columns: 1fr;
+    }
+
+    .site-content:has(> .book-card) {
         grid-template-columns: 1fr;
     }
 }

@@ -122,7 +122,7 @@
     display: grid;
     grid-template-columns: minmax(0, 64%) minmax(0, 36%);
     gap: 2rem;
-    align-items: start;
+    align-items: stretch;
     padding: 3rem 0;
     border-top: 1px solid #e5e2e2;
 }
@@ -153,26 +153,45 @@
 }
 
 .qi-about-why__quote {
-    padding: 2rem;
-    background-color: #fbdce6;
-    border-radius: 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2.5rem 2.25rem;
+    min-height: 100%;
+    background-color: #fdf2f1;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
-.qi-about-why__quote .qi-icon-circle {
-    background-color: transparent;
+.qi-about-why__quote-mark {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 3.5rem;
+    line-height: 1;
     color: #c0185b;
-    width: 40px;
-    height: 40px;
-    margin-bottom: 1rem;
 }
 
 .qi-about-why__quote p {
+    position: relative;
+    z-index: 1;
     margin: 0;
+    max-width: 22ch;
     font-family: Georgia, 'Times New Roman', serif;
     font-style: italic;
     font-size: 1.2rem;
     line-height: 1.55;
     color: #7b1d47;
+}
+
+.qi-about-why__quote-flower {
+    position: absolute;
+    right: -0.5rem;
+    bottom: -1.5rem;
+    width: 110px;
+    height: auto;
+    z-index: 0;
+    pointer-events: none;
 }
 
 /* ---------------- Founder ---------------- */
@@ -249,9 +268,10 @@
     border-right: none;
 }
 
-.qi-about-info-col .qi-icon-circle {
-    width: 44px;
-    height: 44px;
+.qi-about-info-col .qi-icon-img {
+    display: block;
+    width: 52px;
+    height: 52px;
     margin-bottom: 1rem;
 }
 
@@ -481,6 +501,15 @@
 
     .qi-about-why {
         padding: 2.5rem 0;
+    }
+
+    .qi-about-why__quote {
+        padding: 2rem 1.75rem;
+        min-height: 0;
+    }
+
+    .qi-about-why__quote-flower {
+        width: 85px;
     }
 
     .qi-about-founder {

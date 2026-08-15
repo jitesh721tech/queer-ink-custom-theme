@@ -8,6 +8,10 @@
  * title band) because the page's block content supplies its own hero
  * heading — see inc/block-patterns.php for the editable building blocks.
  *
+ * The closing "Stay in the loop" band reuses the same channel-band
+ * template part as the homepage (front-page.php) instead of a separate
+ * block-content copy, so both stay pixel-identical by construction.
+ *
  * @package Queer_Ink_Theme
  */
 
@@ -19,6 +23,7 @@ get_header(); ?>
         the_post();
         the_content();
     endwhile;
+    get_template_part( 'template-parts/section', 'channel-band' );
     ?>
 </main>
 

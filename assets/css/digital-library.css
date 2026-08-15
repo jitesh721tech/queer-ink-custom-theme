@@ -6,6 +6,69 @@
  * @package Queer_Ink_Theme
  */
 
+/* ---------------- Smooth in-page anchor scroll ---------------- */
+/* Scoped to this page only (WordPress's page-id-17 body class) so the
+   hero's "Browse the Library" -> #featured-books jump animates, without
+   changing scroll behavior anywhere else on the site. scroll-behavior
+   must live on the root (html) element to control the viewport's own
+   scrolling — body isn't the scrolling box in standards mode — so this
+   uses :has() to reach html from the page-specific body class. */
+html:has(body.page-id-17) {
+    scroll-behavior: smooth;
+}
+
+/* ---------------- Hero ---------------- */
+
+/* The shared .qi-pub-hero row doesn't stretch its content to fill the
+   row — the group's own inner-container (a flex item of .qi-pub-hero)
+   and the wp:columns wrapper inside it both size to their content's own
+   max-content width instead of the available space. The Archiving
+   hero's wide landscape photo happens to be big enough to hit that
+   ceiling on its own; this hero's narrower source photo doesn't reach
+   it, so the whole row renders visibly narrower unless both levels are
+   forced to fill. */
+.qi-dl-hero .wp-block-group__inner-container {
+    width: 100%;
+}
+
+.qi-dl-hero .wp-block-columns {
+    width: 100%;
+}
+
+/* The source photo is portrait (taller than wide), unlike every other
+   pathway hero's landscape crop — left to scale by width alone it grew
+   far taller than the text column and inflated the whole hero band.
+   The Archiving hero's image renders at its default equal-column width
+   (658px at desktop) and a height of 446px (its landscape photo's own
+   natural aspect ratio at that width, with no cropping). That 658×446
+   box is the basis used here: same equal column split, same box size,
+   with object-fit:cover to crop this portrait photo down to it since it
+   can't reach that ratio on its own. */
+.qi-dl-hero .qi-pub-hero__image {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.qi-dl-hero .qi-pub-hero__image img {
+    width: 100%;
+    height: 446px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+@media (max-width: 980px) {
+    .qi-dl-hero .qi-pub-hero__image img {
+        height: 340px;
+    }
+}
+
+@media (max-width: 680px) {
+    .qi-dl-hero .qi-pub-hero__image img {
+        height: 275px;
+    }
+}
+
 /* ---------------- Pillars ---------------- */
 
 .qi-dl-pillars {
@@ -13,7 +76,7 @@
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 1.5rem;
     padding: 2.5rem 2rem;
-    margin: 0 0 3rem;
+    margin: 2.5rem 0 3rem;
     background-color: #fbdce6;
     border-radius: 16px;
 }
@@ -23,8 +86,16 @@
 }
 
 .qi-dl-pillar .qi-icon-circle {
+    width: 88px;
+    height: 88px;
     margin: 0 auto 0.9rem;
     background-color: #ffffff;
+}
+
+.qi-dl-pillar .qi-icon-circle .qi-icon-img {
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
 }
 
 .qi-dl-pillar h3 {
@@ -40,48 +111,58 @@
     color: #4a4a4a;
 }
 
-/* ---------------- Featured Books scroller ---------------- */
-
-.qi-dl-scroller-track {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.qi-dl-books-scroller {
-    flex: 1;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-}
-
-.qi-dl-books-scroller .publishing-grid--current-list {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(160px, 200px);
-    gap: 1.5rem;
-}
-
-.qi-dl-books-scroller .book-card {
-    scroll-snap-align: start;
-}
+/* Featured Books now reuses Publishing's .qi-book-carousel component
+   directly (see publishing.css) instead of a separate DL-only scroller,
+   so its styling lives there. */
 
 /* ---------------- Browse by subjects ---------------- */
 
-.qi-subjects-grid {
+/* Split modifier: title stays left, "View all books" moves to the row's
+   right edge. WordPress wraps this group's heading/link in its own
+   auto-generated .wp-block-group__inner-container, so — same as the
+   Featured Books header's --centered modifier — the row layout has to
+   target that inner element rather than the outer group. */
+.qi-current-list__header--split .wp-block-group__inner-container {
     display: flex;
-    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    align-items: baseline;
     gap: 1rem;
 }
 
-.qi-subject-pill {
+.qi-subjects-carousel {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+}
+
+.qi-subjects-grid {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding: 0.25rem 0.25rem 0.5rem;
+}
+
+.qi-subjects-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.qi-subject-pill {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
     padding: 0.75rem 1.25rem;
     border: 1px solid #e5e2e2;
     border-radius: 12px;
     background-color: #fff8fa;
     text-decoration: none;
+    white-space: nowrap;
     transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
@@ -89,17 +170,6 @@
 .qi-subject-pill:focus-visible {
     border-color: #c0185b;
     background-color: #fbdce6;
-}
-
-.qi-subject-pill .qi-icon-circle {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-}
-
-.qi-subject-pill .qi-icon-circle .qi-icon {
-    width: 18px;
-    height: 18px;
 }
 
 .qi-subject-pill__label {
@@ -111,52 +181,28 @@
 /* ---------------- Reading Room ---------------- */
 
 .qi-reading-room {
+    position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 22%) minmax(0, 48%) minmax(0, 30%);
+    grid-template-columns: minmax(0, 20%) minmax(0, 52%) minmax(0, 28%);
     gap: 2rem;
     align-items: center;
     padding: 3rem;
     margin: 3rem 0;
-    background-color: #fbdce6;
+    background-color: #fdf2f1;
     border-radius: 16px;
+    overflow: hidden;
 }
 
 .qi-reading-room__media {
-    position: relative;
-    height: 220px;
-}
-
-.qi-reading-room__media-circle {
-    position: absolute;
-    left: 10%;
-    top: 0;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    background-color: #c0185b;
-}
-
-.qi-reading-room__media-books {
-    position: absolute;
-    left: 15%;
-    bottom: 10px;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    justify-content: center;
 }
 
-.qi-reading-room__media-books span {
+.qi-reading-room__media img {
     display: block;
-    width: 130px;
-    height: 26px;
-    border-radius: 4px;
-    background-color: #ffffff;
-    border: 1px solid #e5e2e2;
-}
-
-.qi-reading-room__media-books span:nth-child(2) {
-    width: 120px;
-    background-color: #1a1a1a;
+    width: 100%;
+    max-width: 210px;
+    height: auto;
 }
 
 .qi-reading-room__body .hero__eyebrow {
@@ -178,27 +224,31 @@
 }
 
 .qi-reading-room__features {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
     margin-bottom: 1.75rem;
 }
 
 .qi-reading-room__feature {
+    flex: 1;
+    min-width: 0;
     display: flex;
-    align-items: center;
-    gap: 0.6rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-left: 1.25rem;
+    border-left: 1px solid #ecd3d6;
 }
 
-.qi-reading-room__feature .qi-icon-circle {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
+.qi-reading-room__feature:first-child {
+    padding-left: 0;
+    border-left: none;
 }
 
-.qi-reading-room__feature .qi-icon {
-    width: 18px;
-    height: 18px;
+.qi-reading-room__feature .qi-icon-img {
+    width: 38px;
+    height: 38px;
 }
 
 .qi-reading-room__feature span:last-child {
@@ -214,7 +264,12 @@
 }
 
 .qi-reading-room__quote {
-    align-self: center;
+    position: relative;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    padding-left: 2.75rem;
+    border-left: 1px solid #ecd3d6;
 }
 
 .qi-reading-room__quote p {
@@ -222,8 +277,34 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-style: italic;
     font-size: 1.1rem;
-    line-height: 1.5;
+    line-height: 1.55;
+    max-width: 15ch;
     color: #1a1a1a;
+}
+
+.qi-reading-room__sparkle {
+    position: absolute;
+    color: #e9a3c1;
+}
+
+.qi-reading-room__sparkle svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.qi-reading-room__sparkle--a {
+    bottom: 0.5rem;
+    right: 0.5rem;
+    width: 20px;
+    height: 20px;
+}
+
+.qi-reading-room__sparkle--b {
+    bottom: 2.25rem;
+    right: 1.75rem;
+    width: 12px;
+    height: 12px;
 }
 
 /* ---------------- Closing tagline ---------------- */
@@ -231,29 +312,39 @@
 .qi-dl-tagline {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
-    padding: 1.75rem 2rem;
+    justify-content: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.1rem 1.75rem;
     margin: 0 0 3rem;
-    background-color: #fff8fa;
-    border: 1px solid #e5e2e2;
-    border-radius: 16px;
+    background-color: #fdf2f1;
+    border-radius: 14px;
 }
 
 .qi-dl-tagline .qi-icon-circle {
     flex-shrink: 0;
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    color: #c0185b;
+}
+
+.qi-dl-tagline .qi-icon-circle .qi-icon {
+    width: 32px;
+    height: 32px;
 }
 
 .qi-dl-tagline h2 {
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.2rem;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 1.3rem;
-    color: #1a1a1a;
+    font-size: 1.1rem;
+    color: #c0185b;
 }
 
 .qi-dl-tagline p {
     margin: 0;
     color: #4a4a4a;
-    font-size: 0.92rem;
+    font-size: 0.85rem;
 }
 
 /* ---------------- Tablet landscape ---------------- */
@@ -285,12 +376,30 @@
         padding: 2rem;
     }
 
-    .qi-reading-room__media {
-        height: 160px;
+    .qi-reading-room__media img {
+        max-width: 150px;
     }
 
     .qi-reading-room__quote {
         order: 3;
+        align-self: stretch;
+        margin-top: 1.5rem;
+        padding-left: 0;
+        padding-top: 1.5rem;
+        border-left: none;
+        border-top: 1px solid #ecd3d6;
+    }
+
+    .qi-reading-room__quote p {
+        max-width: none;
+    }
+
+    .qi-reading-room__sparkle--a {
+        bottom: 0;
+    }
+
+    .qi-reading-room__sparkle--b {
+        bottom: 1.75rem;
     }
 }
 
@@ -303,24 +412,27 @@
         gap: 1.5rem;
     }
 
-    .qi-dl-scroller-track .qi-timeline__nav {
-        display: none;
-    }
-
-    .qi-dl-books-scroller .publishing-grid--current-list {
-        grid-auto-columns: minmax(0, 60%);
-    }
-
-    .qi-subject-pill {
-        width: 100%;
-    }
-
     .qi-reading-room {
         padding: 1.5rem;
     }
 
     .qi-reading-room__features {
-        grid-template-columns: 1fr;
+        flex-wrap: wrap;
+        row-gap: 1.25rem;
+    }
+
+    .qi-reading-room__feature {
+        flex: 0 0 calc(50% - 0.625rem);
+    }
+
+    .qi-reading-room__feature:nth-child(odd) {
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .qi-reading-room__feature:nth-child(even) {
+        padding-left: 1.25rem;
+        border-left: 1px solid #ecd3d6;
     }
 
     .qi-reading-room__actions {
@@ -331,6 +443,7 @@
     .qi-dl-tagline {
         flex-direction: column;
         text-align: center;
-        padding: 1.5rem;
+        padding: 1.25rem;
+        gap: 0.6rem;
     }
 }

@@ -31,7 +31,7 @@ $feature_items = array(
         'icon'        => 'journal',
         'title'       => esc_html__( 'QI Journal', 'queer-ink-theme' ),
         'description' => esc_html__( 'A living archive of commentary, research, and queer cultural criticism.', 'queer-ink-theme' ),
-        'url'         => esc_url( home_url( '/journal' ) ),
+        'url'         => esc_url( home_url( '/qi-journal' ) ),
         'label'       => esc_html__( 'Read journal', 'queer-ink-theme' ),
     ),
 );

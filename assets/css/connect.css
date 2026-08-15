@@ -10,6 +10,19 @@
  * @package Queer_Ink_Theme
  */
 
+/* ---------------- Smooth in-page anchor scroll ---------------- */
+/* Scoped to this page only (WordPress's page-id-25 body class) so a
+   visitor arriving via another page's link to #contact-form (e.g.
+   Publishing's "Start Your Publishing Journey") lands with an animated
+   scroll instead of an instant jump. scroll-behavior must live on the
+   root (html) element to control the viewport's own scrolling — body
+   isn't the scrolling box in standards mode — so this uses :has() to
+   reach html from the page-specific body class. Doesn't change scroll
+   behavior anywhere else on the site. */
+html:has(body.page-id-25) {
+    scroll-behavior: smooth;
+}
+
 /* ---------------- Contact ---------------- */
 
 .qi-connect-contact {
@@ -149,14 +162,17 @@
     margin-bottom: 0;
 }
 
-.qi-connect-info__item .qi-icon-circle {
+.qi-connect-info__item .qi-icon-circle,
+.qi-connect-info__item .qi-icon-circle--accent {
     width: 40px;
     height: 40px;
+    background: none;
+    box-shadow: none;
 }
 
 .qi-connect-info__item .qi-icon-circle img {
-    width: 20px;
-    height: 20px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
 }
 
@@ -183,11 +199,92 @@
     color: #c0185b;
 }
 
+/* ---------------- Let's build this together ---------------- */
+
+.qi-connect-together {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    margin: 3rem 0;
+    padding: 1.5rem 2.75rem 1.5rem 1.5rem;
+    background-color: #fff8fa;
+    border: 1px solid #e5e2e2;
+    border-radius: 16px;
+}
+
+.qi-connect-together__media {
+    flex: 0 0 auto;
+    width: clamp(180px, 22vw, 280px);
+}
+
+.qi-connect-together__media img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.qi-connect-together__body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.qi-connect-together__body h2 {
+    margin: 0 0 0.9rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.9rem;
+    color: #1a1a1a;
+    position: relative;
+    padding-bottom: 0.9rem;
+}
+
+.qi-connect-together__body h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background-color: #c0185b;
+}
+
+.qi-connect-together__body p {
+    margin: 0;
+    color: #4a4a4a;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    max-width: 48ch;
+}
+
+.qi-connect-together__action {
+    flex: 0 0 auto;
+}
+
 /* ---------------- Tablet ---------------- */
 
 @media (max-width: 980px) {
     .qi-connect-contact {
         grid-template-columns: 1fr;
+    }
+
+    .qi-connect-together {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .qi-connect-together__media {
+        width: min(60%, 260px);
+    }
+
+    .qi-connect-together__body p {
+        max-width: none;
+        margin-inline: auto;
+    }
+
+    .qi-connect-together__body h2::after {
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .qi-connect-info__grid {
@@ -223,5 +320,18 @@
 
     .qi-connect-form__row {
         grid-template-columns: 1fr;
+    }
+
+    .qi-connect-together {
+        margin: 2.5rem 0;
+        padding: 1.75rem 1.25rem;
+    }
+
+    .qi-connect-together__media {
+        width: min(75%, 220px);
+    }
+
+    .qi-connect-together__body h2 {
+        font-size: 1.5rem;
     }
 }

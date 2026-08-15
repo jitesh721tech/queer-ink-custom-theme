@@ -12,7 +12,7 @@
     --qi-font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
     /* ---------------- Color: editorial crimson + warm blush surfaces ---------------- */
-    --qi-color-primary: #7a002a;
+    --qi-color-primary: #c0185b;
     --qi-color-primary-hover: #63001f;
     --qi-color-primary-container: #a0153e;
     --qi-color-on-primary: #ffffff;
@@ -164,6 +164,46 @@ button {
     margin-bottom: 0;
 }
 
+.entry-content h2 {
+    margin: 2.25rem 0 1rem;
+    font-family: var(--qi-font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--qi-color-ink);
+}
+
+.entry-content h2:first-child {
+    margin-top: 0;
+}
+
+.entry-content h3 {
+    margin: 1.5rem 0 0.75rem;
+    font-family: var(--qi-font-serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--qi-color-ink);
+}
+
+.entry-content ul,
+.entry-content ol {
+    margin: 0 0 1.25rem;
+    padding-left: 1.25rem;
+}
+
+.entry-content li {
+    margin-bottom: 0.5rem;
+}
+
+.entry-content a {
+    color: var(--qi-color-primary);
+}
+
+.entry-content a:hover {
+    color: var(--qi-color-primary-hover);
+}
+
 @media (max-width: 680px) {
     .entry-header {
         padding: 2.5rem 0 1.5rem;
@@ -197,7 +237,7 @@ button {
     justify-content: center;
     gap: 0.5rem;
     padding: 0.95rem 1.75rem;
-    border-radius: var(--qi-radius-full);
+    border-radius: var(--qi-radius-md);
     font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -226,6 +266,31 @@ button {
 
 .button--outline:hover,
 .button--outline:focus-visible {
+    border-color: var(--qi-color-primary);
+    color: var(--qi-color-primary);
+    background-color: var(--qi-color-surface-low);
+}
+
+/* Native Gutenberg buttons (hero hero__eyebrow CTAs etc.) are a separate
+   component from .button above, but read as the same "pill button"
+   pattern to a visitor — kept in the same token-based color/radius so
+   the whole site's buttons stay visually unified. */
+.wp-block-button__link {
+    border-radius: var(--qi-radius-md);
+}
+
+.wp-block-button:not(.is-style-outline) .wp-block-button__link {
+    background-color: var(--qi-color-primary);
+    color: var(--qi-color-on-primary);
+}
+
+.wp-block-button:not(.is-style-outline) .wp-block-button__link:hover,
+.wp-block-button:not(.is-style-outline) .wp-block-button__link:focus-visible {
+    background-color: var(--qi-color-primary-hover);
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link:hover,
+.wp-block-button.is-style-outline .wp-block-button__link:focus-visible {
     border-color: var(--qi-color-primary);
     color: var(--qi-color-primary);
     background-color: var(--qi-color-surface-low);

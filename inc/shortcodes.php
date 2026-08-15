@@ -48,6 +48,111 @@ if ( ! function_exists( 'queer_ink_latest_books_shortcode' ) ) {
 }
 add_shortcode( 'qi_latest_books', 'queer_ink_latest_books_shortcode' );
 
+if ( ! function_exists( 'queer_ink_collections_shortcode' ) ) {
+    /**
+     * Renders qi_collection posts into the Archiving page's "Our
+     * Collections" grid (.qi-connections__grid, styled in archiving.css).
+     */
+    function queer_ink_collections_shortcode( $atts ) {
+        $atts = shortcode_atts( array(
+            'count' => 8,
+        ), $atts, 'qi_collections' );
+
+        $collections = new WP_Query( array(
+            'post_type'      => 'qi_collection',
+            'post_status'    => 'publish',
+            'posts_per_page' => absint( $atts['count'] ),
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ) );
+
+        ob_start();
+
+        if ( $collections->have_posts() ) {
+            echo '<div class="qi-connections__grid">';
+            while ( $collections->have_posts() ) {
+                $collections->the_post();
+                get_template_part( 'template-parts/content', 'qi_collection' );
+            }
+            echo '</div>';
+        } else {
+            echo '<p class="publishing-empty">' . esc_html__( 'Collections are being catalogued — check back soon.', 'queer-ink-theme' ) . '</p>';
+        }
+
+        wp_reset_postdata();
+
+        return ob_get_clean();
+    }
+}
+add_shortcode( 'qi_collections', 'queer_ink_collections_shortcode' );
+
+if ( ! function_exists( 'queer_ink_timeline_entries_shortcode' ) ) {
+    /**
+     * Renders qi_timeline posts into the Archiving page's "Our Journey
+     * Through Time" horizontal scroller (.qi-timeline__scroller,
+     * styled in archiving.css). Outputs the scroller div itself
+     * (including the data-scroller attribute the prev/next buttons in
+     * the surrounding pattern markup target) so the existing carousel
+     * JS in main.js keeps working unchanged. Year/dot/card markup and
+     * the alternating pink/purple treatment are unchanged from the
+     * previous static version — only the data source is now dynamic.
+     */
+    function queer_ink_timeline_entries_shortcode( $atts ) {
+        $atts = shortcode_atts( array(
+            'count' => 20,
+        ), $atts, 'qi_timeline_entries' );
+
+        $entries = new WP_Query( array(
+            'post_type'      => 'qi_timeline',
+            'post_status'    => 'publish',
+            'posts_per_page' => absint( $atts['count'] ),
+            'meta_key'       => '_qi_timeline_year',
+            'orderby'        => 'meta_value_num',
+            'order'          => 'ASC',
+        ) );
+
+        ob_start();
+
+        echo '<div class="qi-timeline__scroller" data-scroller>';
+
+        if ( $entries->have_posts() ) {
+            while ( $entries->have_posts() ) {
+                $entries->the_post();
+
+                $year = get_post_meta( get_the_ID(), '_qi_timeline_year', true );
+                ?>
+                <div class="qi-timeline__item">
+                    <span class="qi-timeline__year"><?php echo esc_html( $year ); ?></span>
+                    <div class="qi-timeline__dot" aria-hidden="true"></div>
+                    <div class="qi-timeline__card">
+                        <div class="qi-timeline__image">
+                            <?php if ( has_post_thumbnail() ) : ?>
+                                <?php the_post_thumbnail( 'medium', array( 'alt' => '' ) ); ?>
+                            <?php else : ?>
+                                <span class="qi-timeline__image-placeholder" aria-hidden="true"></span>
+                            <?php endif; ?>
+                        </div>
+                        <h3><?php the_title(); ?></h3>
+                        <?php if ( has_excerpt() ) : ?>
+                            <p><?php echo esc_html( get_the_excerpt() ); ?></p>
+                        <?php endif; ?>
+                        <a class="qi-pathway-card__link" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Explore', 'queer-ink-theme' ); ?> →</a>
+                    </div>
+                </div>
+                <?php
+            }
+            wp_reset_postdata();
+        } else {
+            echo '<p class="publishing-empty">' . esc_html__( 'Milestones are being added — check back soon.', 'queer-ink-theme' ) . '</p>';
+        }
+
+        echo '</div>';
+
+        return ob_get_clean();
+    }
+}
+add_shortcode( 'qi_timeline_entries', 'queer_ink_timeline_entries_shortcode' );
+
 if ( ! function_exists( 'queer_ink_latest_articles_shortcode' ) ) {
     function queer_ink_latest_articles_shortcode( $atts ) {
         $atts = shortcode_atts( array(
@@ -114,12 +219,11 @@ if ( ! function_exists( 'queer_ink_subjects_shortcode' ) ) {
                 }
                 echo '</ul>';
             } else {
-                echo '<div class="qi-subjects-grid">';
+                echo '<div class="qi-subjects-grid" data-scroller>';
                 foreach ( $terms as $term ) {
                     printf(
-                        '<a class="qi-subject-pill" href="%1$s"><span class="qi-icon-circle">%2$s</span><span class="qi-subject-pill__label">%3$s</span></a>',
+                        '<a class="qi-subject-pill" href="%1$s"><span class="qi-subject-pill__label">%2$s</span></a>',
                         esc_url( get_term_link( $term ) ),
-                        queer_ink_icon( 'book' ),
                         esc_html( $term->name )
                     );
                 }
@@ -145,18 +249,16 @@ if ( ! function_exists( 'queer_ink_article_sections_shortcode' ) ) {
 
         echo '<div class="qi-section-tabs">';
         printf(
-            '<a class="qi-section-tab is-active" href="%1$s">%2$s %3$s</a>',
+            '<a class="qi-section-tab is-active" href="%1$s">%2$s</a>',
             esc_url( home_url( '/journal/' ) ),
-            queer_ink_icon( 'pencil' ),
             esc_html__( 'Latest', 'queer-ink-theme' )
         );
 
         if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
             foreach ( $terms as $term ) {
                 printf(
-                    '<a class="qi-section-tab" href="%1$s">%2$s %3$s</a>',
+                    '<a class="qi-section-tab" href="%1$s">%2$s</a>',
                     esc_url( get_term_link( $term ) ),
-                    queer_ink_icon( 'pencil' ),
                     esc_html( $term->name )
                 );
             }

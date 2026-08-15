@@ -6,6 +6,19 @@
  * @package Queer_Ink_Theme
  */
 
+/* ---------------- Smooth in-page anchor scroll ---------------- */
+/* Scoped to this page only (WordPress's page-id-16 body class) so a
+   visitor arriving via Publishing's "Explore Archive Publications"
+   link (#timeline) lands with an animated scroll instead of an instant
+   jump, without changing scroll behavior anywhere else on the site.
+   scroll-behavior must live on the root (html) element to control the
+   viewport's own scrolling — body isn't the scrolling box in standards
+   mode — so this uses :has() to reach html from the page-specific body
+   class. */
+html:has(body.page-id-16) {
+    scroll-behavior: smooth;
+}
+
 /* ---------------- Hero note ---------------- */
 
 .qi-arc-hero__note {
@@ -13,10 +26,38 @@
     color: #4a4a4a;
 }
 
+/* The shared .qi-pub-hero rule (publishing.css) draws a full-bleed
+   border-bottom under every pathway hero. The Archiving page sits a
+   second, container-width divider directly beneath it (.qi-timeline's
+   border-top) — keeping both reads as a doubled line, so the hero's
+   full-bleed one is dropped here and the shorter one is kept. */
+.qi-pub-hero.qi-arc-hero {
+    border-bottom: none;
+}
+
+/* The text column (heading/paragraphs/note/buttons) is taller than the
+   image's own natural aspect-ratio height, leaving empty space under
+   the image. .wp-block-columns already stretches both columns to equal
+   height (flexbox default), so the image just needs to fill that
+   already-equal-height column — cropped via object-fit, never
+   stretched/distorted. */
+.qi-arc-hero .qi-pub-hero__image {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    margin: 0;
+}
+
+.qi-arc-hero .qi-pub-hero__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /* ---------------- Journey timeline ---------------- */
 
 .qi-timeline {
-    padding: 3rem 0;
+    padding: 3rem 0 1.5rem;
     border-top: 1px solid #e5e2e2;
 }
 
@@ -52,7 +93,7 @@
 .qi-timeline__track {
     position: relative;
     display: flex;
-    align-items: stretch;
+    align-items: center;
     gap: 0.75rem;
 }
 
@@ -60,48 +101,64 @@
     flex-shrink: 0;
     width: 40px;
     height: 40px;
-    align-self: center;
-    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--qi-radius-full);
     border: 1px solid #e5e2e2;
     background-color: #fff;
     color: #1a1a1a;
     font-size: 1.25rem;
     line-height: 1;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    box-shadow: var(--qi-shadow-card);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
 .qi-timeline__nav:hover,
 .qi-timeline__nav:focus-visible {
     background-color: #fbdce6;
     border-color: #c0185b;
+    color: #c0185b;
 }
 
 .qi-timeline__scroller {
+    flex: 1;
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(200px, 1fr);
+    grid-auto-columns: minmax(220px, 260px);
     gap: 1.5rem;
     overflow-x: auto;
+    overflow-y: visible;
     scroll-snap-type: x proximity;
-    padding-bottom: 0.5rem;
-    flex: 1;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding: 0.25rem 0.25rem 0.75rem;
+}
+
+.qi-timeline__scroller::-webkit-scrollbar {
+    display: none;
 }
 
 .qi-timeline__item {
     scroll-snap-align: start;
     position: relative;
-    padding-top: 1.75rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .qi-timeline__item::before {
     content: '';
     position: absolute;
-    top: 0.6rem;
+    top: 2.1rem;
     left: 0;
     right: -1.5rem;
     height: 2px;
-    background-color: #e9a3c1;
+    background: linear-gradient(to right, #c0185b, #4a2e7a);
+}
+
+.qi-timeline__item:nth-child(even)::before {
+    background: linear-gradient(to right, #4a2e7a, #c0185b);
 }
 
 .qi-timeline__item:last-child::before {
@@ -116,36 +173,80 @@
     font-family: Georgia, 'Times New Roman', serif;
 }
 
+.qi-timeline__item:nth-child(even) .qi-timeline__year {
+    color: #4a2e7a;
+}
+
 .qi-timeline__dot {
     position: absolute;
-    top: 0.35rem;
+    top: 1.75rem;
     left: 0;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background-color: #c0185b;
-    border: 2px solid #fff;
+    background-color: #fff;
+    border: 3px solid #c0185b;
+    box-shadow: 0 0 0 2px #fff;
+}
+
+.qi-timeline__item:nth-child(even) .qi-timeline__dot {
+    border-color: #4a2e7a;
 }
 
 .qi-timeline__card {
-    border: 1px solid #e5e2e2;
+    flex: 1 1 auto;
+    margin-top: 1.5rem;
+    border: 1px solid var(--qi-color-outline-variant);
     border-radius: 12px;
     padding: 1.25rem;
-    background-color: #fff8fa;
-    height: 100%;
+    background-color: var(--qi-color-surface-lowest);
+    box-shadow: var(--qi-shadow-card);
 }
 
-.qi-timeline__card .qi-icon-circle {
-    width: 44px;
-    height: 44px;
-    margin-bottom: 0.75rem;
+.qi-timeline__image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.qi-timeline__image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.qi-timeline__image-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--qi-color-surface-high);
 }
 
 .qi-timeline__card h3 {
-    margin: 0 0 0.5rem;
+    position: relative;
+    margin: 0 0 0.9rem;
+    padding-bottom: 0.6rem;
     font-size: 1rem;
     font-family: Georgia, 'Times New Roman', serif;
     color: #1a1a1a;
+}
+
+.qi-timeline__card h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 28px;
+    height: 3px;
+    background-color: #c0185b;
+}
+
+.qi-timeline__item:nth-child(even) .qi-timeline__card h3::after {
+    background-color: #4a2e7a;
 }
 
 .qi-timeline__card p {
@@ -153,6 +254,14 @@
     font-size: 0.85rem;
     line-height: 1.6;
     color: #4a4a4a;
+}
+
+.qi-timeline__item:nth-child(even) .qi-timeline__card .qi-pathway-card__link {
+    color: #4a2e7a;
+}
+
+.qi-timeline__item:nth-child(even) .qi-timeline__card .qi-pathway-card__link:hover {
+    color: #37205c;
 }
 
 .qi-timeline__footer {
@@ -175,23 +284,166 @@
     height: 16px;
 }
 
+/* ---------------- Timeline archive (/timeline/, "View Full Timeline") ---------------- */
+/* The raw qi_timeline CPT archive has no grid wrapper of its own
+   (archive.php renders the .timeline-entry-card loop straight into the
+   shared .site-content used by every page/single/search template), so
+   it's scoped in here via :has() — same technique used to fix the
+   Books archive — reusing this page's own timeline colour treatment
+   (pink/purple alternating) rather than the horizontal-scroller widget
+   markup, which stays as-is per its own approved design. */
+
+.site-content:has(> .timeline-entry-card) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem 1.75rem;
+    align-items: start;
+}
+
+.site-content:has(> .timeline-entry-card) > .archive-header {
+    grid-column: 1 / -1;
+}
+
+.timeline-entry-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--qi-color-outline-variant);
+    border-radius: var(--qi-radius-lg);
+    background-color: var(--qi-color-surface-lowest);
+    overflow: hidden;
+    box-shadow: var(--qi-shadow-card);
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.timeline-entry-card:hover {
+    box-shadow: var(--qi-shadow-hover);
+    transform: translateY(-2px);
+}
+
+.timeline-entry-card:nth-child(even) .timeline-entry-card__year {
+    color: #4a2e7a;
+}
+
+.timeline-entry-card:nth-child(even) .timeline-entry-card__link {
+    color: #4a2e7a;
+}
+
+.timeline-entry-card__media-link {
+    display: block;
+}
+
+.timeline-entry-card__media {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    background-color: var(--qi-color-surface-low);
+}
+
+.timeline-entry-card__media-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.timeline-entry-card__media-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--qi-color-surface-high);
+}
+
+.timeline-entry-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1rem;
+    flex: 1;
+}
+
+.timeline-entry-card__year {
+    font-family: var(--qi-font-serif);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #c0185b;
+}
+
+.timeline-entry-card__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.timeline-entry-card__title a {
+    color: var(--qi-color-ink);
+}
+
+.timeline-entry-card__title a:hover {
+    color: var(--qi-color-primary);
+}
+
+.timeline-entry-card__excerpt {
+    flex: 1;
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--qi-color-ink-variant);
+}
+
+.timeline-entry-card__link {
+    margin-top: auto;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #c0185b;
+    text-decoration: none;
+}
+
+.timeline-entry-card__link:hover {
+    color: var(--qi-color-primary-hover);
+}
+
+@media (max-width: 1200px) and (min-width: 981px) {
+    .site-content:has(> .timeline-entry-card) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 980px) {
+    .site-content:has(> .timeline-entry-card) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-content:has(> .timeline-entry-card) {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ---------------- Why Archive ---------------- */
 
 .qi-why-archive {
-    padding: 3rem 0;
+    display: grid;
+    grid-template-columns: minmax(200px, 26%) 1fr;
+    gap: 2rem;
+    align-items: start;
+    padding: 1.5rem 0 3rem;
     border-top: 1px solid #e5e2e2;
 }
 
 .qi-why-archive__intro {
-    max-width: 46rem;
-    margin-bottom: 2rem;
+    max-width: none;
+    margin-bottom: 0;
+    padding-right: 2.5rem;
+    border-right: 1px solid #e5e2e2;
 }
 
 .qi-why-archive__intro h2 {
     margin: 0 0 0.75rem;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 1.75rem;
-    color: #1a1a1a;
+    color: #c0185b;
 }
 
 .qi-why-archive__intro p {
@@ -208,31 +460,91 @@
 .qi-why-archive__grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.5rem;
+    gap: 1.25rem;
+}
+
+.qi-why-archive__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-left: 1.25rem;
+    border-left: 1px solid #e5e2e2;
+}
+
+.qi-why-archive__card:first-child {
+    padding-left: 0;
+    border-left: none;
+}
+
+.qi-why-archive__card .qi-icon-circle {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: auto;
+    height: 90px;
+    background-color: transparent;
+    color: #c0185b;
+}
+
+.qi-why-archive__card .qi-icon-circle .qi-icon {
+    width: 90px;
+    height: 90px;
+}
+
+.qi-why-archive__card .qi-icon-circle .qi-icon-img {
+    height: 90px;
+    width: auto;
 }
 
 .qi-why-archive__card h3 {
-    margin: 0.75rem 0 0.4rem;
-    font-size: 1rem;
+    margin: 0.75rem 0 0.3rem;
+    font-size: 0.95rem;
     color: #1a1a1a;
 }
 
 .qi-why-archive__card p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #4a4a4a;
     line-height: 1.6;
+    min-height: 4.8em;
 }
 
-/* ---------------- Our Connections ---------------- */
+/* ---------------- Our Collections ---------------- */
 
-.qi-connections .wp-block-columns {
-    align-items: stretch;
-    margin-bottom: 2rem;
+.qi-connections {
+    display: grid;
+    grid-template-columns: minmax(220px, 26%) 1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-top: 1rem;
+    padding: 2.5rem;
+    background-color: #fdf2f1;
+    border: 1px solid #f0d9dc;
+    border-radius: 20px;
 }
 
-.qi-connections__request {
-    display: flex;
+.qi-connections h2 {
+    color: #c0185b;
+}
+
+.qi-connections__intro {
+    padding-right: 2rem;
+    border-right: 1px solid #f0d9dc;
+}
+
+.qi-connections__intro h2 {
+    margin: 0 0 0.6rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.5rem;
+}
+
+.qi-connections__intro > p {
+    margin: 0 0 1.5rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #4a4a4a;
 }
 
 .qi-connections__request-card {
@@ -241,6 +553,13 @@
     padding: 1.5rem;
     background-color: #fff8fa;
     width: 100%;
+}
+
+.qi-connections__request-card .button {
+    display: flex;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .qi-connections__request-card h3 {
@@ -257,15 +576,77 @@
     color: #4a4a4a;
 }
 
-.qi-connections__subhead {
-    margin: 0 0 1rem;
-    font-size: 1.15rem;
-    font-family: Georgia, 'Times New Roman', serif;
-    color: #1a1a1a;
+.qi-connections__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
 }
 
-.qi-connections__subhead:not(:first-of-type) {
-    margin-top: 2.5rem;
+.qi-collection-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.qi-collection-card__media-link {
+    display: block;
+}
+
+.qi-collection-card__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background-color: #fbe2e4;
+    border-radius: 10px;
+    overflow: hidden;
+    color: #c0185b;
+}
+
+.qi-collection-card__media .qi-icon {
+    width: 34px;
+    height: 34px;
+}
+
+.qi-collection-card__media-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.qi-collection-card__media-placeholder {
+    width: 60%;
+    height: 60%;
+    background-color: var(--qi-color-surface-high);
+    border-radius: var(--qi-radius-md);
+}
+
+.qi-collection-card__title {
+    margin: 0.85rem 0 0.4rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1rem;
+    color: #c0185b;
+}
+
+.qi-collection-card__excerpt {
+    flex: 1;
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: #4a4a4a;
+}
+
+.qi-collection-card__link {
+    margin-top: auto;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #c0185b;
+    text-decoration: none;
+}
+
+.qi-collection-card__link:hover {
+    color: var(--qi-color-primary-hover);
 }
 
 .article-card {
@@ -377,39 +758,75 @@
 
 .qi-model {
     display: grid;
-    grid-template-columns: minmax(0, 30%) minmax(0, 70%);
-    gap: 2rem;
-    padding: 3rem 0;
-    border-top: 1px solid #e5e2e2;
+    grid-template-columns: minmax(0, 26%) minmax(0, 74%);
+    gap: 2.5rem;
+    margin: 1.5rem 0 2.5rem;
+    padding: 2.5rem;
+    background-color: #efe9f5;
+    border: 1px solid #e2d7ee;
+    border-radius: 20px;
 }
 
 .qi-model__intro h2 {
-    margin: 0 0 0.75rem;
+    margin: 0 0 0.6rem;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 1.6rem;
-    color: #1a1a1a;
+    font-size: 1.5rem;
+    color: #4a2e7a;
 }
 
 .qi-model__intro p {
-    margin: 0 0 0.9rem;
+    margin: 0 0 0.75rem;
     color: #4a4a4a;
-    line-height: 1.65;
-    font-size: 0.92rem;
+    line-height: 1.55;
+    font-size: 0.88rem;
+}
+
+.qi-model__intro .qi-pathway-card__link {
+    color: #4a2e7a;
+}
+
+/* The archival postcard photo used to sit as a flex sibling outside
+   .qi-model__diagram's own bordered/background box, floating directly
+   on the section's purple background. The panel chrome (border, radius,
+   background, padding) now lives on .qi-model__right instead, so the
+   diagram and the photo render inside one continuous white panel. */
+.qi-model__right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border: 1px solid #e2d7ee;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    background-color: #faf7fd;
 }
 
 .qi-model__diagram {
-    border: 1px solid #e5e2e2;
-    border-radius: 16px;
-    padding: 2rem;
-    background-color: #faf5fc;
+    flex: 1;
+    min-width: 0;
+}
+
+.qi-model__postcard {
+    flex-shrink: 0;
+    width: 190px;
+    height: auto;
+}
+
+.qi-model__eyebrow {
+    margin: 0 0 0.35rem;
+    text-align: center;
+    color: #4a2e7a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .qi-model__diagram-lead {
-    margin: 0 0 1.75rem;
+    margin: 0 0 1rem;
     text-align: center;
     color: #1a1a1a;
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 0.95rem;
+    line-height: 1.5;
     max-width: 42rem;
     margin-left: auto;
     margin-right: auto;
@@ -423,29 +840,57 @@
 
 .qi-model__step {
     flex: 1;
-    border: 1px solid #e5e2e2;
+    border: 1px solid var(--qi-model-step-color, #e5e2e2);
     border-radius: 12px;
-    padding: 1.25rem;
+    padding: 0.9rem 1rem;
     background-color: #fff;
 }
 
+.qi-model__step--relationship {
+    --qi-model-step-color: #e08a3c;
+}
+
+.qi-model__step--evidence {
+    --qi-model-step-color: #c0185b;
+}
+
+.qi-model__step--discovery {
+    --qi-model-step-color: #2f8f5c;
+}
+
+.qi-model__step-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+
 .qi-model__step .qi-icon-circle {
-    width: 44px;
-    height: 44px;
-    margin-bottom: 0.75rem;
+    width: auto;
+    height: auto;
+    flex-shrink: 0;
+    background-color: transparent;
+    color: var(--qi-model-step-color, #c0185b);
+}
+
+.qi-model__step .qi-icon-circle .qi-icon {
+    width: 26px;
+    height: 26px;
 }
 
 .qi-model__step h4 {
-    margin: 0 0 0.25rem;
-    font-size: 1rem;
-    color: #1a1a1a;
+    margin: 0 0 0.2rem;
+    font-size: 0.95rem;
+    color: var(--qi-model-step-color, #1a1a1a);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .qi-model__step-caption {
-    margin: 0 0 0.75rem;
-    font-size: 0.82rem;
-    color: #c0185b;
-    font-weight: 700;
+    margin: 0;
+    font-size: 0.85rem;
+    color: #1a1a1a;
 }
 
 .qi-model__step ul {
@@ -459,19 +904,29 @@
 .qi-model__arrow {
     flex-shrink: 0;
     align-self: center;
-    color: #c0185b;
-    font-size: 1.25rem;
+    color: #8c7073;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
 }
 
 .qi-model__diagram-footer {
-    margin: 1.75rem 0 0;
+    margin: 1rem 0 0;
     text-align: center;
     color: #4a4a4a;
-    font-size: 0.88rem;
-    line-height: 1.6;
+    font-size: 0.85rem;
+    line-height: 1.5;
     max-width: 46rem;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* The decorative postcard is a corner flourish, not core content — it's
+   dropped from 1200px down so the diagram keeps the space it needs to
+   stay readable once the layout starts tightening up. */
+@media (max-width: 1200px) {
+    .qi-model__postcard {
+        display: none;
+    }
 }
 
 /* ---------------- Tablet landscape ---------------- */
@@ -479,6 +934,17 @@
 @media (max-width: 1200px) and (min-width: 981px) {
     .qi-why-archive__grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 1.75rem;
+    }
+
+    .qi-why-archive__card:nth-child(odd) {
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .qi-connections__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 1.75rem;
     }
 }
 
@@ -491,15 +957,22 @@
     }
 
     .qi-timeline__scroller {
-        grid-auto-columns: minmax(220px, 80%);
+        grid-auto-columns: minmax(240px, 46vw);
     }
 
     .qi-why-archive__grid {
         grid-template-columns: 1fr 1fr;
+        row-gap: 1.75rem;
     }
 
-    .qi-connections .wp-block-columns {
-        flex-direction: column;
+    .qi-why-archive__card:nth-child(odd) {
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .qi-connections__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 1.75rem;
     }
 
     .qi-model {
@@ -520,34 +993,66 @@
 
 @media (max-width: 680px) {
     .qi-timeline {
-        padding: 2.5rem 0;
+        padding: 2.5rem 0 1.5rem;
     }
 
     .qi-timeline__nav {
-        display: none;
+        width: 34px;
+        height: 34px;
+        font-size: 1.1rem;
     }
 
     .qi-timeline__scroller {
-        grid-auto-columns: minmax(0, 85%);
+        grid-auto-columns: minmax(220px, 78vw);
+        gap: 1rem;
     }
 
     .qi-why-archive {
-        padding: 2.5rem 0;
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+        padding: 1.5rem 0 2.5rem;
+    }
+
+    .qi-why-archive__intro {
+        padding-right: 0;
+        border-right: none;
     }
 
     .qi-why-archive__grid {
         grid-template-columns: 1fr;
+        row-gap: 1.75rem;
+    }
+
+    .qi-why-archive__card {
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .qi-why-archive__card p {
+        min-height: 0;
+    }
+
+    .qi-connections {
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+        padding: 1.5rem;
+    }
+
+    .qi-connections__intro {
+        padding-right: 0;
+        border-right: none;
+    }
+
+    .qi-connections__grid {
+        grid-template-columns: 1fr;
+        row-gap: 1.5rem;
     }
 
     .qi-model {
-        padding: 2.5rem 0;
+        padding: 1.5rem;
     }
 
-    .qi-model__diagram {
+    .qi-model__right {
         padding: 1.25rem;
-    }
-
-    .qi-connections__subhead:not(:first-of-type) {
-        margin-top: 2rem;
     }
 }

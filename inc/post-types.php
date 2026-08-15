@@ -39,6 +39,38 @@ if ( ! function_exists( 'queer_ink_register_post_types' ) ) {
             'show_in_rest' => true,
         ) );
 
+        register_post_type( 'qi_collection', array(
+            'labels'       => array(
+                'name'          => esc_html__( 'Collections', 'queer-ink-theme' ),
+                'singular_name' => esc_html__( 'Collection', 'queer-ink-theme' ),
+                'add_new_item'  => esc_html__( 'Add New Collection', 'queer-ink-theme' ),
+                'edit_item'     => esc_html__( 'Edit Collection', 'queer-ink-theme' ),
+                'all_items'     => esc_html__( 'All Collections', 'queer-ink-theme' ),
+            ),
+            'public'       => true,
+            'has_archive'  => false,
+            'rewrite'      => array( 'slug' => 'collections', 'with_front' => false ),
+            'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
+            'menu_icon'    => 'dashicons-portfolio',
+            'show_in_rest' => true,
+        ) );
+
+        register_post_type( 'qi_timeline', array(
+            'labels'       => array(
+                'name'          => esc_html__( 'Timeline', 'queer-ink-theme' ),
+                'singular_name' => esc_html__( 'Timeline Entry', 'queer-ink-theme' ),
+                'add_new_item'  => esc_html__( 'Add New Timeline Entry', 'queer-ink-theme' ),
+                'edit_item'     => esc_html__( 'Edit Timeline Entry', 'queer-ink-theme' ),
+                'all_items'     => esc_html__( 'All Timeline Entries', 'queer-ink-theme' ),
+            ),
+            'public'       => true,
+            'has_archive'  => 'timeline',
+            'rewrite'      => array( 'slug' => 'timeline', 'with_front' => false ),
+            'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
+            'menu_icon'    => 'dashicons-clock',
+            'show_in_rest' => true,
+        ) );
+
         register_post_type( 'qi_form_field', array(
             'labels'       => array(
                 'name'          => esc_html__( 'Contact Form Fields', 'queer-ink-theme' ),
@@ -61,3 +93,27 @@ if ( ! function_exists( 'queer_ink_register_post_types' ) ) {
     }
 }
 add_action( 'init', 'queer_ink_register_post_types' );
+
+if ( ! function_exists( 'queer_ink_order_timeline_archive_by_year' ) ) {
+    /**
+     * The /timeline/ archive ("View Full Timeline") reads as a timeline,
+     * so it should list chronologically by the _qi_timeline_year meta
+     * value rather than WordPress's default newest-post-first ordering
+     * — matching the ordering already used by the qi_timeline_entries
+     * shortcode that powers the Archiving page's timeline widget.
+     */
+    function queer_ink_order_timeline_archive_by_year( $query ) {
+        if ( is_admin() || ! $query->is_main_query() ) {
+            return;
+        }
+
+        if ( ! $query->is_post_type_archive( 'qi_timeline' ) ) {
+            return;
+        }
+
+        $query->set( 'meta_key', '_qi_timeline_year' );
+        $query->set( 'orderby', 'meta_value_num' );
+        $query->set( 'order', 'ASC' );
+    }
+}
+add_action( 'pre_get_posts', 'queer_ink_order_timeline_archive_by_year' );
