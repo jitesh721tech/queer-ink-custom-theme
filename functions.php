@@ -11,6 +11,7 @@ require_once get_theme_file_path( 'inc/taxonomies.php' );
 require_once get_theme_file_path( 'inc/rewrite.php' );
 require_once get_theme_file_path( 'inc/shortcodes.php' );
 require_once get_theme_file_path( 'inc/search.php' );
+require_once get_theme_file_path( 'inc/ajax.php' );
 require_once get_theme_file_path( 'inc/block-patterns.php' );
 
 if ( ! function_exists( 'queer_ink_theme_setup' ) ) {
@@ -91,6 +92,10 @@ if ( ! function_exists( 'queer_ink_theme_scripts' ) ) {
         wp_enqueue_style( 'queer-ink-single-content', get_theme_file_uri( 'assets/css/single-content.css' ), array( 'queer-ink-main' ), wp_get_theme()->get( 'Version' ) );
 
         wp_enqueue_script( 'queer-ink-main', get_theme_file_uri( 'assets/js/main.js' ), array(), wp_get_theme()->get( 'Version' ), true );
+        wp_localize_script( 'queer-ink-main', 'qiJournalAjax', array(
+            'url'   => admin_url( 'admin-ajax.php' ),
+            'nonce' => wp_create_nonce( 'qi_journal_filter' ),
+        ) );
     }
 }
 add_action( 'wp_enqueue_scripts', 'queer_ink_theme_scripts' );

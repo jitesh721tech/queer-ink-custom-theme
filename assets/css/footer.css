@@ -128,6 +128,14 @@ footer .footer-logo {
     display: block;
 }
 
+/* instagram.png isn't square like the other social icons, so stretching it
+   to 100%/100% renders visibly taller than Facebook/Twitter; constrain it
+   to its own aspect ratio instead. */
+.footer-social-icon img[alt="Instagram"] {
+    width: auto;
+    height: 82%;
+}
+
 .footer-social-icon:hover,
 .footer-social-icon:focus {
     transform: translateY(-2px);

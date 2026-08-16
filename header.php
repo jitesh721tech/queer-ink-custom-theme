@@ -22,7 +22,7 @@
                 <a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php bloginfo( 'name' ); ?>">
                     <img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/logo/logo.jpeg' ) ); ?>"
                         alt="<?php bloginfo( 'name' ); ?>"
-                        width="120" height="120">
+                        width="193" height="50">
                 </a>
             <?php endif; ?>
         </div>
@@ -37,13 +37,23 @@
                 ) );
                 ?>
             <?php else : ?>
+                <?php
+                $queer_ink_fallback_nav_items = array(
+                    'publishing'      => __( 'Publishing', 'queer-ink-theme' ),
+                    'archiving'       => __( 'Archiving', 'queer-ink-theme' ),
+                    'digital-library' => __( 'Digital Library', 'queer-ink-theme' ),
+                    'qi-journal'      => __( 'QI Journal', 'queer-ink-theme' ),
+                    'about'           => __( 'About', 'queer-ink-theme' ),
+                    'connect'         => __( 'Connect', 'queer-ink-theme' ),
+                );
+                ?>
                 <ul class="primary-menu" id="primary-menu-list">
-                    <li><a href="<?php echo esc_url( home_url( '/publishing' ) ); ?>"><?php esc_html_e( 'Publishing', 'queer-ink-theme' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( home_url( '/archiving' ) ); ?>"><?php esc_html_e( 'Archiving', 'queer-ink-theme' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( home_url( '/digital-library' ) ); ?>"><?php esc_html_e( 'Digital Library', 'queer-ink-theme' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( home_url( '/qi-journal' ) ); ?>"><?php esc_html_e( 'QI Journal', 'queer-ink-theme' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( home_url( '/about' ) ); ?>"><?php esc_html_e( 'About', 'queer-ink-theme' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( home_url( '/connect' ) ); ?>"><?php esc_html_e( 'Connect', 'queer-ink-theme' ); ?></a></li>
+                    <?php foreach ( $queer_ink_fallback_nav_items as $queer_ink_nav_slug => $queer_ink_nav_label ) : ?>
+                        <?php $queer_ink_nav_is_current = is_page( $queer_ink_nav_slug ); ?>
+                        <li class="<?php echo $queer_ink_nav_is_current ? 'current-menu-item' : ''; ?>">
+                            <a href="<?php echo esc_url( home_url( '/' . $queer_ink_nav_slug ) ); ?>"<?php echo $queer_ink_nav_is_current ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $queer_ink_nav_label ); ?></a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
             <div class="header-search-wrap">

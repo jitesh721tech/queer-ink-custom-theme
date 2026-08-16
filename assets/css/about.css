@@ -87,7 +87,6 @@
 
 .qi-about-wwd__col {
     display: block;
-    text-decoration: none;
     padding-right: 0.5rem;
     border-right: 1px solid #e5e2e2;
 }
@@ -96,10 +95,21 @@
     border-right: none;
 }
 
+/* Informational only — these were previously links; the illustrated
+   icons below are full-colour artwork rather than a line-glyph-in-a-
+   circle, so the circle badge's background is dropped to let them show
+   at their own colours, roughly double the previous 48px icon size. */
 .qi-about-wwd__col .qi-icon-circle {
-    width: 48px;
-    height: 48px;
+    width: 96px;
+    height: 96px;
+    background-color: transparent;
     margin-bottom: 1rem;
+}
+
+.qi-about-wwd__col .qi-icon-img {
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
 }
 
 .qi-about-wwd__col h3 {
@@ -195,51 +205,97 @@
 }
 
 /* ---------------- Founder ---------------- */
+/* Editorial founder card: the photo is the card (object-fit: cover,
+   fixed aspect-ratio so it crops cleanly at any width), a dark gradient
+   scrim keeps the overlaid label/name/intro readable, and the rest of
+   the existing bio continues below as plain running text — same
+   copy as before, just no longer crammed onto the photo itself. */
 
 .qi-about-founder {
     display: grid;
-    grid-template-columns: minmax(0, 26%) minmax(0, 74%);
-    gap: 2.5rem;
+    grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
     align-items: center;
-    padding: 2.5rem;
+    gap: 2.5rem;
+    padding: 3rem 0;
     margin: 1rem 0 3rem;
-    background-color: #fff8fa;
-    border: 1px solid #e5e2e2;
-    border-radius: 16px;
+    border-top: 1px solid #e5e2e2;
 }
 
-.qi-about-founder__media {
+.qi-about-founder__card {
     position: relative;
-    height: 220px;
+    width: 100%;
+    max-width: 460px;
+    aspect-ratio: 4 / 5;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(26, 26, 26, 0.18);
 }
 
-.qi-about-founder__media img {
+.qi-about-founder__img {
+    display: block;
     width: 100%;
     height: 100%;
-    border-radius: 12px;
     object-fit: cover;
-    box-shadow: 0 10px 24px rgba(26, 26, 26, 0.15);
 }
 
-.qi-about-founder__body h2 {
-    margin: 0 0 1rem;
+.qi-about-founder__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(20, 10, 14, 0) 32%, rgba(17, 8, 12, 0.6) 62%, rgba(13, 6, 9, 0.92) 100%);
+}
+
+.qi-about-founder__overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.75rem;
+    color: #ffffff;
+}
+
+.qi-about-founder__label {
+    display: inline-block;
+    margin-bottom: 0.85rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.18);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.qi-about-founder__overlay h2 {
+    margin: 0 0 0.75rem;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 1.4rem;
-    color: #1a1a1a;
+    font-size: 1.5rem;
+    color: #ffffff;
 }
 
-.qi-about-founder__body p {
+.qi-about-founder__overlay p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.65;
+    font-size: 0.88rem;
+}
+
+.qi-about-founder__more {
+    max-width: 38rem;
+}
+
+.qi-about-founder__more p {
     margin: 0 0 0.9rem;
     color: #4a4a4a;
     line-height: 1.7;
     font-size: 0.95rem;
 }
 
-.qi-about-founder__body p:last-child {
+.qi-about-founder__more p:last-child {
     margin-bottom: 0;
 }
 
-.qi-about-founder__body a {
+.qi-about-founder__more a {
     color: #c0185b;
     font-weight: 700;
     text-decoration: none;
@@ -448,13 +504,17 @@
 
     .qi-about-founder {
         grid-template-columns: 1fr;
-        text-align: center;
     }
 
-    .qi-about-founder__media {
-        height: 180px;
-        max-width: 240px;
+    .qi-about-founder__card {
+        max-width: 380px;
         margin: 0 auto;
+    }
+
+    .qi-about-founder__more {
+        max-width: 100%;
+        margin-top: 1.5rem;
+        text-align: center;
     }
 
     .qi-about-info-row {
@@ -513,7 +573,11 @@
     }
 
     .qi-about-founder {
-        padding: 1.75rem;
+        padding: 2.5rem 0;
+    }
+
+    .qi-about-founder__card {
+        max-width: 100%;
     }
 
     .qi-about-info-row {

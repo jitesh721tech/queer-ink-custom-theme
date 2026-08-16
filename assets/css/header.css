@@ -8,6 +8,32 @@ Queer Ink Header
     width:100%;
     background:var(--qi-color-surface-lowest);
     border-bottom:1px solid var(--qi-color-outline-variant);
+    position:sticky;
+    top:0;
+    z-index:1000;
+    transition:box-shadow .25s ease;
+}
+
+.site-header.is-scrolled{
+    box-shadow:0 4px 16px rgba(37,24,26,0.08);
+}
+
+/* When logged in, WordPress's own admin toolbar is fixed at the true
+   top of the viewport (z-index above everything, including our
+   sticky header's top:0), so once you scroll it visually covers the
+   top slice of the header. Offset the sticky position by the admin
+   bar's own height so the header sticks just below it instead —
+   matches WP core's own admin-bar breakpoint (46px under 783px wide,
+   32px above it). Visitors who aren't logged in never see the admin
+   bar, so this never applies to them. */
+body.admin-bar .site-header{
+    top:32px;
+}
+
+@media screen and (max-width:782px){
+    body.admin-bar .site-header{
+        top:46px;
+    }
 }
 
 .site-header__inner{
@@ -55,6 +81,7 @@ Queer Ink Header
 }
 
 .primary-menu a{
+    position:relative;
     text-decoration:none;
     color:var(--qi-color-ink);
     font-size:14px;
@@ -66,6 +93,28 @@ Queer Ink Header
 
 .primary-menu a:hover{
     color:var(--qi-color-primary);
+}
+
+.primary-menu li.current-menu-item > a,
+.primary-menu li.current_page_item > a,
+.primary-menu li.current-menu-ancestor > a,
+.primary-menu li.current-menu-parent > a,
+.primary-menu a[aria-current="page"]{
+    color:var(--qi-color-primary);
+}
+
+.primary-menu li.current-menu-item > a::after,
+.primary-menu li.current_page_item > a::after,
+.primary-menu li.current-menu-ancestor > a::after,
+.primary-menu li.current-menu-parent > a::after,
+.primary-menu a[aria-current="page"]::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:-10px;
+    height:2px;
+    background-color:var(--qi-color-primary);
 }
 
 /* ---------------- Search ---------------- */
@@ -251,6 +300,14 @@ z-index:500;
 
 .primary-menu li:last-child a{
     border-bottom:none;
+}
+
+.primary-menu li.current-menu-item > a::after,
+.primary-menu li.current_page_item > a::after,
+.primary-menu li.current-menu-ancestor > a::after,
+.primary-menu li.current-menu-parent > a::after,
+.primary-menu a[aria-current="page"]::after{
+    display:none;
 }
 
 }

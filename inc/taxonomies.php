@@ -8,6 +8,14 @@
  *
  * qi_article_section is article-only — it groups posts by editorial
  * section (Reflections, Research, Voices...) for the QI Journal page.
+ * Each article should carry exactly one section term (a content
+ * convention, not enforced by WordPress) so it reads as a category.
+ *
+ * qi_article_topic is a second, separate article-only taxonomy for
+ * cross-cutting topics (Archives & Memory, Publishing & Books...) —
+ * articles can carry several. Deliberately its own taxonomy rather than
+ * reusing qi_subject (shared with qi_book): Book subjects and Journal
+ * topics are different vocabularies that happen to sound similar.
  *
  * qi_book_author and qi_article_author are deliberately separate,
  * non-hierarchical (tag-style) taxonomies rather than one shared
@@ -64,6 +72,21 @@ if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
             'show_in_rest'      => true,
             'show_admin_column' => true,
             'rewrite'           => array( 'slug' => 'section', 'with_front' => false ),
+        ) );
+
+        register_taxonomy( 'qi_article_topic', array( 'qi_article' ), array(
+            'labels'       => array(
+                'name'          => esc_html__( 'Topics', 'queer-ink-theme' ),
+                'singular_name' => esc_html__( 'Topic', 'queer-ink-theme' ),
+                'add_new_item'  => esc_html__( 'Add New Topic', 'queer-ink-theme' ),
+                'edit_item'     => esc_html__( 'Edit Topic', 'queer-ink-theme' ),
+                'all_items'     => esc_html__( 'All Topics', 'queer-ink-theme' ),
+            ),
+            'public'            => true,
+            'hierarchical'      => false,
+            'show_in_rest'      => true,
+            'show_admin_column' => true,
+            'rewrite'           => array( 'slug' => 'topic', 'with_front' => false ),
         ) );
 
         register_taxonomy( 'qi_book_author', array( 'qi_book' ), array(

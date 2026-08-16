@@ -83,6 +83,10 @@ body {
     border: 0;
 }
 
+.is-hidden {
+    display: none !important;
+}
+
 img, picture, svg {
     max-width: 100%;
     display: block;
@@ -204,10 +208,65 @@ button {
     color: var(--qi-color-primary-hover);
 }
 
+/* Generic WordPress pages (page.php via content-page.php) render
+   .entry-header/.entry-content as direct children of .site-content,
+   which carries no horizontal padding of its own — so give this exact
+   shallow nesting its own gutter, matching .container's own 32/24/16px
+   breakpoints. Scoped with the direct-child combinator so it doesn't
+   also match .entry-header/.entry-content where they're nested deeper
+   inside an already-guttered wrapper (e.g. .qi-single-book__body on
+   the single Book/Article/Collection/Timeline templates). */
+.site-content > article > .entry-header,
+.site-content > article > .entry-content {
+    padding-left: 32px;
+    padding-right: 32px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 980px) {
+    .site-content > article > .entry-header,
+    .site-content > article > .entry-content {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
 @media (max-width: 680px) {
     .entry-header {
-        padding: 2.5rem 0 1.5rem;
+        padding-top: 2.5rem;
+        padding-bottom: 1.5rem;
         margin-bottom: 2rem;
+    }
+
+    .site-content > article > .entry-header,
+    .site-content > article > .entry-content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+/* 404.php's .error-404 and index.php's .page-placeholder are likewise
+   direct children of the unpadded .site-content — same fix. */
+.site-content > .error-404,
+.site-content > .page-placeholder {
+    padding-left: 32px;
+    padding-right: 32px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 980px) {
+    .site-content > .error-404,
+    .site-content > .page-placeholder {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+@media (max-width: 680px) {
+    .site-content > .error-404,
+    .site-content > .page-placeholder {
+        padding-left: 16px;
+        padding-right: 16px;
     }
 }
 

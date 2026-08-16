@@ -188,14 +188,23 @@ if ( ! function_exists( 'queer_ink_latest_articles_shortcode' ) ) {
 add_shortcode( 'qi_latest_articles', 'queer_ink_latest_articles_shortcode' );
 
 if ( ! function_exists( 'queer_ink_subjects_shortcode' ) ) {
+    /**
+     * 'taxonomy' defaults to qi_subject (Digital Library's book subjects,
+     * the shortcode's original/only use). QI Journal's "Popular Topics"
+     * passes taxonomy="qi_article_topic" instead — a separate taxonomy,
+     * not a repurposing of this one — so both keep their own vocabulary.
+     */
     function queer_ink_subjects_shortcode( $atts ) {
         $atts = shortcode_atts( array(
-            'style' => 'grid',
-            'count' => 0,
+            'style'    => 'grid',
+            'count'    => 0,
+            'taxonomy' => 'qi_subject',
         ), $atts, 'qi_subjects' );
 
+        $taxonomy = in_array( $atts['taxonomy'], array( 'qi_subject', 'qi_article_topic' ), true ) ? $atts['taxonomy'] : 'qi_subject';
+
         $args = array(
-            'taxonomy'   => 'qi_subject',
+            'taxonomy'   => $taxonomy,
             'hide_empty' => false,
         );
 
@@ -212,8 +221,9 @@ if ( ! function_exists( 'queer_ink_subjects_shortcode' ) ) {
                 echo '<ul class="qi-topics-list">';
                 foreach ( $terms as $term ) {
                     printf(
-                        '<li><a href="%1$s"><span>%2$s</span><span class="qi-topics-list__arrow" aria-hidden="true">›</span></a></li>',
+                        '<li><a href="%1$s" data-filter-topic="%2$s"><span>%3$s</span><span class="qi-topics-list__arrow" aria-hidden="true">›</span></a></li>',
                         esc_url( get_term_link( $term ) ),
+                        esc_attr( $term->slug ),
                         esc_html( $term->name )
                     );
                 }
@@ -239,6 +249,15 @@ if ( ! function_exists( 'queer_ink_subjects_shortcode' ) ) {
 add_shortcode( 'qi_subjects', 'queer_ink_subjects_shortcode' );
 
 if ( ! function_exists( 'queer_ink_article_sections_shortcode' ) ) {
+    /**
+     * "Latest" + one tab per qi_article_section term. Each tab keeps a
+     * real href to its taxonomy archive (works with JS disabled); the
+     * data-filter-section slug lets main.js intercept clicks and filter
+     * the article list in place via the qi_load_articles AJAX action
+     * instead of leaving /qi-journal/. "is-active" only ever marks
+     * "Latest" server-side (the page always loads fresh at that state);
+     * JS moves it after that.
+     */
     function queer_ink_article_sections_shortcode( $atts ) {
         $terms = get_terms( array(
             'taxonomy'   => 'qi_article_section',
@@ -249,7 +268,7 @@ if ( ! function_exists( 'queer_ink_article_sections_shortcode' ) ) {
 
         echo '<div class="qi-section-tabs">';
         printf(
-            '<a class="qi-section-tab is-active" href="%1$s">%2$s</a>',
+            '<a class="qi-section-tab is-active" href="%1$s" data-filter-section="">%2$s</a>',
             esc_url( home_url( '/journal/' ) ),
             esc_html__( 'Latest', 'queer-ink-theme' )
         );
@@ -257,8 +276,9 @@ if ( ! function_exists( 'queer_ink_article_sections_shortcode' ) ) {
         if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
             foreach ( $terms as $term ) {
                 printf(
-                    '<a class="qi-section-tab" href="%1$s">%2$s</a>',
+                    '<a class="qi-section-tab" href="%1$s" data-filter-section="%2$s">%3$s</a>',
                     esc_url( get_term_link( $term ) ),
+                    esc_attr( $term->slug ),
                     esc_html( $term->name )
                 );
             }
@@ -272,8 +292,14 @@ add_shortcode( 'qi_article_sections', 'queer_ink_article_sections_shortcode' );
 
 if ( ! function_exists( 'queer_ink_subjects_dropdown_shortcode' ) ) {
     function queer_ink_subjects_dropdown_shortcode( $atts ) {
+        $atts = shortcode_atts( array(
+            'taxonomy' => 'qi_subject',
+        ), $atts, 'qi_subjects_dropdown' );
+
+        $taxonomy = in_array( $atts['taxonomy'], array( 'qi_subject', 'qi_article_topic' ), true ) ? $atts['taxonomy'] : 'qi_subject';
+
         $terms = get_terms( array(
-            'taxonomy'   => 'qi_subject',
+            'taxonomy'   => $taxonomy,
             'hide_empty' => false,
         ) );
 
@@ -283,7 +309,7 @@ if ( ! function_exists( 'queer_ink_subjects_dropdown_shortcode' ) ) {
             <option value=""><?php esc_html_e( 'All Topics', 'queer-ink-theme' ); ?></option>
             <?php if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) : ?>
                 <?php foreach ( $terms as $term ) : ?>
-                    <option value="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php echo esc_html( $term->name ); ?></option>
+                    <option value="<?php echo esc_url( get_term_link( $term ) ); ?>" data-filter-topic="<?php echo esc_attr( $term->slug ); ?>"><?php echo esc_html( $term->name ); ?></option>
                 <?php endforeach; ?>
             <?php endif; ?>
         </select>

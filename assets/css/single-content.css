@@ -6,7 +6,11 @@ Supports single-qi_book.php and single-qi_article.php.
 /* ---------------- Single Book ---------------- */
 
 .qi-single-book {
-    padding: 3rem 0 4rem;
+    width: min(100%, 1400px);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 32px 4rem;
+    box-sizing: border-box;
 }
 
 .qi-single-book__layout {
@@ -104,7 +108,11 @@ Supports single-qi_book.php and single-qi_article.php.
 /* ---------------- Single Article ---------------- */
 
 .qi-single-article {
-    padding: 3rem 0 4rem;
+    width: min(100%, 1400px);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 32px 4rem;
+    box-sizing: border-box;
 }
 
 .qi-single-article__media {
@@ -141,4 +149,20 @@ Supports single-qi_book.php and single-qi_article.php.
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 2rem;
+}
+
+@media ( max-width: 980px ) {
+    .qi-single-book,
+    .qi-single-article {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+@media ( max-width: 680px ) {
+    .qi-single-book,
+    .qi-single-article {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
 }

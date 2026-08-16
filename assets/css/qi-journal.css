@@ -6,6 +6,15 @@
  * @package Queer_Ink_Theme
  */
 
+/* ---------------- Hero ---------------- */
+/* Scoped to the qi-journal-hero class added to just this page's hero
+   group, so the rounding doesn't affect the shared .qi-pub-hero__image
+   class used by other landing pages' heroes. */
+
+.qi-journal-hero .qi-pub-hero__image img {
+    border-radius: var(--qi-radius-xl);
+}
+
 /* ---------------- Filter bar ---------------- */
 
 .qi-filter-bar {
@@ -111,6 +120,18 @@
 .qi-journal-load-more {
     margin: 2rem 0 0;
     text-align: center;
+}
+
+.qi-journal-load-more__button[aria-busy="true"] {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.qi-journal-load-more__status {
+    display: block;
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--qi-color-ink-variant);
 }
 
 /* ---------------- Sidebar ---------------- */
@@ -278,9 +299,12 @@
     color: #c0185b;
 }
 
-.qi-journal-cta__icon-item .qi-icon {
-    width: 26px;
-    height: 26px;
+/* ~3x the previous 26px glyph size, per the reference art. */
+.qi-journal-cta__icon-img {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
 }
 
 .qi-journal-cta__icon-item span {

@@ -17,6 +17,31 @@ html:has(body.page-id-17) {
     scroll-behavior: smooth;
 }
 
+/* ---------------- Featured Books / Browse by Subjects spacing ---------------- */
+/* .qi-current-list and .qi-current-list__header are shared with the
+   Publishing page (publishing.css) — scoped to page-id-17 here so
+   Publishing's "Our Current List" spacing is untouched. */
+
+body.page-id-17 .qi-current-list {
+    margin-top: 2rem; /* was 3rem — slightly tighter gap before the divider */
+    padding-top: 1.5rem; /* was 3rem — ~50% less space between the divider and the heading */
+}
+
+body.page-id-17 .qi-current-list__header {
+    margin-bottom: 0.75rem; /* was 1.5rem — ~50% less space between the heading and the carousel below it */
+}
+
+/* Browse by Subjects: drop its own top divider/spacing entirely so it
+   reads as a continuation of Featured Books rather than a new section,
+   and tighten its own bottom padding so the .qi-reading-room's existing
+   margin-top is the only (small) gap before "Join the Reading Room". */
+body.page-id-17 .qi-current-list--subjects {
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-top: none;
+}
+
 /* ---------------- Hero ---------------- */
 
 /* The shared .qi-pub-hero row doesn't stretch its content to fill the
@@ -136,6 +161,15 @@ html:has(body.page-id-17) {
     gap: 0.75rem;
 }
 
+/* The nav buttons reuse .qi-book-carousel__nav (see publishing.css),
+   which carries a margin-top tuned to align with tall book covers.
+   Subject pills are a single short row, so that offset is reset here —
+   higher specificity than the shared rule (and its own breakpoints)
+   lets align-items: center above position it correctly instead. */
+.qi-subjects-carousel .qi-book-carousel__nav {
+    margin-top: 8px; /* .qi-subjects-grid's own asymmetric padding offsets the pills' true centre by this much */
+}
+
 .qi-subjects-grid {
     flex: 1;
     display: flex;
@@ -149,6 +183,20 @@ html:has(body.page-id-17) {
 }
 
 .qi-subjects-grid::-webkit-scrollbar {
+    display: none;
+}
+
+/* "View all subjects" (data-expand-subjects in main.js) switches the
+   single scrollable row to a wrapped view showing every subject pill
+   at once — the carousel arrows have nothing left to scroll, so they're
+   hidden rather than left sitting there non-functional. */
+.qi-subjects-carousel.is-expanded .qi-subjects-grid {
+    flex-wrap: wrap;
+    overflow: visible;
+    scroll-snap-type: none;
+}
+
+.qi-subjects-carousel.is-expanded .qi-book-carousel__nav {
     display: none;
 }
 
@@ -186,9 +234,10 @@ html:has(body.page-id-17) {
     grid-template-columns: minmax(0, 20%) minmax(0, 52%) minmax(0, 28%);
     gap: 2rem;
     align-items: center;
-    padding: 3rem;
+    padding: 2.25rem 3rem; /* was 3rem all around — tightens height without touching horizontal breathing room */
     margin: 3rem 0;
     background-color: #fdf2f1;
+    border: 1px solid var(--qi-color-outline-variant);
     border-radius: 16px;
     overflow: hidden;
 }

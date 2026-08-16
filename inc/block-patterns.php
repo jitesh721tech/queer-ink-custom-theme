@@ -177,10 +177,18 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
         $whatsapp_logo_image = esc_url( get_theme_file_uri( 'assets/images/sections/wp_logo.png' ) );
         $telegram_logo_image = esc_url( get_theme_file_uri( 'assets/images/sections/telegram_logo.png' ) );
         $qi_journal_cta_image = esc_url( get_theme_file_uri( 'assets/images/sections/qi-journal-cta.png' ) );
+        $qi_journal_cta_icon_story_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-journal-cta-story.png' ) );
+        $qi_journal_cta_icon_knowledge_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-journal-cta-knowledge.png' ) );
+        $qi_journal_cta_icon_future_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-journal-cta-future.png' ) );
         $about_why_flower_image = esc_url( get_theme_file_uri( 'assets/images/sections/about-why-flower.png' ) );
         $about_team_icon_image = esc_url( get_theme_file_uri( 'assets/images/sections/team.png' ) );
         $about_media_icon_image = esc_url( get_theme_file_uri( 'assets/images/sections/media.png' ) );
         $about_annual_report_icon_image = esc_url( get_theme_file_uri( 'assets/images/sections/annual_report.png' ) );
+        $about_wwd_icon_publishing_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-publishing.png' ) );
+        $about_wwd_icon_archiving_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-archiving.png' ) );
+        $about_wwd_icon_digital_library_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-digital-library.png' ) );
+        $about_wwd_icon_blog_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-blog.png' ) );
+        $about_wwd_icon_conversations_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-conversations.png' ) );
 
         // Site-relative destination URLs, resolved through home_url() so links
         // still work when WordPress is installed in a subdirectory (e.g. /queer-ink/).
@@ -189,6 +197,7 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
         $url_journal         = esc_url( home_url( '/journal/' ) );
         $url_qi_journal      = esc_url( home_url( '/qi-journal/' ) );
         $url_about           = esc_url( home_url( '/about/' ) );
+        $url_about_qi_journal = esc_url( home_url( '/about-qi-journal/' ) );
         $url_publishing      = esc_url( home_url( '/publishing/' ) );
         $url_archiving       = esc_url( home_url( '/archiving/' ) );
         $url_timeline        = esc_url( home_url( '/timeline/' ) );
@@ -774,14 +783,14 @@ HTML
             array(
                 'title'      => esc_html__( 'Queer Ink: Browse by Subjects', 'queer-ink-theme' ),
                 'categories' => array( 'queer-ink' ),
-                'content'    => '<!-- wp:group {"className":"qi-current-list"} -->
-<div class="wp-block-group qi-current-list"><!-- wp:group {"className":"qi-current-list__header qi-current-list__header--split"} -->
+                'content'    => '<!-- wp:group {"className":"qi-current-list qi-current-list--subjects","anchor":"subjects"} -->
+<div class="wp-block-group qi-current-list qi-current-list--subjects" id="subjects"><!-- wp:group {"className":"qi-current-list__header qi-current-list__header--split"} -->
 <div class="wp-block-group qi-current-list__header qi-current-list__header--split"><!-- wp:heading -->
 <h2 class="wp-block-heading">Browse by Subjects</h2>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"qi-current-list__view-all"} -->
-<p class="qi-current-list__view-all"><a href="' . $url_books . '">View all books →</a></p>
+<p class="qi-current-list__view-all"><a href="#subjects" data-expand-subjects>View all subjects →</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -860,8 +869,8 @@ HTML
                 'title'      => esc_html__( 'Queer Ink: QI Journal Hero', 'queer-ink-theme' ),
                 'categories' => array( 'queer-ink' ),
                 'content'    => <<<HTML
-<!-- wp:group {"className":"qi-pub-hero"} -->
-<div class="wp-block-group qi-pub-hero"><!-- wp:columns -->
+<!-- wp:group {"className":"qi-pub-hero qi-journal-hero"} -->
+<div class="wp-block-group qi-pub-hero qi-journal-hero"><!-- wp:columns -->
 <div class="wp-block-columns"><!-- wp:column -->
 <div class="wp-block-column"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
 <p class="hero__eyebrow">QI JOURNAL</p>
@@ -877,7 +886,7 @@ HTML
 
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button -->
-<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{$url_connect}">Share Your Story</a></div>
+<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="{$url_connect}#contact-form">Share Your Story</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column -->
@@ -903,7 +912,7 @@ HTML
 <div class="qi-filter-bar">
     <div class="qi-filter-bar__tabs">[qi_article_sections]</div>
     <div class="qi-filter-bar__controls">
-        [qi_subjects_dropdown]
+        [qi_subjects_dropdown taxonomy="qi_article_topic"]
         <form class="qi-search-form" role="search" method="get" action="' . $url_home . '">
             <input type="hidden" name="post_type" value="qi_article" />
             <label class="screen-reader-text" for="qi-journal-search">' . esc_html__( 'Search articles', 'queer-ink-theme' ) . '</label>
@@ -915,6 +924,12 @@ HTML
 <!-- /wp:html -->',
             )
         );
+
+        // Load More starts hidden if the first static page (6 articles,
+        // matching [qi_latest_articles count="6"] below) already covers
+        // every published article — nothing more for it to load.
+        $qi_journal_total_articles = wp_count_posts( 'qi_article' )->publish;
+        $qi_journal_has_more_class = $qi_journal_total_articles > 6 ? '' : ' is-hidden';
 
         register_block_pattern(
             'queer-ink/qi-journal-content',
@@ -928,7 +943,10 @@ HTML
 <!-- /wp:shortcode -->
 
 <!-- wp:html -->
-<p class="qi-journal-load-more"><a class="button button--outline" href="' . $url_journal . '">Load More Articles</a></p>
+<p class="qi-journal-load-more' . $qi_journal_has_more_class . '">
+    <button type="button" class="button button--outline qi-journal-load-more__button" data-load-more data-paged="1">Load More Articles</button>
+    <span class="qi-journal-load-more__status" role="status" aria-live="polite"></span>
+</p>
 <!-- /wp:html --></div>
 <!-- /wp:column -->
 
@@ -937,11 +955,11 @@ HTML
 <div class="qi-journal-widget">
     <h3>About QI Journal</h3>
     <p>QI Journal is a space for queer perspectives, research, community voices and resources that deepen our understanding of our pasts and imagine our futures.</p>
-    <a class="qi-pathway-card__link" href="' . $url_about . '">Learn more about our work →</a>
+    <a class="qi-pathway-card__link" href="' . $url_about_qi_journal . '">Learn more about our work →</a>
 </div>
 <div class="qi-journal-widget">
     <h3>Popular Topics</h3>
-    [qi_subjects style="list" count="6"]
+    [qi_subjects taxonomy="qi_article_topic" style="list" count="6"]
 </div>
 <div class="qi-journal-widget">
     <h3>Stay in the Loop</h3>
@@ -983,12 +1001,12 @@ HTML
     <div class="qi-journal-cta__body">
         <h2>Your experiences strengthen our archive.</h2>
         <p>Share your story, research or reflections with a community that listens, learns and builds together.</p>
-        <a class="button button--primary" href="' . $url_connect . '">Write for QI Journal</a>
+        <a class="button button--primary" href="' . $url_connect . '#contact-form">Write for QI Journal</a>
     </div>
     <div class="qi-journal-cta__icons">
-        <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle">' . queer_ink_icon( 'pencil' ) . '</div><span>Share your story</span></div>
-        <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle">' . queer_ink_icon( 'book' ) . '</div><span>Expand our knowledge</span></div>
-        <div class="qi-journal-cta__icon-item"><div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div><span>Build our future</span></div>
+        <div class="qi-journal-cta__icon-item"><img class="qi-journal-cta__icon-img" src="' . $qi_journal_cta_icon_story_image . '" alt=""><span>Share your story</span></div>
+        <div class="qi-journal-cta__icon-item"><img class="qi-journal-cta__icon-img" src="' . $qi_journal_cta_icon_knowledge_image . '" alt=""><span>Expand our knowledge</span></div>
+        <div class="qi-journal-cta__icon-item"><img class="qi-journal-cta__icon-img" src="' . $qi_journal_cta_icon_future_image . '" alt=""><span>Build our future</span></div>
     </div>
 </div>
 <!-- /wp:html -->',
@@ -1040,31 +1058,31 @@ HTML
         <p>We hold queer Indian lives — through publishing, archives, a digital library, a public knowledge exchange, and editorial writing.</p>
     </div>
     <div class="qi-about-wwd__grid">
-        <a class="qi-about-wwd__col" href="' . $url_publishing . '">
-            <div class="qi-icon-circle">' . queer_ink_icon( 'book' ) . '</div>
+        <div class="qi-about-wwd__col">
+            <div class="qi-icon-circle"><img class="qi-icon-img" src="' . $about_wwd_icon_publishing_image . '" alt="" loading="lazy"></div>
             <h3>The Publishing Imprint</h3>
             <p>Issues books drawn from the Queer India Archives — anthologies, edited collections, and oral histories shaped into book form. A self-publishing accelerator, the Storytellers Studio, also supports independent authors to publish their own work through mentorship and crowdfund-led publication.</p>
-        </a>
-        <a class="qi-about-wwd__col" href="' . $url_archiving . '">
-            <div class="qi-icon-circle">' . queer_ink_icon( 'archive' ) . '</div>
+        </div>
+        <div class="qi-about-wwd__col">
+            <div class="qi-icon-circle"><img class="qi-icon-img" src="' . $about_wwd_icon_archiving_image . '" alt="" loading="lazy"></div>
             <h3>The Queer India Archives</h3>
             <p>Preserves oral histories, photographs, correspondence, organisational records, zines, ephemera and material culture from queer Indian lives and movements — held in trust, on terms set by contributors.</p>
-        </a>
-        <a class="qi-about-wwd__col" href="' . $url_digital_library . '">
-            <div class="qi-icon-circle">' . queer_ink_icon( 'globe' ) . '</div>
+        </div>
+        <div class="qi-about-wwd__col">
+            <div class="qi-icon-circle"><img class="qi-icon-img" src="' . $about_wwd_icon_digital_library_image . '" alt="" loading="lazy"></div>
             <h3>The Queer Ink Digital Library</h3>
             <p>Makes queer Indian literature and history searchable, public-facing and openly accessible — books, documents, oral histories, films and curated collections, for readers, researchers, students and community members anywhere.</p>
-        </a>
-        <a class="qi-about-wwd__col" href="' . $url_qi_journal . '">
-            <div class="qi-icon-circle">' . queer_ink_icon( 'message' ) . '</div>
+        </div>
+        <div class="qi-about-wwd__col">
+            <div class="qi-icon-circle"><img class="qi-icon-img" src="' . $about_wwd_icon_blog_image . '" alt="" loading="lazy"></div>
             <h3>Qblog</h3>
             <p>Is the editorial writing space — Shobhna\'s reflections, essays, and notes from inside the work.</p>
-        </a>
-        <a class="qi-about-wwd__col" href="' . $url_connect . '">
-            <div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div>
+        </div>
+        <div class="qi-about-wwd__col">
+            <div class="qi-icon-circle"><img class="qi-icon-img" src="' . $about_wwd_icon_conversations_image . '" alt="" loading="lazy"></div>
             <h3>QConversations</h3>
             <p>Is the public knowledge exchange — a sustained practice of public posts, free engagement on social platforms, and paid private consultations for focused thinking.</p>
-        </a>
+        </div>
     </div>
 </div>
 <!-- /wp:html -->',
@@ -1102,12 +1120,16 @@ HTML
                 'categories' => array( 'queer-ink' ),
                 'content'    => '<!-- wp:html -->
 <div class="qi-about-founder">
-    <div class="qi-about-founder__media">
-        <img src="' . $about_founder_image . '" alt="Shobhna S Kumar, founder of Queer Ink"/>
+    <div class="qi-about-founder__card">
+        <img class="qi-about-founder__img" src="' . $about_founder_image . '" alt="Shobhna S Kumar, founder of Queer Ink">
+        <div class="qi-about-founder__scrim" aria-hidden="true"></div>
+        <div class="qi-about-founder__overlay">
+            <span class="qi-about-founder__label">Founder</span>
+            <h2>Shobhna S Kumar</h2>
+            <p>Shobhna S Kumar founded Queer Ink in 2010 as India\'s first online queer bookstore. In 2012 she published <em>Out! Stories from the New Queer India</em>, edited by Minal Hajratwala — Queer Ink\'s first book, the foundational anthology of contemporary queer Indian writing.</p>
+        </div>
     </div>
-    <div class="qi-about-founder__body">
-        <h2>Shobhna S Kumar — founder.</h2>
-        <p>Shobhna S Kumar founded Queer Ink in 2010 as India\'s first online queer bookstore. In 2012 she published <em>Out! Stories from the New Queer India</em>, edited by Minal Hajratwala — Queer Ink\'s first book, the foundational anthology of contemporary queer Indian writing.</p>
+    <div class="qi-about-founder__more">
         <p>Born in Fiji and raised partly in Australia, she settled in India in 2002. She is a publisher, archivist, and editor whose work over fifteen years has held queer Indian lives in print, on record, and in conversation.</p>
         <p>She lives and works in Mumbai. Contact: <a href="mailto:shobhna@queer-ink.com">shobhna@queer-ink.com</a></p>
     </div>

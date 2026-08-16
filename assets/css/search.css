@@ -7,10 +7,36 @@
  * @package Queer_Ink_Theme
  */
 
+/* ---------------- Shared page gutter ---------------- */
+/* These sections are the direct children of .site-content.container
+   rendered by search.php. .site-content itself carries no horizontal
+   padding (it's the shared full-bleed wrapper other pages' sections
+   supply their own gutter on top of), so each top-level section here
+   provides its own, matching .container's 32/24/16px breakpoints.
+   Scoped under .site-content > because WordPress's body_class() also
+   adds "search-results"/"search-no-results" to <body> on this
+   template — an unscoped selector would match that too and double the
+   padding via the body element itself. */
+
+.site-content > .search-header,
+.site-content > .search-empty-state,
+.site-content > .search-no-results,
+.site-content > .search-authors,
+.site-content > .search-results {
+    width: min(100%, 1400px);
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 32px;
+    padding-right: 32px;
+    box-sizing: border-box;
+}
+
 /* ---------------- Header ---------------- */
 
 .search-header {
-    padding: 3rem 0 2rem;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
     border-bottom: 1px solid #e5e2e2;
 }
 
@@ -277,6 +303,15 @@
 /* ---------------- Tablet ---------------- */
 
 @media (max-width: 980px) {
+    .site-content > .search-header,
+    .site-content > .search-empty-state,
+    .site-content > .search-no-results,
+    .site-content > .search-authors,
+    .site-content > .search-results {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
     .search-authors__grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -289,8 +324,18 @@
 /* ---------------- Mobile ---------------- */
 
 @media (max-width: 680px) {
+    .site-content > .search-header,
+    .site-content > .search-empty-state,
+    .site-content > .search-no-results,
+    .site-content > .search-authors,
+    .site-content > .search-results {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
     .search-header {
-        padding: 2.5rem 0 1.5rem;
+        padding-top: 2.5rem;
+        padding-bottom: 1.5rem;
     }
 
     .search-authors__grid {

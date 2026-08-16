@@ -298,6 +298,27 @@ html:has(body.page-id-16) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 2rem 1.75rem;
     align-items: start;
+    width: min(100%, 1400px);
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 32px;
+    padding-right: 32px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 980px) {
+    .site-content:has(> .timeline-entry-card) {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+@media (max-width: 680px) {
+    .site-content:has(> .timeline-entry-card) {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
 }
 
 .site-content:has(> .timeline-entry-card) > .archive-header {
@@ -752,6 +773,59 @@ html:has(body.page-id-16) {
     font-weight: 700;
     color: #c0185b;
     text-decoration: none;
+}
+
+/* ---------------- Articles archive (/journal/) ---------------- */
+/* Same gap as the Books and Timeline archives: the raw qi_article CPT
+   archive has no grid wrapper of its own (archive.php renders the
+   .article-card loop straight into the shared .site-content), so it's
+   scoped in here via :has(), mirroring the identical fix already
+   applied to .book-card and .timeline-entry-card. */
+
+.site-content:has(> .article-card) {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem 1.75rem;
+    align-items: start;
+    width: min(100%, 1400px);
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 32px;
+    padding-right: 32px;
+    box-sizing: border-box;
+}
+
+.site-content:has(> .article-card) > .archive-header {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 1200px) and (min-width: 981px) {
+    .site-content:has(> .article-card) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 980px) {
+    .site-content:has(> .article-card) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+@media (max-width: 680px) {
+    .site-content:has(> .article-card) {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-content:has(> .article-card) {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ---------------- Relationship-centred model ---------------- */
