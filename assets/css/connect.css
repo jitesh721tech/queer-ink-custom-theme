@@ -310,8 +310,15 @@ html:has(body.page-id-25) {
 /* ---------------- Mobile ---------------- */
 
 @media (max-width: 680px) {
+    /* .qi-connect-contact is a direct child of the shared .site-content
+       wrapper, which carries no horizontal padding of its own on
+       mobile — matches the standard 16px gutter used on every other
+       page. Fixing the wrapper insets both .qi-connect-card children
+       (.qi-connect-form and .qi-connect-info) uniformly. */
     .qi-connect-contact {
         padding: 2.5rem 0;
+        margin-left: 16px;
+        margin-right: 16px;
     }
 
     .qi-connect-card {
@@ -320,6 +327,29 @@ html:has(body.page-id-25) {
 
     .qi-connect-form__row {
         grid-template-columns: 1fr;
+    }
+
+    /* More breathing room between fields, and taller inputs for
+       comfortable tapping — the form otherwise felt cramped at this
+       width. */
+    .qi-connect-form__field {
+        margin-bottom: 1.35rem;
+    }
+
+    .qi-connect-form input:not([type="checkbox"]),
+    .qi-connect-form select,
+    .qi-connect-form textarea {
+        padding: 0.9rem 1rem;
+    }
+
+    .qi-connect-form__consent {
+        margin: 0.5rem 0 1.5rem;
+    }
+
+    .qi-connect-form .button--primary {
+        display: flex;
+        width: fit-content;
+        margin: 0 auto;
     }
 
     .qi-connect-together {

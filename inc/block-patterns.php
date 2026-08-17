@@ -202,6 +202,7 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
         $url_archiving       = esc_url( home_url( '/archiving/' ) );
         $url_timeline        = esc_url( home_url( '/timeline/' ) );
         $url_digital_library = esc_url( home_url( '/digital-library/' ) );
+        $url_subjects        = esc_url( home_url( '/subjects/' ) );
         $url_home            = esc_url( home_url( '/' ) );
 
         register_block_pattern(
@@ -210,8 +211,8 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
                 'title'      => esc_html__( 'Queer Ink: Publishing Hero', 'queer-ink-theme' ),
                 'categories' => array( 'queer-ink' ),
                 'content'    => <<<HTML
-<!-- wp:group {"className":"qi-pub-hero"} -->
-<div class="wp-block-group qi-pub-hero" style="background-image:url({$publishing_hero_bg_image})"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
+<!-- wp:group {"className":"qi-pub-hero qi-publishing-hero"} -->
+<div class="wp-block-group qi-pub-hero qi-publishing-hero" style="background-image:url({$publishing_hero_bg_image})"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
 <p class="hero__eyebrow">PUBLISHING</p>
 <!-- /wp:paragraph -->
 
@@ -790,7 +791,7 @@ HTML
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"qi-current-list__view-all"} -->
-<p class="qi-current-list__view-all"><a href="#subjects" data-expand-subjects>View all subjects →</a></p>
+<p class="qi-current-list__view-all"><a href="' . $url_subjects . '">View all subjects →</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -913,12 +914,6 @@ HTML
     <div class="qi-filter-bar__tabs">[qi_article_sections]</div>
     <div class="qi-filter-bar__controls">
         [qi_subjects_dropdown taxonomy="qi_article_topic"]
-        <form class="qi-search-form" role="search" method="get" action="' . $url_home . '">
-            <input type="hidden" name="post_type" value="qi_article" />
-            <label class="screen-reader-text" for="qi-journal-search">' . esc_html__( 'Search articles', 'queer-ink-theme' ) . '</label>
-            <input id="qi-journal-search" type="search" name="s" placeholder="' . esc_attr__( 'Search articles...', 'queer-ink-theme' ) . '" />
-            <button type="submit" aria-label="' . esc_attr__( 'Search', 'queer-ink-theme' ) . '">' . queer_ink_icon( 'search' ) . '</button>
-        </form>
     </div>
 </div>
 <!-- /wp:html -->',

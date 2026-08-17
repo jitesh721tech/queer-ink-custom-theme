@@ -108,8 +108,33 @@
 }
 
 @media (max-width: 680px) {
+    /* Mobile: the hero photo becomes a full-bleed background behind the
+       copy instead of a separate image below the buttons. A dark scrim
+       keeps the text readable without fading the photo out — DOM order
+       is unchanged (media still follows copy in markup), this is purely
+       a stacking-context change via position/z-index. */
     .hero {
+        position: relative;
+        min-height: 26rem;
         padding: 2.5rem 0;
+        overflow: hidden;
+        border-bottom: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        /* The source photo is a busy light-pink/white collage grid, not
+           a moody dark photo — its light patches are scattered across
+           the whole frame, not just the top, so a mostly-uniform strong
+           scrim (rather than a light-top/dark-bottom fade) is needed to
+           keep white text readable no matter which tile ends up behind
+           it at any given screen height. */
+        background: linear-gradient(180deg, rgba(15, 7, 10, 0.74) 0%, rgba(13, 6, 9, 0.8) 50%, rgba(11, 5, 7, 0.88) 100%);
+        z-index: 1;
     }
 
     .hero__inner {
@@ -118,12 +143,59 @@
         padding-right: 16px;
     }
 
+    /* Positioned on .hero__copy (not .hero__inner) so .hero__inner
+       stays position:static — otherwise it would become the containing
+       block for .hero__media's inset:0 below, shrinking the background
+       to just the text's own content box instead of the full section. */
+    .hero__copy {
+        position: relative;
+        z-index: 2;
+    }
+
     .hero__title {
         font-size: 2.75rem;
         max-width: 100%;
+        color: #ffffff;
+    }
+
+    .hero__title--accent {
+        color: #ff6b9d;
+    }
+
+    .hero .hero__eyebrow {
+        color: #ff9dbd;
+    }
+
+    .hero__description {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero .button--outline {
+        border-color: rgba(255, 255, 255, 0.7);
+        color: #ffffff;
+    }
+
+    .hero .button--outline:hover,
+    .hero .button--outline:focus-visible {
+        border-color: #ffffff;
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.12);
     }
 
     .hero__media {
-        min-height: 16rem;
+        position: absolute;
+        inset: 0;
+        min-height: 0;
+        z-index: 0;
+    }
+
+    .hero__image-container {
+        height: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .hero__image {
+        border-radius: 0;
     }
 }

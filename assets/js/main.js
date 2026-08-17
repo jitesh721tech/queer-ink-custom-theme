@@ -72,17 +72,6 @@
         } );
     } );
 
-    var expandSubjectsLink = document.querySelector( '[data-expand-subjects]' );
-    var subjectsCarousel = document.querySelector( '.qi-subjects-carousel' );
-
-    if ( expandSubjectsLink && subjectsCarousel ) {
-        expandSubjectsLink.addEventListener( 'click', function ( event ) {
-            event.preventDefault();
-            subjectsCarousel.classList.add( 'is-expanded' );
-            subjectsCarousel.scrollIntoView( { behavior: 'smooth', block: 'start' } );
-        } );
-    }
-
     var searchToggle = document.querySelector( '.header-search' );
     var searchPanel = document.querySelector( '.header-search-panel' );
 

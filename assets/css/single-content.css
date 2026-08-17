@@ -165,4 +165,17 @@ Supports single-qi_book.php and single-qi_article.php.
         padding-left: 16px;
         padding-right: 16px;
     }
+
+    /* Cover + Download PDF button centered in the stacked single-column
+       layout instead of sitting flush left; the button is already
+       display:block inside the (now centered) cover column, so it
+       follows automatically. Subject/category tags centered too. */
+    .qi-single-book__cover {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .qi-single-book__meta {
+        justify-content: center;
+    }
 }

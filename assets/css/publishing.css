@@ -1173,24 +1173,69 @@ html:has(body.page-id-11) {
         padding-left: 16px;
     }
 
-    .qi-pub-hero::before {
-        background: linear-gradient(180deg, rgba(255, 250, 248, 0.96) 0%, rgba(255, 250, 248, 0.92) 55%, rgba(255, 250, 248, 0.85) 100%);
-    }
-
     .qi-pub-hero h1 {
         max-width: 100%;
     }
 
+    /* Publishing only (.qi-publishing-hero — the other landing pages'
+       heroes share the bare .qi-pub-hero class and keep the light cream
+       scrim above, which already suits their photos/layouts). Mobile
+       switches Publishing from that light scrim (needed on desktop
+       because the text sits beside the visible photo) to a dark
+       overlay, since on mobile the text stacks directly on top of the
+       image — a dark scrim keeps the bright, sunlit reading-room photo
+       recognisable while giving white text reliable contrast anywhere
+       in the frame. */
+    .qi-publishing-hero::before {
+        background: linear-gradient(180deg, rgba(20, 14, 10, 0.68) 0%, rgba(16, 11, 8, 0.78) 55%, rgba(12, 8, 6, 0.88) 100%);
+    }
+
+    .qi-publishing-hero h1 {
+        color: #ffffff;
+    }
+
+    .qi-publishing-hero p {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* "Our Publishing Approach" is a native Gutenberg outline button
+       (.is-style-outline), not the theme's .button--outline — it was
+       inheriting a dark border/text from the block editor defaults,
+       nearly invisible against the new dark scrim. */
+    .qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link {
+        border-color: rgba(255, 255, 255, 0.7);
+        color: #ffffff;
+    }
+
+    .qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link:hover,
+    .qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link:focus-visible {
+        border-color: #ffffff;
+        color: #ffffff;
+        background-color: rgba(255, 255, 255, 0.12);
+    }
+
+    /* .qi-pathways-heading and .qi-archives-band are direct children of
+       the shared .site-content wrapper, which carries no horizontal
+       padding of its own on mobile — so both need their own gutter. */
     .qi-pathways-heading {
         margin-top: 2rem;
+        margin-left: 16px;
+        margin-right: 16px;
+        font-size: 1.375rem;
     }
 
     .qi-archives-band {
         margin-top: 1.75rem;
+        margin-left: 16px;
+        margin-right: 16px;
     }
 
     .qi-archives-band__content {
         padding: 1.75rem;
+    }
+
+    .qi-archives-band__content h2 {
+        font-size: 1.5rem;
     }
 
     .qi-archives-band__media {
@@ -1199,6 +1244,8 @@ html:has(body.page-id-11) {
 
     .qi-pathway-band {
         margin-top: 1.75rem;
+        margin-left: 16px;
+        margin-right: 16px;
         padding: 1.5rem;
     }
 
@@ -1224,8 +1271,16 @@ html:has(body.page-id-11) {
         justify-content: center;
     }
 
+    /* One complete pathway card fills the view at a time; the next
+       card's leading edge (and its connecting arrow) peeks in from the
+       right as the existing swipe/scroll affordance. */
+    .qi-pathway-band__steps {
+        scroll-snap-type: x mandatory;
+    }
+
     .qi-pathway-step {
-        flex: 0 0 62%;
+        flex: 0 0 calc(100% - 56px);
+        scroll-snap-align: start;
     }
 
     .qi-info-columns {
@@ -1235,7 +1290,7 @@ html:has(body.page-id-11) {
 
     .qi-current-list {
         margin-top: 2rem;
-        padding: 2.5rem 0;
+        padding: 2.5rem 16px;
     }
 
     .qi-current-list__header {
@@ -1290,9 +1345,19 @@ html:has(body.page-id-11) {
         font-size: 1.6rem;
     }
 
+    .qi-cta-band {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
     .qi-cta-band__actions {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
+    }
+
+    .qi-cta-band__actions .button {
+        width: 80%;
+        max-width: 280px;
     }
 }
 
@@ -1301,7 +1366,25 @@ html:has(body.page-id-11) {
         grid-template-columns: 1fr;
     }
 
+    /* Books archive (/books/) only — 2 equal columns, the same
+       configuration already used at the 680px tier just extended down
+       to this width, so covers keep their existing 3:4 aspect-ratio
+       and cards keep their normal type scale; title/author centered
+       beneath each cover. */
     .site-content:has(> .book-card) {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .site-content:has(> .book-card) .book-card__body {
+        text-align: center;
+    }
+
+    .site-content:has(> .book-card) .book-card__title {
+        overflow-wrap: break-word;
+    }
+
+    .site-content:has(> .book-card) .book-card__excerpt {
+        display: none;
     }
 }

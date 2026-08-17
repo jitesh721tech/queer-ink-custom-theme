@@ -358,6 +358,16 @@
 /* ---------------- Mobile ---------------- */
 
 @media (max-width: 680px) {
+    /* .qi-filter-bar, .qi-journal-layout and .qi-journal-cta are direct
+       children of the shared .site-content wrapper, which carries no
+       horizontal padding of its own on mobile — so each needs its own
+       gutter (fixing .qi-journal-layout also insets everything nested
+       inside it: the sidebar widgets and the Load More button). */
+    .qi-filter-bar {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
     .qi-filter-bar__controls {
         flex-direction: column;
         align-items: stretch;
@@ -368,12 +378,28 @@
         flex: 1;
     }
 
+    .qi-journal-layout {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
     .qi-journal-main .publishing-grid--current-list {
         grid-template-columns: 1fr;
+        row-gap: 1.75rem;
     }
 
     .qi-journal-cta {
         padding: 1.5rem;
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    /* Only the button centers — the heading/paragraph above keep their
+       existing left-aligned reading flow. */
+    .qi-journal-cta__body .button--primary {
+        display: flex;
+        width: fit-content;
+        margin: 0 auto;
     }
 
     .qi-journal-cta__media img {

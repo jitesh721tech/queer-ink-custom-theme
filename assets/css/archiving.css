@@ -1067,7 +1067,24 @@ html:has(body.page-id-16) {
 
 @media (max-width: 680px) {
     .qi-timeline {
-        padding: 2.5rem 0 1.5rem;
+        padding: 1.75rem 16px 1.25rem;
+    }
+
+    .qi-timeline__header {
+        margin-bottom: 1.25rem;
+    }
+
+    .qi-timeline__header h2 {
+        font-size: 1.4rem;
+    }
+
+    .qi-timeline__header .button {
+        padding: 0.6rem 1.1rem;
+        font-size: 0.85rem;
+    }
+
+    .qi-timeline__track {
+        gap: 0.5rem;
     }
 
     .qi-timeline__nav {
@@ -1081,10 +1098,29 @@ html:has(body.page-id-16) {
         gap: 1rem;
     }
 
+    /* Compresses the connecting-line/dot zone above each card and the
+       gap before the card itself, so the strip of colour above the
+       cards doesn't read as an oversized empty band on mobile. */
+    .qi-timeline__item::before {
+        top: 1.5rem;
+    }
+
+    .qi-timeline__dot {
+        top: 1.2rem;
+    }
+
+    .qi-timeline__card {
+        margin-top: 1rem;
+    }
+
+    .qi-timeline__footer {
+        margin-top: 1.25rem;
+    }
+
     .qi-why-archive {
         grid-template-columns: 1fr;
         gap: 1.75rem;
-        padding: 1.5rem 0 2.5rem;
+        padding: 1.5rem 16px 2.5rem;
     }
 
     .qi-why-archive__intro {
@@ -1110,6 +1146,8 @@ html:has(body.page-id-16) {
         grid-template-columns: 1fr;
         gap: 1.75rem;
         padding: 1.5rem;
+        margin-left: 16px;
+        margin-right: 16px;
     }
 
     .qi-connections__intro {
@@ -1117,16 +1155,40 @@ html:has(body.page-id-16) {
         border-right: none;
     }
 
+    .qi-connections__request-card .button {
+        padding: 0.65rem 1.5rem;
+    }
+
     .qi-connections__grid {
         grid-template-columns: 1fr;
-        row-gap: 1.5rem;
+        row-gap: 2.25rem;
     }
 
     .qi-model {
         padding: 1.5rem;
+        margin-left: 16px;
+        margin-right: 16px;
     }
 
     .qi-model__right {
         padding: 1.25rem;
+    }
+
+    /* Icon/title/caption centered as a stacked card; the bullet lists
+       stay left-aligned within that centered column since a centered
+       list is harder to scan. */
+    .qi-model__step {
+        text-align: center;
+    }
+
+    .qi-model__step-head {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .qi-model__step ul {
+        display: inline-block;
+        text-align: left;
     }
 }

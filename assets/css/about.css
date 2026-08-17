@@ -551,16 +551,34 @@
 /* ---------------- Mobile ---------------- */
 
 @media (max-width: 680px) {
+    /* These sections render straight into the shared .site-content
+       wrapper (About renders the_content() with no per-page container
+       of its own), which carries no horizontal padding on mobile — so
+       each needs its own gutter. */
     .qi-about-wwd {
-        padding: 2.5rem 0;
+        padding: 2.5rem 16px;
     }
 
     .qi-about-wwd__grid {
         grid-template-columns: 1fr;
     }
 
+    /* Centered icon/title/description stack instead of the desktop's
+       left-aligned column. */
+    .qi-about-wwd__col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .qi-about-wwd__col .qi-icon-circle {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .qi-about-why {
-        padding: 2.5rem 0;
+        padding: 2.5rem 16px;
     }
 
     .qi-about-why__quote {
@@ -573,7 +591,7 @@
     }
 
     .qi-about-founder {
-        padding: 2.5rem 0;
+        padding: 2rem 16px;
     }
 
     .qi-about-founder__card {
@@ -582,6 +600,19 @@
 
     .qi-about-info-row {
         padding: 1.75rem;
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    /* Icon and title centered; the longer paragraph copy below stays
+       left-aligned for readability. */
+    .qi-about-info-col .qi-icon-img {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .qi-about-info-col h3 {
+        text-align: center;
     }
 
     .qi-stay-loop {

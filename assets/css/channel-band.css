@@ -286,8 +286,14 @@
 /* ---------------- Mobile ---------------- */
 
 @media (max-width: 680px) {
+    /* .channel-band has no page gutter of its own to fall back on (the
+       shared .site-content wrapper it sits in carries no horizontal
+       padding), so on mobile it was rendering flush against both screen
+       edges with only its own 20px inner padding as breathing room.
+       Giving it the standard 16px mobile page margin here fixes it
+       everywhere this shared section is reused (Home/About/Connect). */
     .channel-band {
-        margin: 2.5rem 0;
+        margin: 2.5rem 16px;
         padding: 2.25rem 1.25rem;
     }
 
