@@ -1011,9 +1011,11 @@ html:has(body.page-id-11) {
     margin-bottom: 2.5rem;
 }
 
+/* visibility (not display:none) so the empty left/right grid tracks
+   still reserve their space and .qi-cta-band__body stays centered in
+   the middle column exactly as before, just without the illustration. */
 .qi-cta-band--illustrated .qi-cta-band__decor {
-    align-items: center;
-    height: auto;
+    visibility: hidden;
 }
 
 .qi-cta-band--illustrated .qi-cta-band__decor .qi-cta-band__illustration {

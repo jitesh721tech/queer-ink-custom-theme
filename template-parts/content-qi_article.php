@@ -21,37 +21,44 @@
     <div class="article-card__body">
         <?php
         $qi_sections = get_the_terms( get_the_ID(), 'qi_article_section' );
-        if ( $qi_sections && ! is_wp_error( $qi_sections ) ) :
+        $qi_topics   = get_the_terms( get_the_ID(), 'qi_article_topic' );
+        $qi_has_section = $qi_sections && ! is_wp_error( $qi_sections );
+        $qi_has_topics  = $qi_topics && ! is_wp_error( $qi_topics );
+        if ( $qi_has_section || $qi_has_topics ) :
             ?>
-            <p class="article-card__meta">
-                <span class="article-card__section"><?php echo esc_html( $qi_sections[0]->name ); ?></span>
-                <span class="article-card__date"><?php echo esc_html( get_the_date() ); ?></span>
-            </p>
-        <?php else : ?>
-            <p class="article-card__meta">
-                <span class="article-card__date"><?php echo esc_html( get_the_date() ); ?></span>
+            <p class="article-card__taxonomy">
+                <?php if ( $qi_has_section ) : ?>
+                    <a class="article-card__section" href="<?php echo esc_url( get_term_link( $qi_sections[0] ) ); ?>"><?php echo esc_html( $qi_sections[0]->name ); ?></a>
+                <?php endif; ?>
+                <?php if ( $qi_has_topics ) : ?>
+                    <?php foreach ( $qi_topics as $qi_topic ) : ?>
+                        <a class="article-card__topic" href="<?php echo esc_url( get_term_link( $qi_topic ) ); ?>"><?php echo esc_html( $qi_topic->name ); ?></a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </p>
         <?php endif; ?>
         <h3 class="article-card__title">
             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         </h3>
-        <?php
-        $qi_article_authors = get_the_terms( get_the_ID(), 'qi_article_author' );
-        if ( $qi_article_authors && ! is_wp_error( $qi_article_authors ) ) :
-            ?>
-            <p class="article-card__author">
-                <?php esc_html_e( 'By', 'queer-ink-theme' ); ?>
-                <?php
+        <p class="article-card__byline">
+            <?php
+            $qi_article_authors = get_the_terms( get_the_ID(), 'qi_article_author' );
+            if ( $qi_article_authors && ! is_wp_error( $qi_article_authors ) ) :
                 $qi_article_author_links = array();
                 foreach ( $qi_article_authors as $qi_article_author ) {
                     $qi_article_author_links[] = '<a href="' . esc_url( get_term_link( $qi_article_author ) ) . '">' . esc_html( $qi_article_author->name ) . '</a>';
                 }
-                echo wp_kses_post( implode( ', ', $qi_article_author_links ) );
+                echo wp_kses_post( esc_html__( 'By', 'queer-ink-theme' ) . ' ' . implode( ', ', $qi_article_author_links ) );
                 ?>
-            </p>
-        <?php endif; ?>
-        <?php if ( has_excerpt() ) : ?>
-            <p class="article-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
+                <span class="article-card__byline-sep" aria-hidden="true">·</span>
+            <?php endif; ?>
+            <span class="article-card__date"><?php echo esc_html( get_the_date() ); ?></span>
+        </p>
+        <?php
+        $qi_article_excerpt = get_the_excerpt();
+        if ( $qi_article_excerpt ) :
+            ?>
+            <p class="article-card__excerpt"><?php echo esc_html( $qi_article_excerpt ); ?></p>
         <?php endif; ?>
         <a class="article-card__link" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read More', 'queer-ink-theme' ); ?> →</a>
     </div>

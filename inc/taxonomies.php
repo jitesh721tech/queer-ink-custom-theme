@@ -2,20 +2,24 @@
 /**
  * Shared taxonomy registrations.
  *
- * qi_subject and qi_language are registered against both qi_book and
- * qi_article so the Digital Library can browse/filter across both post
- * types instead of needing a post type of its own.
+ * qi_subject and qi_language are registered against qi_book (qi_subject
+ * used to also cover qi_article, but the Journal now uses its own
+ * qi_article_topic vocabulary as the article-side equivalent instead —
+ * see below — so qi_article was removed from qi_subject's object types.
+ * This doesn't touch qi_book's use of qi_subject at all.
  *
  * qi_article_section is article-only — it groups posts by editorial
- * section (Reflections, Research, Voices...) for the QI Journal page.
+ * category (Reflections, Research, Voices...) for the QI Journal page.
  * Each article should carry exactly one section term (a content
- * convention, not enforced by WordPress) so it reads as a category.
+ * convention, not enforced by WordPress) so it reads as a category —
+ * labelled "Category"/"Categories" in wp-admin for that reason, though
+ * the taxonomy key and rewrite slug (qi_article_section, /section/)
+ * are unchanged so existing URLs keep working.
  *
  * qi_article_topic is a second, separate article-only taxonomy for
- * cross-cutting topics (Archives & Memory, Publishing & Books...) —
- * articles can carry several. Deliberately its own taxonomy rather than
- * reusing qi_subject (shared with qi_book): Book subjects and Journal
- * topics are different vocabularies that happen to sound similar.
+ * cross-cutting topics (Archives & Memory, Queer Histories...) —
+ * articles can carry several. It now doubles as the "Subjects"
+ * equivalent for articles now that qi_subject is book-only.
  *
  * qi_book_author and qi_article_author are deliberately separate,
  * non-hierarchical (tag-style) taxonomies rather than one shared
@@ -29,7 +33,7 @@
 
 if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
     function queer_ink_register_taxonomies() {
-        register_taxonomy( 'qi_subject', array( 'qi_book', 'qi_article' ), array(
+        register_taxonomy( 'qi_subject', array( 'qi_book' ), array(
             'labels'       => array(
                 'name'          => esc_html__( 'Subjects', 'queer-ink-theme' ),
                 'singular_name' => esc_html__( 'Subject', 'queer-ink-theme' ),
@@ -61,11 +65,11 @@ if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
 
         register_taxonomy( 'qi_article_section', array( 'qi_article' ), array(
             'labels'       => array(
-                'name'          => esc_html__( 'Sections', 'queer-ink-theme' ),
-                'singular_name' => esc_html__( 'Section', 'queer-ink-theme' ),
-                'add_new_item'  => esc_html__( 'Add New Section', 'queer-ink-theme' ),
-                'edit_item'     => esc_html__( 'Edit Section', 'queer-ink-theme' ),
-                'all_items'     => esc_html__( 'All Sections', 'queer-ink-theme' ),
+                'name'          => esc_html__( 'Categories', 'queer-ink-theme' ),
+                'singular_name' => esc_html__( 'Category', 'queer-ink-theme' ),
+                'add_new_item'  => esc_html__( 'Add New Category', 'queer-ink-theme' ),
+                'edit_item'     => esc_html__( 'Edit Category', 'queer-ink-theme' ),
+                'all_items'     => esc_html__( 'All Categories', 'queer-ink-theme' ),
             ),
             'public'            => true,
             'hierarchical'      => false,

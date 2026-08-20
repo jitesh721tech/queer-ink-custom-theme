@@ -15,7 +15,9 @@ while ( have_posts() ) :
 
     $qi_article_sections  = get_the_terms( get_the_ID(), 'qi_article_section' );
     $qi_article_authors   = get_the_terms( get_the_ID(), 'qi_article_author' );
-    $qi_article_subjects  = get_the_terms( get_the_ID(), 'qi_subject' );
+    // qi_subject is book-only now — qi_article_topic is the article-side
+    // equivalent, shown here the same way Subjects used to be.
+    $qi_article_topics    = get_the_terms( get_the_ID(), 'qi_article_topic' );
     ?>
 
     <main id="site-content" class="site-content container" role="main">
@@ -54,10 +56,10 @@ while ( have_posts() ) :
                 <?php the_content(); ?>
             </div>
 
-            <?php if ( $qi_article_subjects && ! is_wp_error( $qi_article_subjects ) ) : ?>
+            <?php if ( $qi_article_topics && ! is_wp_error( $qi_article_topics ) ) : ?>
                 <p class="qi-single-article__tags">
-                    <?php foreach ( $qi_article_subjects as $qi_article_subject ) : ?>
-                        <a class="qi-single-book__tag" href="<?php echo esc_url( get_term_link( $qi_article_subject ) ); ?>"><?php echo esc_html( $qi_article_subject->name ); ?></a>
+                    <?php foreach ( $qi_article_topics as $qi_article_topic ) : ?>
+                        <a class="qi-single-book__tag" href="<?php echo esc_url( get_term_link( $qi_article_topic ) ); ?>"><?php echo esc_html( $qi_article_topic->name ); ?></a>
                     <?php endforeach; ?>
                 </p>
             <?php endif; ?>
