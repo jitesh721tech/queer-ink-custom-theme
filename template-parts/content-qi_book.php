@@ -27,7 +27,7 @@
         if ( $qi_book_authors && ! is_wp_error( $qi_book_authors ) ) :
             ?>
             <p class="book-card__author">
-                <?php esc_html_e( 'By', 'queer-ink-theme' ); ?>
+                <span class="book-card__author-label"><?php esc_html_e( 'by', 'queer-ink-theme' ); ?></span>
                 <?php
                 $qi_book_author_links = array();
                 foreach ( $qi_book_authors as $qi_book_author ) {

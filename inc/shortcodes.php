@@ -193,22 +193,42 @@ if ( ! function_exists( 'queer_ink_subjects_shortcode' ) ) {
      * the shortcode's original/only use). QI Journal's "Popular Topics"
      * passes taxonomy="qi_article_topic" instead — a separate taxonomy,
      * not a repurposing of this one — so both keep their own vocabulary.
+     *
+     * 'popular="1"' (Popular Topics only) shows the admin-curated list
+     * from the Topics term list's "Popular" column (see
+     * inc/admin-taxonomy-fields.php) instead of the plain latest/all-terms
+     * query — falls back to the normal query, capped at 5, if nothing has
+     * been curated yet so the section is never empty before an admin
+     * picks favourites.
      */
     function queer_ink_subjects_shortcode( $atts ) {
         $atts = shortcode_atts( array(
             'style'    => 'grid',
             'count'    => 0,
             'taxonomy' => 'qi_subject',
+            'popular'  => 0,
         ), $atts, 'qi_subjects' );
 
         $taxonomy = in_array( $atts['taxonomy'], array( 'qi_subject', 'qi_article_topic' ), true ) ? $atts['taxonomy'] : 'qi_subject';
+        $popular  = 'qi_article_topic' === $taxonomy && ! empty( $atts['popular'] );
+
+        $popular_ids = $popular && function_exists( 'queer_ink_get_popular_article_topic_ids' )
+            ? queer_ink_get_popular_article_topic_ids()
+            : array();
 
         $args = array(
             'taxonomy'   => $taxonomy,
             'hide_empty' => false,
         );
 
-        if ( absint( $atts['count'] ) > 0 ) {
+        if ( $popular && ! empty( $popular_ids ) ) {
+            $args['include'] = $popular_ids;
+            $args['orderby'] = 'include';
+        } elseif ( $popular ) {
+            // No curation yet — fall back to the first 5 so the widget
+            // still shows something sensible until an admin picks favourites.
+            $args['number'] = 5;
+        } elseif ( absint( $atts['count'] ) > 0 ) {
             $args['number'] = absint( $atts['count'] );
         }
 

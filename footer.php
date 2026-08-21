@@ -13,7 +13,7 @@
                 <?php the_custom_logo(); ?>
             <?php else : ?>
                 <a class="footer-logo-link" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-                    <img class="footer-logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/logo/logo.jpeg' ) ); ?>" alt="<?php bloginfo( 'name' ); ?>" />
+                    <img class="footer-logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/logo/queer_ink_logo.png' ) ); ?>" alt="<?php bloginfo( 'name' ); ?>" />
                 </a>
             <?php endif; ?>
         </div>

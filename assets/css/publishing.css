@@ -85,6 +85,42 @@ html:has(body.page-id-11) {
     margin-top: 0.75rem;
 }
 
+/* Publishing only (.qi-publishing-hero — the other landing pages' heroes
+   share the bare .qi-pub-hero class and keep the light cream scrim
+   above, which suits their own photos). Publishing's hero photo gets a
+   dark, low-opacity overlay instead so the (sunlit, colourful) photo
+   stays clearly recognisable while the text — now white — stays
+   readable anywhere over the image. Compound selectors (.qi-pub-hero
+   .qi-publishing-hero) so this always outranks the shared rules above,
+   regardless of source order. */
+.qi-pub-hero.qi-publishing-hero::before {
+    background: linear-gradient(90deg, rgba(8, 6, 5, 0.64) 0%, rgba(8, 6, 5, 0.52) 30%, rgba(8, 6, 5, 0.4) 60%, rgba(8, 6, 5, 0.32) 100%);
+}
+
+.qi-pub-hero.qi-publishing-hero h1 {
+    color: #ffffff;
+}
+
+.qi-pub-hero.qi-publishing-hero p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* "Our Publishing Approach" is a native Gutenberg outline button
+   (.is-style-outline), not the theme's .button--outline — it inherits a
+   dark border/text from the block editor defaults, invisible against
+   the new dark overlay. */
+.qi-pub-hero.qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link {
+    border-color: rgba(255, 255, 255, 0.7);
+    color: #ffffff;
+}
+
+.qi-pub-hero.qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link:hover,
+.qi-pub-hero.qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link:focus-visible {
+    border-color: #ffffff;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
 /* ---------------- From the Archives band ---------------- */
 
 .qi-pathways-heading {
@@ -813,11 +849,16 @@ html:has(body.page-id-11) {
 .book-card__author {
     margin: 0;
     font-size: 0.82rem;
-    color: var(--qi-color-ink-variant);
+    color: var(--qi-color-ink);
+}
+
+.book-card__author-label {
+    color: var(--qi-color-primary);
+    font-weight: 700;
 }
 
 .book-card__author a {
-    color: var(--qi-color-primary);
+    color: var(--qi-color-ink);
     font-weight: 700;
     text-decoration: none;
 }
@@ -1079,6 +1120,10 @@ html:has(body.page-id-11) {
         background: linear-gradient(90deg, rgba(255, 250, 248, 0.96) 0%, rgba(255, 250, 248, 0.88) 45%, rgba(255, 250, 248, 0.45) 75%, rgba(255, 250, 248, 0.18) 100%);
     }
 
+    .qi-pub-hero.qi-publishing-hero::before {
+        background: linear-gradient(90deg, rgba(8, 6, 5, 0.7) 0%, rgba(8, 6, 5, 0.6) 45%, rgba(8, 6, 5, 0.46) 75%, rgba(8, 6, 5, 0.38) 100%);
+    }
+
     .qi-archives-band {
         grid-template-columns: 1fr;
     }
@@ -1181,39 +1226,16 @@ html:has(body.page-id-11) {
 
     /* Publishing only (.qi-publishing-hero — the other landing pages'
        heroes share the bare .qi-pub-hero class and keep the light cream
-       scrim above, which already suits their photos/layouts). Mobile
-       switches Publishing from that light scrim (needed on desktop
-       because the text sits beside the visible photo) to a dark
-       overlay, since on mobile the text stacks directly on top of the
-       image — a dark scrim keeps the bright, sunlit reading-room photo
+       scrim above, which already suits their photos/layouts). Text/button
+       colors are handled once, at the base rule above, since the dark
+       overlay now applies at every breakpoint — mobile only needs a
+       steeper gradient because the text stacks directly on top of the
+       image here (rather than sitting beside it, as on desktop), so a
+       stronger scrim keeps the bright, sunlit reading-room photo
        recognisable while giving white text reliable contrast anywhere
        in the frame. */
     .qi-publishing-hero::before {
         background: linear-gradient(180deg, rgba(20, 14, 10, 0.68) 0%, rgba(16, 11, 8, 0.78) 55%, rgba(12, 8, 6, 0.88) 100%);
-    }
-
-    .qi-publishing-hero h1 {
-        color: #ffffff;
-    }
-
-    .qi-publishing-hero p {
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    /* "Our Publishing Approach" is a native Gutenberg outline button
-       (.is-style-outline), not the theme's .button--outline — it was
-       inheriting a dark border/text from the block editor defaults,
-       nearly invisible against the new dark scrim. */
-    .qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link {
-        border-color: rgba(255, 255, 255, 0.7);
-        color: #ffffff;
-    }
-
-    .qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link:hover,
-    .qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link:focus-visible {
-        border-color: #ffffff;
-        color: #ffffff;
-        background-color: rgba(255, 255, 255, 0.12);
     }
 
     /* .qi-pathways-heading and .qi-archives-band are direct children of

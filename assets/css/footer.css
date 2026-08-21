@@ -13,7 +13,12 @@
 .site-footer-inner {
     width: min(100%, 1400px);
     margin: 0 auto;
-    padding: 0 8px;
+    /* Matches the standard 32px desktop gutter used by the header/main
+       content (was 8px, far thinner than everywhere else — combined with
+       the -32px transform below, that pushed the logo and copy left of
+       the intended edge, clipping the logo). Tablet (<=980px) and mobile
+       (<=680px) already override this below and are unaffected. */
+    padding: 0 32px;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -25,14 +30,13 @@
 .footer-branding {
     display: flex;
     justify-content: flex-start;
-    transform: translateX(-32px);
 }
 
 footer .footer-branding img,
 footer .footer-logo {
     display: block;
-    height: 50px !important;
-    max-height: 50px !important;
+    height: 58px !important;
+    max-height: 58px !important;
     width: auto !important;
 }
 
@@ -44,7 +48,6 @@ footer .footer-logo {
 .footer-copy {
     max-width: 280px;
     align-self: flex-start;
-    transform: translateX(-32px);
 }
 
 .footer-copy p {
@@ -134,6 +137,16 @@ footer .footer-logo {
 .footer-social-icon img[alt="Instagram"] {
     width: auto;
     height: 82%;
+}
+
+/* twitter.png's glyph fills almost its entire square canvas edge-to-edge,
+   while facebook.png/instagram.png have visible padding baked into the
+   source image — at the same 100%/100% fill, the X icon reads noticeably
+   larger than the other two. Scaling it down brings its apparent badge
+   size in line with them. */
+.footer-social-icon img[alt="Twitter"] {
+    width: 85%;
+    height: 85%;
 }
 
 .footer-social-icon:hover,

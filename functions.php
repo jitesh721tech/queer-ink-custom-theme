@@ -8,6 +8,7 @@
 require_once get_theme_file_path( 'inc/post-types.php' );
 require_once get_theme_file_path( 'inc/meta-boxes.php' );
 require_once get_theme_file_path( 'inc/taxonomies.php' );
+require_once get_theme_file_path( 'inc/admin-taxonomy-fields.php' );
 require_once get_theme_file_path( 'inc/rewrite.php' );
 require_once get_theme_file_path( 'inc/shortcodes.php' );
 require_once get_theme_file_path( 'inc/search.php' );

@@ -954,7 +954,7 @@ HTML
 </div>
 <div class="qi-journal-widget">
     <h3>Popular Topics</h3>
-    [qi_subjects taxonomy="qi_article_topic" style="list" count="6"]
+    [qi_subjects taxonomy="qi_article_topic" style="list" popular="1"]
 </div>
 <div class="qi-journal-widget">
     <h3>Stay in the Loop</h3>

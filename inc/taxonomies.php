@@ -21,12 +21,18 @@
  * articles can carry several. It now doubles as the "Subjects"
  * equivalent for articles now that qi_subject is book-only.
  *
- * qi_book_author and qi_article_author are deliberately separate,
- * non-hierarchical (tag-style) taxonomies rather than one shared
- * "author" taxonomy or the native post_author field — a book author and
- * an article writer are treated as distinct entities, and neither
- * requires a WordPress user account. Each term gets its own browsable
- * archive automatically via archive.php.
+ * qi_book_author and qi_article_author are deliberately separate
+ * taxonomies rather than one shared "author" taxonomy or the native
+ * post_author field — a book author and an article writer are treated
+ * as distinct entities, and neither requires a WordPress user account.
+ * Each term gets its own browsable archive automatically via archive.php.
+ *
+ * qi_language, qi_article_section, qi_article_topic, qi_book_author and
+ * qi_article_author are all registered 'hierarchical' => true purely to
+ * get wp-admin/the block editor's searchable-checkbox term UI (the same
+ * one qi_subject already used) instead of the tag/chip-style input
+ * non-hierarchical taxonomies get — none of them actually use parent
+ * terms, so this has no effect on term data, frontend URLs or filtering.
  *
  * @package Queer_Ink_Theme
  */
@@ -57,7 +63,13 @@ if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
                 'all_items'     => esc_html__( 'All Languages', 'queer-ink-theme' ),
             ),
             'public'            => true,
-            'hierarchical'      => false,
+            // Hierarchical purely for the wp-admin/block-editor UI it
+            // triggers — a searchable checkbox list + "+ Add New Language"
+            // (matching Subjects), instead of the tag/chip-style input
+            // non-hierarchical taxonomies get. No term here has (or is
+            // meant to have) a parent, so frontend URLs, term archives and
+            // tax_query filtering are all unaffected.
+            'hierarchical'      => true,
             'show_in_rest'      => true,
             'show_admin_column' => true,
             'rewrite'           => array( 'slug' => 'language', 'with_front' => false ),
@@ -72,7 +84,9 @@ if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
                 'all_items'     => esc_html__( 'All Categories', 'queer-ink-theme' ),
             ),
             'public'            => true,
-            'hierarchical'      => false,
+            // See qi_language above — hierarchical only for the checkbox
+            // admin UI; no term here has a parent.
+            'hierarchical'      => true,
             'show_in_rest'      => true,
             'show_admin_column' => true,
             'rewrite'           => array( 'slug' => 'section', 'with_front' => false ),
@@ -87,7 +101,9 @@ if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
                 'all_items'     => esc_html__( 'All Topics', 'queer-ink-theme' ),
             ),
             'public'            => true,
-            'hierarchical'      => false,
+            // See qi_language above — hierarchical only for the checkbox
+            // admin UI; no term here has a parent.
+            'hierarchical'      => true,
             'show_in_rest'      => true,
             'show_admin_column' => true,
             'rewrite'           => array( 'slug' => 'topic', 'with_front' => false ),
@@ -103,7 +119,9 @@ if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
                 'search_items'  => esc_html__( 'Search Authors', 'queer-ink-theme' ),
             ),
             'public'            => true,
-            'hierarchical'      => false,
+            // See qi_language above — hierarchical only for the checkbox
+            // admin UI; no term here has a parent.
+            'hierarchical'      => true,
             'show_in_rest'      => true,
             'show_admin_column' => true,
             'rewrite'           => array( 'slug' => 'book-author', 'with_front' => false ),
@@ -119,7 +137,9 @@ if ( ! function_exists( 'queer_ink_register_taxonomies' ) ) {
                 'search_items'  => esc_html__( 'Search Writers', 'queer-ink-theme' ),
             ),
             'public'            => true,
-            'hierarchical'      => false,
+            // See qi_language above — hierarchical only for the checkbox
+            // admin UI; no term here has a parent.
+            'hierarchical'      => true,
             'show_in_rest'      => true,
             'show_admin_column' => true,
             'rewrite'           => array( 'slug' => 'writer', 'with_front' => false ),

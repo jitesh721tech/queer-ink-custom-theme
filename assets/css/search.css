@@ -32,6 +32,20 @@
     box-sizing: border-box;
 }
 
+/* Desktop only: .site-content.container now supplies its own 32px
+   gutter (see style.css), so zero this out here to avoid doubling it.
+   Tablet/mobile below keep their own padding, untouched. */
+@media (min-width: 981px) {
+    .site-content > .search-header,
+    .site-content > .search-empty-state,
+    .site-content > .search-no-results,
+    .site-content > .search-authors,
+    .site-content > .search-results {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 /* ---------------- Header ---------------- */
 
 .search-header {

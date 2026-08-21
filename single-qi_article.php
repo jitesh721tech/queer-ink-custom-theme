@@ -3,7 +3,10 @@
  * Single view for the qi_article CPT — full detail page (media, section,
  * date, writer byline, full article content) instead of the compact
  * card partial single.php falls back to for post types without their
- * own single-{post_type}.php.
+ * own single-{post_type}.php. Reuses the .qi-single-book layout/CSS
+ * (single-content.css) — the same sticky image column + body column
+ * shape as single-qi_timeline.php — so image sizing and sticky-scroll
+ * behavior stay identical across both without duplicating any CSS.
  *
  * @package Queer_Ink_Theme
  */
@@ -21,52 +24,61 @@ while ( have_posts() ) :
     ?>
 
     <main id="site-content" class="site-content container" role="main">
-        <article id="article-<?php the_ID(); ?>" <?php post_class( 'qi-single-article' ); ?>>
-            <?php if ( has_post_thumbnail() ) : ?>
-                <div class="qi-single-article__media">
-                    <?php the_post_thumbnail( 'large', array( 'class' => 'qi-single-article__media-img' ) ); ?>
-                </div>
-            <?php endif; ?>
-
-            <header class="entry-header">
-                <p class="qi-single-article__meta">
-                    <?php if ( $qi_article_sections && ! is_wp_error( $qi_article_sections ) ) : ?>
-                        <span class="qi-single-article__section"><?php echo esc_html( $qi_article_sections[0]->name ); ?></span>
+        <article id="article-<?php the_ID(); ?>" <?php post_class( 'qi-single-book' ); ?>>
+            <div class="qi-single-book__layout">
+                <div class="qi-single-book__cover">
+                    <?php if ( has_post_thumbnail() ) : ?>
+                        <?php the_post_thumbnail( 'medium_large', array( 'class' => 'qi-single-book__cover-img' ) ); ?>
+                    <?php else : ?>
+                        <span class="qi-single-book__cover-placeholder" aria-hidden="true"></span>
                     <?php endif; ?>
-                    <span class="qi-single-article__date"><?php echo esc_html( get_the_date() ); ?></span>
-                </p>
 
-                <h1 class="entry-title"><?php the_title(); ?></h1>
+                    <?php if ( $qi_article_sections && ! is_wp_error( $qi_article_sections ) ) : ?>
+                        <p class="qi-single-article__meta">
+                            <span class="qi-single-article__section"><?php echo esc_html( $qi_article_sections[0]->name ); ?></span>
+                        </p>
+                    <?php endif; ?>
 
-                <?php if ( $qi_article_authors && ! is_wp_error( $qi_article_authors ) ) : ?>
-                    <p class="qi-single-article__authors">
-                        <?php esc_html_e( 'By', 'queer-ink-theme' ); ?>
-                        <?php
-                        $qi_article_author_links = array();
-                        foreach ( $qi_article_authors as $qi_article_author ) {
-                            $qi_article_author_links[] = '<a href="' . esc_url( get_term_link( $qi_article_author ) ) . '">' . esc_html( $qi_article_author->name ) . '</a>';
-                        }
-                        echo wp_kses_post( implode( ', ', $qi_article_author_links ) );
-                        ?>
+                    <?php if ( $qi_article_topics && ! is_wp_error( $qi_article_topics ) ) : ?>
+                        <p class="qi-single-article__tags">
+                            <?php foreach ( $qi_article_topics as $qi_article_topic ) : ?>
+                                <a class="qi-single-book__tag" href="<?php echo esc_url( get_term_link( $qi_article_topic ) ); ?>"><?php echo esc_html( $qi_article_topic->name ); ?></a>
+                            <?php endforeach; ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+
+                <div class="qi-single-book__body">
+                    <header class="entry-header">
+                        <p class="qi-single-article__meta">
+                            <span class="qi-single-article__date"><?php echo esc_html( get_the_date() ); ?></span>
+                        </p>
+
+                        <h1 class="entry-title"><?php the_title(); ?></h1>
+
+                        <?php if ( $qi_article_authors && ! is_wp_error( $qi_article_authors ) ) : ?>
+                            <p class="qi-single-article__authors">
+                                <?php esc_html_e( 'By', 'queer-ink-theme' ); ?>
+                                <?php
+                                $qi_article_author_links = array();
+                                foreach ( $qi_article_authors as $qi_article_author ) {
+                                    $qi_article_author_links[] = '<a href="' . esc_url( get_term_link( $qi_article_author ) ) . '">' . esc_html( $qi_article_author->name ) . '</a>';
+                                }
+                                echo wp_kses_post( implode( ', ', $qi_article_author_links ) );
+                                ?>
+                            </p>
+                        <?php endif; ?>
+                    </header>
+
+                    <div class="entry-content">
+                        <?php the_content(); ?>
+                    </div>
+
+                    <p class="qi-single-book__back">
+                        <a href="<?php echo esc_url( home_url( '/journal/' ) ); ?>">&larr; <?php esc_html_e( 'Back to Journal', 'queer-ink-theme' ); ?></a>
                     </p>
-                <?php endif; ?>
-            </header>
-
-            <div class="entry-content">
-                <?php the_content(); ?>
+                </div>
             </div>
-
-            <?php if ( $qi_article_topics && ! is_wp_error( $qi_article_topics ) ) : ?>
-                <p class="qi-single-article__tags">
-                    <?php foreach ( $qi_article_topics as $qi_article_topic ) : ?>
-                        <a class="qi-single-book__tag" href="<?php echo esc_url( get_term_link( $qi_article_topic ) ); ?>"><?php echo esc_html( $qi_article_topic->name ); ?></a>
-                    <?php endforeach; ?>
-                </p>
-            <?php endif; ?>
-
-            <p class="qi-single-book__back">
-                <a href="<?php echo esc_url( home_url( '/journal/' ) ); ?>">&larr; <?php esc_html_e( 'Back to Journal', 'queer-ink-theme' ); ?></a>
-            </p>
         </article>
     </main>
 

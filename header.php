@@ -20,9 +20,9 @@
                 <?php the_custom_logo(); ?>
             <?php else : ?>
                 <a class="site-logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" aria-label="<?php bloginfo( 'name' ); ?>">
-                    <img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/logo/logo.jpeg' ) ); ?>"
+                    <img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/logo/queer_ink_logo.png' ) ); ?>"
                         alt="<?php bloginfo( 'name' ); ?>"
-                        width="193" height="50">
+                        width="103" height="58">
                 </a>
             <?php endif; ?>
         </div>

@@ -134,6 +134,38 @@ button {
     padding: 0;
 }
 
+/* Desktop/laptop only: .site-content carries no horizontal padding of
+   its own by design (many pages' full-bleed hero/band sections rely on
+   that), so every ordinary content section was sitting almost flush
+   against the viewport edge here, at a different inset than the
+   32px-padded header/footer above and below it. Restores the same
+   standard 32px gutter used everywhere else, scoped to the actual page
+   wrapper (.site-content.container, i.e. <main>) so it can't touch any
+   other bare .site-content usage. Below this width, each page/template
+   already supplies its own tablet/mobile gutter and is left untouched. */
+@media (min-width: 981px) {
+    .site-content.container {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    /* These sections previously had to supply their own 32px gutter
+       because .site-content had none; now that the wrapper itself
+       carries it, zero these out at desktop only so the gutter isn't
+       doubled. Their tablet/mobile padding (set elsewhere) is untouched.
+       Selectors add the redundant .container qualifier purely to outrank
+       the equal-specificity 32px rules further down this file regardless
+       of source order (a plain repeat of the same selector lost that tie
+       here once before). */
+    .site-content.container > article > .entry-header,
+    .site-content.container > article > .entry-content,
+    .site-content.container > .error-404,
+    .site-content.container > .page-placeholder {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 /* ---------------- WordPress Page entry content ---------------- */
 /* Used by page.php and page-{slug}.php templates via content-page.php. */
 
@@ -162,6 +194,54 @@ button {
 
 .entry-content p {
     margin: 0 0 1.25rem;
+}
+
+/* ---------------- Boxed page layout ---------------- */
+/* About QI Journal / Our Principles only — a single, template-driven
+   "Back" link (see template-parts/content-page-boxed.php) plus a
+   centered white content card, replacing the flush-left title/content
+   and the duplicate top+bottom "Back" links these two pages used to
+   have baked into their own post content. The card is 44rem (entry-
+   content's own existing max-width) plus this padding on each side, so
+   the text column itself keeps the exact same width/position it always
+   had — only now centered on the page instead of flush-left, with a
+   white background behind it and the title sharing that same width. */
+
+.qi-page-back {
+    max-width: 44rem;
+    margin: 2rem auto 1rem;
+}
+
+.qi-page-back a {
+    color: var(--qi-color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.qi-page-boxed {
+    max-width: 49rem;
+    margin: 0 auto 4rem;
+    padding: 2.5rem;
+    background-color: var(--qi-color-surface-lowest);
+    border-radius: var(--qi-radius-lg);
+}
+
+.qi-page-boxed .entry-header {
+    padding-top: 0;
+}
+
+.qi-page-boxed .entry-content {
+    max-width: none;
+}
+
+@media (max-width: 680px) {
+    .qi-page-back {
+        margin: 1.5rem auto 0.75rem;
+    }
+
+    .qi-page-boxed {
+        padding: 1.75rem 1.25rem;
+    }
 }
 
 .entry-content p:last-child {
