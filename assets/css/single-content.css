@@ -80,6 +80,20 @@ body.admin-bar .qi-single-book__cover {
     text-decoration: none;
 }
 
+/* Category/Topic, directly below the title — each line only renders at
+   all when that taxonomy has a term assigned (single-qi_article.php),
+   so there's never an empty label or stray margin to hide here. */
+.qi-single-article__taxonomy-line {
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+    color: #4a4a4a;
+}
+
+.qi-single-article__taxonomy-label {
+    color: #c0185b;
+    font-weight: 700;
+}
+
 .qi-single-book__meta {
     display: flex;
     flex-wrap: wrap;
@@ -113,6 +127,15 @@ body.admin-bar .qi-single-book__cover {
     text-decoration: none;
 }
 
+/* Book/Article/Timeline only — same link, moved above .qi-single-book__layout
+   instead of below the content. Single Collection still uses the bare
+   .qi-single-book__back class, unchanged, at the bottom. The compound
+   selector (both classes) outranks .qi-single-book__back above so the
+   margin flip always wins regardless of source order. */
+.qi-single-book__back.qi-single-book__back--top {
+    margin: 0 0 1.5rem;
+}
+
 @media ( max-width: 780px ) {
     .qi-single-book__layout {
         grid-template-columns: 1fr;
@@ -121,6 +144,18 @@ body.admin-bar .qi-single-book__cover {
     .qi-single-book__cover {
         position: static;
         max-width: 280px;
+    }
+}
+
+/* Portrait tablet only (768x1024) — this width already falls inside the
+   780px stacking breakpoint above but was left flush-left there; center
+   the cover the same way the existing 680px mobile rule below already
+   does, without touching the wider 780-980px range (still side-by-side
+   there) or mobile itself. */
+@media ( min-width: 768px ) and ( max-width: 780px ) {
+    .qi-single-book__cover {
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -176,6 +211,43 @@ body.admin-bar .qi-single-book__cover {
     .qi-single-article {
         padding-left: 24px;
         padding-right: 24px;
+    }
+}
+
+/* Portrait tablet only (768x1024). */
+@media ( min-width: 768px ) and ( max-width: 980px ) {
+    /* .site-content.container (style.css) now correctly supplies its own
+       32px here too, so zero this out to avoid doubling it, same as the
+       min-width:981px desktop rule above. */
+    .qi-single-book,
+    .qi-single-article {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Article/Collection only — Book's title is left as-is. Both share
+       this same .entry-title/.qi-single-book__body markup with Book, so
+       scoped via body_class()'s native single-{post_type} class instead
+       of a new template change. */
+    body.single-qi_article .qi-single-book__body .entry-title,
+    body.single-qi_collection .qi-single-book__body .entry-title {
+        text-align: center;
+    }
+
+    /* Article only — the date sits alone in this meta row in the body
+       header (the equivalent row in .qi-single-book__cover holds the
+       section/topic badges, untouched); .qi-single-article__meta is a
+       flex row, so centering its single child just needs justify-content. */
+    body.single-qi_article .qi-single-book__body .qi-single-article__meta {
+        justify-content: center;
+    }
+
+    /* Article only — entry-content's shared 44rem cap (style.css) is
+       already narrower than the stacked column's available width at
+       this size, so removing it here lets the content use the column's
+       actual full width instead of an arbitrary narrower cap. */
+    body.single-qi_article .qi-single-book__body .entry-content {
+        max-width: none;
     }
 }
 

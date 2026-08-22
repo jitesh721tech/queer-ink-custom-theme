@@ -122,6 +122,31 @@ button {
     }
 }
 
+/* Portrait tablet only (768x1024). Same problem/fix as the min-width:981
+   block below: .container's own 24px here never actually reached the
+   page wrapper, because .site-content{padding:0} (below) ties with it in
+   specificity and wins on source order — confirmed via computed styles,
+   #site-content really was 0px here, not 24px. Targets the compound
+   .site-content.container selector instead (matching the proven desktop
+   fix) so it actually wins, and zeroes the same nested elements the
+   desktop block zeroes, to avoid doubling the gutter now that the
+   wrapper itself correctly supplies it. Bare .container (e.g. the
+   header, which isn't .site-content) still gets the 24px above, unaffected. */
+@media (min-width: 768px) and (max-width: 980px) {
+    .site-content.container {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    .site-content.container > article > .entry-header,
+    .site-content.container > article > .entry-content,
+    .site-content.container > .error-404,
+    .site-content.container > .page-placeholder {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 @media (max-width: 680px) {
     .container {
         padding-left: 16px;

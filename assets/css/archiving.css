@@ -195,12 +195,25 @@ html:has(body.page-id-16) {
 
 .qi-timeline__card {
     flex: 1 1 auto;
+    /* A flex column so the Explore link (margin-top: auto below) always
+       sits at the card's bottom edge regardless of excerpt length,
+       instead of directly following wherever the excerpt happens to
+       end. All cards in a row already share one height (the scroller's
+       grid stretches every .qi-timeline__item — and this card via its
+       own flex: 1 1 auto — to the tallest row member), so this reliably
+       pins the button to the same position on every card. */
+    display: flex;
+    flex-direction: column;
     margin-top: 1.5rem;
     border: 1px solid var(--qi-color-outline-variant);
     border-radius: 12px;
     padding: 1.25rem;
     background-color: var(--qi-color-surface-lowest);
     box-shadow: var(--qi-shadow-card);
+}
+
+.qi-timeline__card .qi-pathway-card__link {
+    margin-top: auto;
 }
 
 .qi-timeline__image {
@@ -314,6 +327,19 @@ html:has(body.page-id-16) {
     }
 }
 
+/* Portrait tablet only (768x1024). archiving.css loads after style.css
+   (see functions.php's wp_enqueue_style dependency order), so this rule
+   — not .site-content.container's own 32px in style.css — is what
+   actually wins the equal-specificity tie on this element; needed even
+   though the values now match, otherwise this falls back to the 24px
+   rule above instead. */
+@media (min-width: 768px) and (max-width: 980px) {
+    .site-content:has(> .timeline-entry-card) {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+}
+
 @media (max-width: 680px) {
     .site-content:has(> .timeline-entry-card) {
         padding-left: 16px;
@@ -321,8 +347,25 @@ html:has(body.page-id-16) {
     }
 }
 
+.site-content:has(> .timeline-entry-card) > .qi-page-back,
 .site-content:has(> .timeline-entry-card) > .archive-header {
     grid-column: 1 / -1;
+}
+
+/* Left-align with the grid below instead of the shared .qi-page-back's
+   default centering (used elsewhere by About QI Journal/Our Principles/
+   Subjects, which stays untouched), and halve the gap to the "Timeline"
+   title: was 1rem (back link's own bottom margin) + 1.5rem
+   (.archive-header's own top margin) = 2.5rem; now 0.5rem + 0.75rem =
+   1.25rem. */
+.site-content:has(> .timeline-entry-card) > .qi-page-back {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+}
+
+.site-content:has(> .timeline-entry-card) > .archive-header {
+    margin-top: 0.75rem;
 }
 
 .timeline-entry-card {
@@ -865,6 +908,15 @@ html:has(body.page-id-16) {
     }
 }
 
+/* Portrait tablet only (768x1024) — same cross-file cascade-order note
+   as the timeline-entry-card rule above. */
+@media (min-width: 768px) and (max-width: 980px) {
+    .site-content:has(> .article-card) {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+}
+
 @media (max-width: 680px) {
     .site-content:has(> .article-card) {
         padding-left: 16px;
@@ -955,6 +1007,20 @@ html:has(body.page-id-16) {
     text-transform: uppercase;
 }
 
+/* Nested as .qi-model__steps's own first child (see block-patterns.php),
+   this is now that container's title bar rather than freestanding text
+   above it — same label, its own padding/divider/background instead.
+   grid-column: 1/-1 keeps it spanning the full width as its own row
+   above the 3 models, regardless of how many grid columns those models
+   are currently arranged into (3 in a row at most widths, 1 on mobile). */
+.qi-model__steps > .qi-model__eyebrow {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 0.85rem 1.5rem;
+    border-bottom: 1px solid #e2d7ee;
+    background-color: #f3edf9;
+}
+
 .qi-model__diagram-lead {
     margin: 0 0 1rem;
     text-align: center;
@@ -966,18 +1032,36 @@ html:has(body.page-id-16) {
     margin-right: auto;
 }
 
+/* One bordered container (was 3 separate boxes connected by arrows) —
+   Relationship/Evidence/Discovery are internal, divided sections inside
+   a single shared rectangle at every width, instead of 3 individually-
+   bordered boxes. Grid (not flex) specifically so the eyebrow title bar
+   above can span grid-column: 1/-1 as its own full-width row regardless
+   of column count — 3 in a row by default (matching the original
+   side-by-side arrangement), dropping to 1 column only on true mobile
+   (<=680px, see the max-width:680px override below). The shared outer
+   border/radius/background here never changes either way. */
 .qi-model__steps {
-    display: flex;
-    align-items: stretch;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid #e2d7ee;
+    border-radius: 16px;
+    background-color: #fff;
+    overflow: hidden;
 }
 
 .qi-model__step {
-    flex: 1;
-    border: 1px solid var(--qi-model-step-color, #e5e2e2);
-    border-radius: 12px;
-    padding: 0.9rem 1rem;
-    background-color: #fff;
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+}
+
+/* Excludes Relationship specifically (rather than :first-child/:not, or
+   an adjacent-sibling selector) because the hidden .qi-model__arrow
+   elements still sit between the steps in the DOM, breaking both of
+   those — this is the one selector that reliably means "not the first
+   model" regardless of the arrows' presence or display value. */
+.qi-model__step:not(.qi-model__step--relationship) {
+    border-left: 1px solid #e2d7ee;
 }
 
 .qi-model__step--relationship {
@@ -994,8 +1078,9 @@ html:has(body.page-id-16) {
 
 .qi-model__step-head {
     display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
     margin-bottom: 0.5rem;
 }
 
@@ -1012,13 +1097,35 @@ html:has(body.page-id-16) {
     height: 26px;
 }
 
+/* The number and title share one flex row so they always sit on the
+   same line/baseline as each other, regardless of how the title text
+   itself wraps at narrower widths — see .qi-model__step-number below
+   for the number badge (block-patterns.php now renders it as its own
+   element instead of plain text baked into the heading). */
 .qi-model__step h4 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     margin: 0 0 0.2rem;
     font-size: 0.95rem;
     color: var(--qi-model-step-color, #1a1a1a);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
+}
+
+.qi-model__step-number {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    background-color: var(--qi-model-step-color, #c0185b);
+    color: #fff;
+    font-size: 0.85em;
 }
 
 .qi-model__step-caption {
@@ -1028,19 +1135,19 @@ html:has(body.page-id-16) {
 }
 
 .qi-model__step ul {
-    margin: 0;
+    display: inline-block;
+    margin: 0.5rem 0 0;
     padding-left: 1.1rem;
     color: #4a4a4a;
     font-size: 0.85rem;
     line-height: 1.7;
+    text-align: left;
 }
 
+/* Was a flow arrow between 3 side-by-side boxes; the stacked single
+   container above no longer needs a connector between its sections. */
 .qi-model__arrow {
-    flex-shrink: 0;
-    align-self: center;
-    color: #8c7073;
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
+    display: none;
 }
 
 .qi-model__diagram-footer {
@@ -1111,15 +1218,6 @@ html:has(body.page-id-16) {
 
     .qi-model {
         grid-template-columns: 1fr;
-    }
-
-    .qi-model__steps {
-        flex-direction: column;
-    }
-
-    .qi-model__arrow {
-        transform: rotate(90deg);
-        align-self: center;
     }
 }
 
@@ -1234,21 +1332,19 @@ html:has(body.page-id-16) {
         padding: 1.25rem;
     }
 
-    /* Icon/title/caption centered as a stacked card; the bullet lists
-       stay left-aligned within that centered column since a centered
-       list is harder to scan. */
-    .qi-model__step {
-        text-align: center;
+    /* Mobile only — the 3 sections stack instead of sitting in a row,
+       same single outer container either way (border/radius/background
+       on .qi-model__steps is unconditional above, untouched here) — the
+       eyebrow's grid-column: 1/-1 already spans this single column
+       as-is, no extra rule needed for it. The divider between sections
+       switches from a vertical rule (between columns) to a horizontal
+       one (between stacked rows) to match. */
+    .qi-model__steps {
+        grid-template-columns: 1fr;
     }
 
-    .qi-model__step-head {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .qi-model__step ul {
-        display: inline-block;
-        text-align: left;
+    .qi-model__step:not(.qi-model__step--relationship) {
+        border-left: none;
+        border-top: 1px solid #e2d7ee;
     }
 }

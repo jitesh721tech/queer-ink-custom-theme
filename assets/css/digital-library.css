@@ -202,11 +202,57 @@ body.page-id-17 .qi-current-list--subjects {
 /* Dedicated Subjects page (/subjects/, page ID 147) — same [qi_subjects]
    shortcode/pill styling as the Digital Library carousel, reused here
    as a plain wrapped listing instead of a horizontal scroller, since
-   this page has no carousel/nav-button wrapper around it. */
+   this page has no carousel/nav-button wrapper around it. entry-content
+   normally caps at 44rem (style.css) for article-style reading pages;
+   this page is a browse/listing page instead, so it's widened to use
+   the same width as the rest of the site's card grids and centered,
+   with its title/intro centered to match. */
+body.page-id-147 .entry-header,
+body.page-id-147 .entry-content {
+    max-width: none;
+}
+
+body.page-id-147 .entry-header,
+body.page-id-147 .entry-title,
+body.page-id-147 .entry-content > p:first-child {
+    text-align: center;
+}
+
+body.page-id-147 .entry-content > p:first-child {
+    max-width: 38rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Left-align with the content container instead of .qi-page-back's
+   default centering (unchanged for About QI Journal/Our Principles),
+   and halve the gap to the "Subjects" title: was 1rem (back link's own
+   bottom margin) + 3.2rem (.entry-header's own top padding) = 4.2rem;
+   now 0.5rem + 1.5rem = 2rem. */
+body.page-id-147 .qi-page-back {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+}
+
+body.page-id-147 .entry-header {
+    padding-top: 1.5rem;
+}
+
+/* Centered vertical list — one subject per row — instead of the
+   horizontal wrapped/scrolling pill row the Digital Library carousel
+   uses (untouched). */
 body.page-id-147 .qi-subjects-grid {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     overflow: visible;
     scroll-snap-type: none;
+}
+
+body.page-id-147 .qi-subject-pill {
+    width: 100%;
+    max-width: 26rem;
+    justify-content: center;
 }
 
 .qi-subject-pill {
@@ -421,6 +467,31 @@ body.page-id-147 .qi-subjects-grid {
     }
 }
 
+/* Tablet landscape only (1024x768) — 5 pillars in the 3-column grid
+   above leave a lone 2-item second row sitting flush left (columns 1-2
+   of 3, empty on the right); doubling the column count to 6 tracks (so
+   each pillar spans 2, still reading as 3 equal columns for row 1) lets
+   the 2 leftover items be repositioned to sit exactly centered — 1
+   empty track's worth of equal space on each side — instead of just
+   shifted. First row is untouched (3 items already fill all 6 tracks). */
+@media (min-width: 981px) and (max-width: 1024px) {
+    .qi-dl-pillars {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .qi-dl-pillar {
+        grid-column: span 2;
+    }
+
+    .qi-dl-pillar:nth-child(4) {
+        grid-column: 2 / 4;
+    }
+
+    .qi-dl-pillar:nth-child(5) {
+        grid-column: 4 / 6;
+    }
+}
+
 /* ---------------- Tablet ---------------- */
 
 @media (max-width: 980px) {
@@ -458,6 +529,43 @@ body.page-id-147 .qi-subjects-grid {
 
     .qi-reading-room__sparkle--b {
         bottom: 1.75rem;
+    }
+}
+
+/* Portrait tablet only (768x1024) — 5 pillars in the 2-column grid above
+   leaves the lone 5th item sitting left-aligned in column 1; center it
+   on its own full-width row instead. */
+@media (min-width: 768px) and (max-width: 980px) {
+    .qi-dl-pillar:nth-child(5) {
+        grid-column: 1 / -1;
+        max-width: calc((100% - 1.5rem) / 2);
+        margin: 0 auto;
+    }
+
+    /* "Join the Reading Room" — image left, text right (vertical
+       centering is already the unconditional base .qi-reading-room
+       rule's align-items:center, untouched by the single-column 980px
+       tier above), instead of the full single-column stack. The quote
+       panel keeps its existing below-the-fold styling from the 980px
+       tier, just spanning both columns as its own row now. */
+    .qi-reading-room {
+        grid-template-columns: minmax(0, 32%) minmax(0, 68%);
+    }
+
+    .qi-reading-room__quote {
+        grid-column: 1 / -1;
+    }
+
+    /* Center the 4 icon/description features and the 2 action buttons
+       below the text, instead of their default left alignment. */
+    .qi-reading-room__features,
+    .qi-reading-room__actions {
+        justify-content: center;
+    }
+
+    .qi-reading-room__feature {
+        align-items: center;
+        text-align: center;
     }
 }
 

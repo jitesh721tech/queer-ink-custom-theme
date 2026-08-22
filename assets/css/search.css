@@ -335,6 +335,20 @@
     }
 }
 
+/* Portrait tablet only (768x1024) — .site-content.container (style.css)
+   now correctly supplies its own 32px here too, so zero this out to
+   avoid doubling it, same as the desktop rule above. */
+@media (min-width: 768px) and (max-width: 980px) {
+    .site-content > .search-header,
+    .site-content > .search-empty-state,
+    .site-content > .search-no-results,
+    .site-content > .search-authors,
+    .site-content > .search-results {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 /* ---------------- Mobile ---------------- */
 
 @media (max-width: 680px) {

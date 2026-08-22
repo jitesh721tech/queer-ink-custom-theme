@@ -122,18 +122,6 @@
     text-align: center;
 }
 
-.qi-journal-load-more__button[aria-busy="true"] {
-    opacity: 0.6;
-    cursor: default;
-}
-
-.qi-journal-load-more__status {
-    display: block;
-    margin-top: 0.6rem;
-    font-size: 0.85rem;
-    color: var(--qi-color-ink-variant);
-}
-
 /* ---------------- Sidebar ---------------- */
 
 .qi-journal-sidebar {
@@ -352,6 +340,16 @@
         flex-wrap: wrap;
         justify-content: center;
         row-gap: 1.25rem;
+    }
+}
+
+/* Portrait tablet only (768x1024) — the sidebar's "About QI Journal"
+   widget stacks below the main column at the 980px tier above but its
+   title/text stay left-aligned; center them. The "Your experiences..."
+   CTA band (.qi-journal-cta) above is left untouched. */
+@media (min-width: 768px) and (max-width: 980px) {
+    .qi-journal-widget {
+        text-align: center;
     }
 }
 

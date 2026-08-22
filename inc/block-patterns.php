@@ -600,14 +600,14 @@ HTML
     </div>
     <div class="qi-model__right">
     <div class="qi-model__diagram">
-        <p class="qi-model__eyebrow">The Relationship-Centred Archiving Model</p>
         <p class="qi-model__diagram-lead">Instead of asking &ldquo;What should we collect?&rdquo; we begin by asking, &ldquo;Whose relationships are we preserving, and for whom?&rdquo;</p>
         <div class="qi-model__steps">
+            <p class="qi-model__eyebrow">The Relationship-Centred Archiving Model</p>
             <div class="qi-model__step qi-model__step--relationship">
                 <div class="qi-model__step-head">
                     <div class="qi-icon-circle">' . queer_ink_icon( 'users' ) . '</div>
                     <div>
-                        <h4>1. Relationship</h4>
+                        <h4><span class="qi-model__step-number">1</span> Relationship</h4>
                         <p class="qi-model__step-caption">The human context.</p>
                     </div>
                 </div>
@@ -625,7 +625,7 @@ HTML
                 <div class="qi-model__step-head">
                     <div class="qi-icon-circle">' . queer_ink_icon( 'archive' ) . '</div>
                     <div>
-                        <h4>2. Evidence</h4>
+                        <h4><span class="qi-model__step-number">2</span> Evidence</h4>
                         <p class="qi-model__step-caption">The tangible record.</p>
                     </div>
                 </div>
@@ -644,7 +644,7 @@ HTML
                 <div class="qi-model__step-head">
                     <div class="qi-icon-circle">' . queer_ink_icon( 'search' ) . '</div>
                     <div>
-                        <h4>3. Discovery</h4>
+                        <h4><span class="qi-model__step-number">3</span> Discovery</h4>
                         <p class="qi-model__step-caption">The future.</p>
                     </div>
                 </div>
@@ -920,12 +920,6 @@ HTML
             )
         );
 
-        // Load More starts hidden if the first static page (6 articles,
-        // matching [qi_latest_articles count="6"] below) already covers
-        // every published article — nothing more for it to load.
-        $qi_journal_total_articles = wp_count_posts( 'qi_article' )->publish;
-        $qi_journal_has_more_class = $qi_journal_total_articles > 6 ? '' : ' is-hidden';
-
         register_block_pattern(
             'queer-ink/qi-journal-content',
             array(
@@ -938,9 +932,8 @@ HTML
 <!-- /wp:shortcode -->
 
 <!-- wp:html -->
-<p class="qi-journal-load-more' . $qi_journal_has_more_class . '">
-    <button type="button" class="button button--outline qi-journal-load-more__button" data-load-more data-paged="1">Load More Articles</button>
-    <span class="qi-journal-load-more__status" role="status" aria-live="polite"></span>
+<p class="qi-journal-load-more">
+    <a class="button button--outline" href="' . $url_journal . '">View All Articles</a>
 </p>
 <!-- /wp:html --></div>
 <!-- /wp:column -->

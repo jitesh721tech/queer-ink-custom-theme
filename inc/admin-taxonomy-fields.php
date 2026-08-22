@@ -1,6 +1,8 @@
 <?php
 /**
- * "Popular Topics" curation control on the Articles → Topics term list.
+ * "Popular Topics" curation control on the Articles → Topics term list,
+ * plus a plain-language safety notice on the Articles → Categories
+ * term list confirming that deleting a category never deletes articles.
  *
  * Books/Articles' taxonomy fields (Subjects, Languages, Categories,
  * Topics, Authors, Writers) already get a searchable, tick-and-add-new
@@ -106,6 +108,32 @@ if ( ! function_exists( 'queer_ink_enqueue_popular_topics_assets' ) ) {
     }
 }
 add_action( 'admin_enqueue_scripts', 'queer_ink_enqueue_popular_topics_assets' );
+
+/**
+ * ---------------- Categories screen reassurance ----------------
+ *
+ * qi_article_section's "Delete" action (edit-tags.php) is plain
+ * WordPress core behavior already — deleting a term only removes that
+ * taxonomy relationship (wp_delete_term()), it never deletes the posts
+ * that carried it. No custom code changes that. This just makes that
+ * explicit on the screen, since an admin cleaning up incorrectly
+ * created categories has no other way to know it's safe.
+ */
+
+if ( ! function_exists( 'queer_ink_categories_screen_notice' ) ) {
+    function queer_ink_categories_screen_notice() {
+        $screen = get_current_screen();
+        if ( ! $screen || 'edit-qi_article_section' !== $screen->id ) {
+            return;
+        }
+        ?>
+        <div class="notice notice-info">
+            <p><?php esc_html_e( 'Deleting a category here only removes the category itself — it will not delete any articles. Articles that had it simply lose that one category label; all their other categories, topics and content are unaffected.', 'queer-ink-theme' ); ?></p>
+        </div>
+        <?php
+    }
+}
+add_action( 'admin_notices', 'queer_ink_categories_screen_notice' );
 
 if ( ! function_exists( 'queer_ink_ajax_toggle_popular_topic' ) ) {
     function queer_ink_ajax_toggle_popular_topic() {

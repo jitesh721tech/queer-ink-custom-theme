@@ -125,35 +125,22 @@
         } );
     }
 
-    // ---------------- QI Journal: category/topic filtering + Load More ----------------
-    // All three (section tabs, popular-topics links, the topic dropdown) and
-    // Load More share one AJAX action (qi_load_articles, see inc/ajax.php)
-    // so the visitor never leaves /qi-journal/ and cards always render
-    // through the same content-qi_article.php partial as the first page.
+    // ---------------- QI Journal: category/topic filtering ----------------
+    // Section tabs, popular-topics links and the topic dropdown share one
+    // AJAX action (qi_load_articles, see inc/ajax.php) so the visitor never
+    // leaves /qi-journal/ and cards always render through the same
+    // content-qi_article.php partial as the first page. "View All Articles"
+    // (replacing the old Load More button) is a plain link to /journal/,
+    // so it needs no JS.
     var journalGrid = document.querySelector( '.qi-journal-main .publishing-grid--current-list' );
 
     if ( journalGrid && window.qiJournalAjax ) {
-        var loadMoreButton = document.querySelector( '[data-load-more]' );
-        var loadMoreWrap = document.querySelector( '.qi-journal-load-more' );
-        var loadMoreStatus = document.querySelector( '.qi-journal-load-more__status' );
         var sectionTabs = document.querySelectorAll( '.qi-section-tab[data-filter-section]' );
         var topicLinks = document.querySelectorAll( '.qi-topics-list a[data-filter-topic]' );
         var topicSelect = document.querySelector( '.qi-topics-select[data-nav-select]' );
-        var loadMoreDefaultLabel = loadMoreButton ? loadMoreButton.textContent : '';
 
         var qiFilters = { section: '', topic: '' };
-        var qiPaged = 1;
         var qiBusy = false;
-
-        var collectCardIds = function () {
-            var ids = {};
-            journalGrid.querySelectorAll( '.article-card[id]' ).forEach( function ( card ) {
-                ids[ card.id ] = true;
-            } );
-            return ids;
-        };
-
-        var qiLoadedIds = collectCardIds();
 
         var setActiveTab = function ( sectionSlug ) {
             sectionTabs.forEach( function ( tab ) {
@@ -161,29 +148,19 @@
             } );
         };
 
-        var fetchArticles = function ( paged, append ) {
+        var fetchArticles = function () {
             if ( qiBusy ) {
                 return;
             }
             qiBusy = true;
 
-            if ( loadMoreStatus ) {
-                loadMoreStatus.textContent = '';
-            }
-
-            if ( append && loadMoreButton ) {
-                loadMoreButton.disabled = true;
-                loadMoreButton.setAttribute( 'aria-busy', 'true' );
-                loadMoreButton.textContent = 'Loading…';
-            } else {
-                journalGrid.setAttribute( 'aria-busy', 'true' );
-                journalGrid.style.opacity = '0.5';
-            }
+            journalGrid.setAttribute( 'aria-busy', 'true' );
+            journalGrid.style.opacity = '0.5';
 
             var body = new URLSearchParams();
             body.set( 'action', 'qi_load_articles' );
             body.set( 'nonce', window.qiJournalAjax.nonce );
-            body.set( 'paged', String( paged ) );
+            body.set( 'paged', '1' );
             body.set( 'section', qiFilters.section );
             body.set( 'topic', qiFilters.topic );
 
@@ -202,46 +179,18 @@
                     }
 
                     var data = response.data;
-                    var temp = document.createElement( 'div' );
-                    temp.innerHTML = data.html;
+                    journalGrid.innerHTML = data.html;
 
-                    if ( append ) {
-                        Array.prototype.slice.call( temp.children ).forEach( function ( card ) {
-                            if ( card.id && qiLoadedIds[ card.id ] ) {
-                                return; // Already on the page — skip the duplicate.
-                            }
-                            if ( card.id ) {
-                                qiLoadedIds[ card.id ] = true;
-                            }
-                            journalGrid.appendChild( card );
-                        } );
-                    } else {
-                        journalGrid.innerHTML = data.html;
-                        qiLoadedIds = collectCardIds();
-
-                        if ( ! data.found ) {
-                            journalGrid.innerHTML = '<p class="publishing-empty">No articles found.</p>';
-                        }
-                    }
-
-                    qiPaged = paged;
-
-                    if ( loadMoreWrap ) {
-                        loadMoreWrap.classList.toggle( 'is-hidden', ! data.has_more );
+                    if ( ! data.found ) {
+                        journalGrid.innerHTML = '<p class="publishing-empty">No articles found.</p>';
                     }
                 } )
                 .catch( function () {
-                    if ( loadMoreStatus ) {
-                        loadMoreStatus.textContent = 'Something went wrong loading articles. Please try again.';
-                    }
+                    // Filters fail silently — the grid just keeps its
+                    // previous results rather than showing a stray message.
                 } )
                 .finally( function () {
                     qiBusy = false;
-                    if ( loadMoreButton ) {
-                        loadMoreButton.disabled = false;
-                        loadMoreButton.removeAttribute( 'aria-busy' );
-                        loadMoreButton.textContent = loadMoreDefaultLabel;
-                    }
                     journalGrid.removeAttribute( 'aria-busy' );
                     journalGrid.style.opacity = '';
                 } );
@@ -256,7 +205,7 @@
                     topicSelect.value = '';
                 }
                 setActiveTab( qiFilters.section );
-                fetchArticles( 1, false );
+                fetchArticles();
             } );
         } );
 
@@ -269,7 +218,7 @@
                 if ( topicSelect ) {
                     topicSelect.value = link.getAttribute( 'href' );
                 }
-                fetchArticles( 1, false );
+                fetchArticles();
             } );
         } );
 
@@ -279,13 +228,7 @@
                 qiFilters.topic = selectedOption ? ( selectedOption.getAttribute( 'data-filter-topic' ) || '' ) : '';
                 qiFilters.section = '';
                 setActiveTab( '' );
-                fetchArticles( 1, false );
-            } );
-        }
-
-        if ( loadMoreButton ) {
-            loadMoreButton.addEventListener( 'click', function () {
-                fetchArticles( qiPaged + 1, true );
+                fetchArticles();
             } );
         }
     }

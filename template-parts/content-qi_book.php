@@ -23,10 +23,14 @@
             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         </h3>
         <?php
+        // Always rendered (even with no author terms) so every card
+        // reserves the same line of vertical space here — otherwise
+        // cards with no author render visibly shorter than ones with
+        // one. See .book-card__author's min-height in publishing.css.
         $qi_book_authors = get_the_terms( get_the_ID(), 'qi_book_author' );
-        if ( $qi_book_authors && ! is_wp_error( $qi_book_authors ) ) :
-            ?>
-            <p class="book-card__author">
+        ?>
+        <p class="book-card__author">
+            <?php if ( $qi_book_authors && ! is_wp_error( $qi_book_authors ) ) : ?>
                 <span class="book-card__author-label"><?php esc_html_e( 'by', 'queer-ink-theme' ); ?></span>
                 <?php
                 $qi_book_author_links = array();
@@ -35,8 +39,8 @@
                 }
                 echo wp_kses_post( implode( ', ', $qi_book_author_links ) );
                 ?>
-            </p>
-        <?php endif; ?>
+            <?php endif; ?>
+        </p>
         <?php if ( has_excerpt() ) : ?>
             <p class="book-card__excerpt"><?php echo esc_html( get_the_excerpt() ); ?></p>
         <?php endif; ?>

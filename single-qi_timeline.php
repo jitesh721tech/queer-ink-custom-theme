@@ -20,6 +20,9 @@ while ( have_posts() ) :
 
     <main id="site-content" class="site-content container" role="main">
         <article id="timeline-<?php the_ID(); ?>" <?php post_class( 'qi-single-book' ); ?>>
+            <p class="qi-single-book__back qi-single-book__back--top">
+                <a href="<?php echo esc_url( home_url( '/archiving/#timeline' ) ); ?>">&larr; <?php esc_html_e( 'Back to Our Journey Through Time', 'queer-ink-theme' ); ?></a>
+            </p>
             <div class="qi-single-book__layout">
                 <div class="qi-single-book__cover">
                     <?php if ( has_post_thumbnail() ) : ?>
@@ -43,10 +46,6 @@ while ( have_posts() ) :
                     <div class="entry-content">
                         <?php the_content(); ?>
                     </div>
-
-                    <p class="qi-single-book__back">
-                        <a href="<?php echo esc_url( home_url( '/archiving/#timeline' ) ); ?>">&larr; <?php esc_html_e( 'Back to Our Journey Through Time', 'queer-ink-theme' ); ?></a>
-                    </p>
                 </div>
             </div>
         </article>
