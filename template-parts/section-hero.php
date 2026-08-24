@@ -29,7 +29,7 @@ $secondary_url   = get_theme_mod( 'queer_ink_hero_secondary_url', esc_url( home_
             <figure class="hero__image-container">
                 <img
                     class="hero__image"
-                    src="<?php echo esc_url( get_theme_file_uri( 'assets/images/hero/homepage_hero.jpeg' ) ); ?>"
+                    src="<?php echo esc_url( get_theme_file_uri( 'assets/images/hero/homepage_hero.png' ) ); ?>"
                     alt="Queer Ink collage image"
                 />
             </figure>

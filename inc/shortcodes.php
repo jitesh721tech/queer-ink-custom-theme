@@ -339,6 +339,31 @@ if ( ! function_exists( 'queer_ink_subjects_dropdown_shortcode' ) ) {
 }
 add_shortcode( 'qi_subjects_dropdown', 'queer_ink_subjects_dropdown_shortcode' );
 
+if ( ! function_exists( 'queer_ink_form_field_validation_attrs' ) ) {
+    /**
+     * HTML5 pattern/inputmode/data-qi-validate attributes for the 3 field
+     * types this form validates beyond plain "required" — kept in one
+     * place so the client-side JS (main.js) and this markup always agree
+     * on what "valid" means for a given type. Actual enforcement is
+     * server-side too (queer_ink_handle_contact_form_submission()); this
+     * is the client-side half of the same rule set.
+     */
+    function queer_ink_form_field_validation_attrs( $type ) {
+        switch ( $type ) {
+            case 'name':
+                // Letters (incl. accents), spaces, apostrophes, hyphens,
+                // periods — not digits-only or symbol-only input.
+                return ' pattern="[A-Za-zÀ-ÖØ-öø-ÿ][A-Za-zÀ-ÖØ-öø-ÿ\s\'\.\-]*" data-qi-validate="name" autocomplete="name"';
+            case 'email':
+                return ' data-qi-validate="email" autocomplete="email"';
+            case 'tel':
+                return ' pattern="[0-9]{10,12}" inputmode="numeric" data-qi-validate="tel" autocomplete="tel"';
+            default:
+                return '';
+        }
+    }
+}
+
 if ( ! function_exists( 'queer_ink_render_form_field' ) ) {
     /**
      * Renders a single qi_form_field post as its configured input.
@@ -353,6 +378,10 @@ if ( ! function_exists( 'queer_ink_render_form_field' ) ) {
         $placeholder = '' !== $placeholder ? $placeholder : $label;
         $field_name  = $field_post->post_name ? $field_post->post_name : 'field-' . $field_post->ID;
         $field_id    = 'qi-field-' . $field_name;
+
+        // "name" is a plain text input — its own type value only exists
+        // to pick out which field gets the letters-only validation below.
+        $input_type = 'name' === $type ? 'text' : $type;
 
         ob_start();
         ?>
@@ -375,7 +404,7 @@ if ( ! function_exists( 'queer_ink_render_form_field' ) ) {
                     ?>
                 </select>
             <?php else : ?>
-                <input type="<?php echo esc_attr( $type ); ?>" id="<?php echo esc_attr( $field_id ); ?>" name="<?php echo esc_attr( $field_name ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" <?php echo $required ? 'required aria-required="true"' : ''; ?>>
+                <input type="<?php echo esc_attr( $input_type ); ?>" id="<?php echo esc_attr( $field_id ); ?>" name="<?php echo esc_attr( $field_name ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" <?php echo $required ? 'required aria-required="true"' : ''; ?><?php echo queer_ink_form_field_validation_attrs( $type ); // phpcs:ignore -- fixed, trusted attribute string, not user input. ?>>
             <?php endif; ?>
         </div>
         <?php
@@ -389,10 +418,15 @@ if ( ! function_exists( 'queer_ink_contact_form_shortcode' ) ) {
      * fields (type, label, required, select options, order, half/full
      * width) are entirely admin-editable from wp-admin → Contact Form
      * Fields, with no field structure hard-coded in the template.
+     *
+     * Submits to admin-post.php (WordPress's own native form-handling
+     * entry point — see queer_ink_handle_contact_form_submission()
+     * below), not a plugin. The 'action' shortcode attribute is kept for
+     * backwards compatibility but no longer needed for the form to work.
      */
     function queer_ink_contact_form_shortcode( $atts ) {
         $atts = shortcode_atts( array(
-            'action' => '',
+            'action' => admin_url( 'admin-post.php' ),
         ), $atts, 'qi_contact_form' );
 
         $fields = get_posts( array(
@@ -403,9 +437,36 @@ if ( ! function_exists( 'queer_ink_contact_form_shortcode' ) ) {
             'order'          => 'ASC',
         ) );
 
+        // Read-only, used purely to pick which (already-fixed) message to
+        // display below — sanitize_key() reduces it to [a-z0-9_-] first,
+        // so an unexpected value just matches nothing rather than being
+        // used unsafely.
+        $status = isset( $_GET['qi_contact'] ) ? sanitize_key( wp_unslash( $_GET['qi_contact'] ) ) : '';
+
+        $status_messages = array(
+            'success'          => array( 'type' => 'success', 'text' => esc_html__( "Thanks — your message has been sent. We'll get back to you soon.", 'queer-ink-theme' ) ),
+            'validation_error' => array( 'type' => 'error', 'text' => esc_html__( 'Please fill in all required fields before sending.', 'queer-ink-theme' ) ),
+            'invalid_name'     => array( 'type' => 'error', 'text' => esc_html__( 'Please enter a valid name (letters only).', 'queer-ink-theme' ) ),
+            'invalid_email'    => array( 'type' => 'error', 'text' => esc_html__( 'Please enter a valid email address.', 'queer-ink-theme' ) ),
+            'invalid_mobile'   => array( 'type' => 'error', 'text' => esc_html__( 'Please enter a valid mobile number (10-12 digits only).', 'queer-ink-theme' ) ),
+            'mail_error'       => array( 'type' => 'error', 'text' => esc_html__( "Sorry, your message couldn't be sent right now. Please try again shortly or email us directly.", 'queer-ink-theme' ) ),
+            'error'            => array( 'type' => 'error', 'text' => esc_html__( 'Your session expired before sending — please try again.', 'queer-ink-theme' ) ),
+        );
+
         ob_start();
+
+        if ( isset( $status_messages[ $status ] ) ) {
+            printf(
+                '<p class="qi-connect-form__message qi-connect-form__message--%1$s" role="status">%2$s</p>',
+                esc_attr( $status_messages[ $status ]['type'] ),
+                $status_messages[ $status ]['text']
+            );
+        }
         ?>
         <form class="qi-connect-form__form" method="post" action="<?php echo esc_url( $atts['action'] ); ?>">
+            <input type="hidden" name="action" value="qi_contact_form_submit">
+            <input type="hidden" name="qi_contact_redirect" value="<?php echo esc_url( get_permalink() ); ?>">
+            <?php wp_nonce_field( 'qi_contact_form_submit', 'qi_contact_form_nonce' ); ?>
             <?php
             if ( empty( $fields ) ) {
                 if ( current_user_can( 'edit_theme_options' ) || current_user_can( 'manage_options' ) ) {
@@ -455,3 +516,165 @@ if ( ! function_exists( 'queer_ink_contact_form_shortcode' ) ) {
     }
 }
 add_shortcode( 'qi_contact_form', 'queer_ink_contact_form_shortcode' );
+
+if ( ! function_exists( 'queer_ink_handle_contact_form_submission' ) ) {
+    /**
+     * Handles the Connect page's "Send us a message" form (see
+     * queer_ink_contact_form_shortcode() above) via admin-post.php —
+     * WordPress's own native, plugin-free entry point for handling a
+     * plain form POST. Registered for both logged-in and logged-out
+     * visitors since anyone can submit this form.
+     *
+     * Destination: info@queer-ink.com — the only contact address this
+     * theme's own content presents anywhere (Connect page, "Other ways
+     * to reach us" → Email; see inc/block-patterns.php), so it's reused
+     * here rather than guessing at one.
+     *
+     * Field list/types/required-ness come from the same qi_form_field
+     * posts the shortcode itself renders from, so validation always
+     * matches whatever an admin has currently configured under Contact
+     * Form Fields — nothing about the field set is hard-coded here.
+     */
+    function queer_ink_handle_contact_form_submission() {
+        $redirect_url = isset( $_POST['qi_contact_redirect'] ) ? esc_url_raw( wp_unslash( $_POST['qi_contact_redirect'] ) ) : '';
+        if ( ! $redirect_url ) {
+            $redirect_url = wp_get_referer();
+        }
+        if ( ! $redirect_url ) {
+            $redirect_url = home_url( '/connect/' );
+        }
+
+        $nonce_ok = isset( $_POST['qi_contact_form_nonce'] )
+            && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['qi_contact_form_nonce'] ) ), 'qi_contact_form_submit' );
+
+        if ( ! $nonce_ok ) {
+            wp_safe_redirect( add_query_arg( 'qi_contact', 'error', $redirect_url ) . '#contact-form' );
+            exit;
+        }
+
+        $fields = get_posts( array(
+            'post_type'      => 'qi_form_field',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+        ) );
+
+        $valid        = true;
+        // Set only by the specific name/email/tel format checks below, so
+        // the redirect can show the exact wording for whichever field
+        // actually failed format-wise, rather than one generic message —
+        // first field to fail wins (later fields don't overwrite it).
+        // Empty-required-field failures never set this, so that case
+        // falls through to the generic "please fill in..." message.
+        $format_error = '';
+        $email_value  = '';
+        $lines        = array();
+
+        foreach ( $fields as $field_post ) {
+            $type       = get_post_meta( $field_post->ID, '_qi_field_type', true ) ?: 'text';
+            $required   = (bool) get_post_meta( $field_post->ID, '_qi_field_required', true );
+            $label      = get_the_title( $field_post );
+            $field_name = $field_post->post_name ? $field_post->post_name : 'field-' . $field_post->ID;
+
+            $raw = isset( $_POST[ $field_name ] ) ? wp_unslash( $_POST[ $field_name ] ) : '';
+
+            if ( 'email' === $type ) {
+                // sanitize_email() itself returns '' for *any* malformed
+                // address (missing @, no domain, etc.) — not just a
+                // genuinely empty field — so that alone can't tell "left
+                // blank" apart from "typed something invalid". Checking
+                // the raw trimmed input first keeps those two cases
+                // reporting the right message (required vs. invalid_email).
+                $was_entered = '' !== trim( $raw );
+                $value       = sanitize_email( $raw );
+                if ( $was_entered && ( '' === $value || ! is_email( $value ) ) ) {
+                    $valid = false;
+                    $value = ''; // Reject the malformed address rather than mailing it.
+                    if ( ! $format_error ) {
+                        $format_error = 'invalid_email';
+                    }
+                } elseif ( '' !== $value ) {
+                    $email_value = $value;
+                }
+            } elseif ( 'tel' === $type ) {
+                // sanitize_text_field() first (strips tags/extra
+                // whitespace), then the digits-only, 10-12-length check —
+                // letters, symbols (+, -, spaces, etc.) and wrong lengths
+                // are all rejected, matching the "10-12 digits only" rule.
+                $value = sanitize_text_field( $raw );
+                if ( '' !== $value && ! preg_match( '/^[0-9]{10,12}$/', $value ) ) {
+                    $valid = false;
+                    if ( ! $format_error ) {
+                        $format_error = 'invalid_mobile';
+                    }
+                }
+            } elseif ( 'name' === $type ) {
+                $value = sanitize_text_field( $raw );
+                if ( '' !== $value && ! preg_match( '/^[A-Za-z\x{00C0}-\x{00D6}\x{00D8}-\x{00F6}\x{00F8}-\x{00FF}][A-Za-z\x{00C0}-\x{00D6}\x{00D8}-\x{00F6}\x{00F8}-\x{00FF}\s\'.-]*$/u', $value ) ) {
+                    $valid = false;
+                    if ( ! $format_error ) {
+                        $format_error = 'invalid_name';
+                    }
+                }
+            } elseif ( 'textarea' === $type ) {
+                $value = sanitize_textarea_field( $raw );
+            } else {
+                $value = sanitize_text_field( $raw );
+            }
+
+            if ( $required && '' === $value ) {
+                $valid = false;
+            }
+
+            if ( '' !== $value ) {
+                $lines[] = $label . ': ' . $value;
+            }
+        }
+
+        // The consent checkbox isn't a qi_form_field post — it's a fixed
+        // part of the form markup — so it's required separately here.
+        if ( empty( $_POST['consent'] ) ) {
+            $valid = false;
+        }
+
+        if ( ! $valid ) {
+            wp_safe_redirect( add_query_arg( 'qi_contact', $format_error ? $format_error : 'validation_error', $redirect_url ) . '#contact-form' );
+            exit;
+        }
+
+        $to      = 'info@queer-ink.com';
+        $subject = sprintf(
+            /* translators: %s: site name. */
+            esc_html__( '[%s] New contact form submission', 'queer-ink-theme' ),
+            wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES )
+        );
+        $body = implode( "\n\n", $lines );
+
+        // From is explicitly the site's own admin_email (a real, already-
+        // configured address), not the visitor's — WordPress's own
+        // wp_mail() default of wordpress@{host} fails PHPMailer's address
+        // validation outright on a bare "localhost" install (confirmed
+        // via the wp_mail_failed hook while diagnosing this: "Invalid
+        // address: (From): wordpress@localhost"), and even on a real
+        // domain, letting a visitor-supplied address control From/
+        // Envelope-From would let a forged submission spoof outgoing
+        // mail. The visitor's own (already is_email()-validated) address
+        // only ever goes in Reply-To, so hitting "Reply" goes straight
+        // to them.
+        $headers = array(
+            'Content-Type: text/plain; charset=UTF-8',
+            sprintf( 'From: %1$s <%2$s>', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ), get_option( 'admin_email' ) ),
+        );
+        if ( $email_value ) {
+            $headers[] = 'Reply-To: ' . $email_value;
+        }
+
+        $sent = wp_mail( $to, $subject, $body, $headers );
+
+        wp_safe_redirect( add_query_arg( 'qi_contact', $sent ? 'success' : 'mail_error', $redirect_url ) . '#contact-form' );
+        exit;
+    }
+}
+add_action( 'admin_post_nopriv_qi_contact_form_submit', 'queer_ink_handle_contact_form_submission' );
+add_action( 'admin_post_qi_contact_form_submit', 'queer_ink_handle_contact_form_submission' );

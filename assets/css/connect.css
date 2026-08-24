@@ -88,6 +88,30 @@ html:has(body.page-id-25) {
     font-size: 0.85rem;
 }
 
+/* Success/error feedback after a real submit-and-redirect round trip
+   (see queer_ink_handle_contact_form_submission() in inc/shortcodes.php) —
+   same shape as .qi-connect-form__admin-notice above, just recolored. */
+.qi-connect-form__message {
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.qi-connect-form__message--success {
+    border-color: #b7dfc4;
+    background-color: #eaf7ee;
+    color: #205c34;
+}
+
+.qi-connect-form__message--error {
+    border-color: #f3c2ce;
+    background-color: #fdecf0;
+    color: #8a1338;
+}
+
 .qi-connect-form input:not([type="checkbox"]),
 .qi-connect-form select,
 .qi-connect-form textarea {

@@ -18,6 +18,29 @@ Queer Ink Header
     box-shadow:0 4px 16px rgba(37,24,26,0.08);
 }
 
+/* Homepage-only entrance animation, initial load only — a plain CSS
+   keyframe on a static selector, so it plays exactly once when the
+   header is first painted and never re-triggers on scroll, clicks or
+   navigation (nothing here adds/removes a class or restarts it).
+   prefers-reduced-motion guard means reduced-motion users get the
+   header in its normal resting position immediately, no motion at all. */
+@media (prefers-reduced-motion: no-preference){
+    body.home .site-header{
+        animation:qi-header-enter .6s ease-out both;
+    }
+}
+
+@keyframes qi-header-enter{
+    from{
+        opacity:0;
+        transform:translateY(-16px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
 /* When logged in, WordPress's own admin toolbar is fixed at the true
    top of the viewport (z-index above everything, including our
    sticky header's top:0), so once you scroll it visually covers the
@@ -167,10 +190,37 @@ body.admin-bar .site-header{
 }
 
 /* Toggled by JS once it measures real free space to the right of the
-   button — screen width alone can't tell us that reliably. */
+   button — screen width alone can't tell us that reliably. Left in
+   place for widths this file doesn't pin one way or the other below;
+   the two breakpoints after it force a side deterministically instead. */
 .header-search-panel.header-search-panel--right{
     left:calc(100% + 10px);
     right:auto;
+}
+
+/* Tablet, both orientations (768x1024 portrait and 1024x768 landscape
+   both fall in this range) — always opens to the left, overriding JS's
+   --right class if it happens to add one, since the ask here is a
+   guaranteed side at this width rather than whatever the space
+   measurement finds. Stops at 680px so it never touches the "opens
+   below the header" mobile behaviour lower down in this file. */
+@media (min-width: 681px) and (max-width: 1279px){
+    .header-search-panel.header-search-panel--right{
+        left:auto;
+        right:calc(100% + 10px);
+    }
+}
+
+/* Small laptop and up (1280x720, 1366x768, 1440x900 all land here) —
+   always opens to the right of the icon instead. Overrides the base
+   left-opening rule directly (not just the --right variant) so this is
+   guaranteed even in the unlikely case JS's own measurement doesn't add
+   that class at these widths. */
+@media (min-width: 1280px){
+    .header-search-panel{
+        left:calc(100% + 10px);
+        right:auto;
+    }
 }
 
 .header-search-panel[hidden]{

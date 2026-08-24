@@ -85,40 +85,60 @@ html:has(body.page-id-11) {
     margin-top: 0.75rem;
 }
 
-/* Publishing only (.qi-publishing-hero — the other landing pages' heroes
-   share the bare .qi-pub-hero class and keep the light cream scrim
-   above, which suits their own photos). Publishing's hero photo gets a
-   dark, low-opacity overlay instead so the (sunlit, colourful) photo
-   stays clearly recognisable while the text — now white — stays
-   readable anywhere over the image. Compound selectors (.qi-pub-hero
-   .qi-publishing-hero) so this always outranks the shared rules above,
-   regardless of source order. */
+/* Publishing only (.qi-publishing-hero). The hero no longer has a
+   full-bleed background photo (moved to a right-hand column image,
+   matching the qi-pub-hero__image pattern already used by the other
+   landing pages' heroes below), so the light cream ::before scrim from
+   the shared .qi-pub-hero rule above is dropped here and the heading
+   goes back to a normal dark-on-light treatment instead of white. */
+.qi-pub-hero.qi-publishing-hero {
+    display: block;
+    min-height: 0;
+    width: auto;
+    left: auto;
+    right: auto;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 3rem 0;
+    background-image: none;
+    overflow: visible;
+}
+
 .qi-pub-hero.qi-publishing-hero::before {
-    background: linear-gradient(90deg, rgba(8, 6, 5, 0.64) 0%, rgba(8, 6, 5, 0.52) 30%, rgba(8, 6, 5, 0.4) 60%, rgba(8, 6, 5, 0.32) 100%);
+    display: none;
+}
+
+.qi-pub-hero.qi-publishing-hero .wp-block-columns {
+    align-items: center;
+    gap: 3rem;
 }
 
 .qi-pub-hero.qi-publishing-hero h1 {
-    color: #ffffff;
+    color: var(--qi-color-primary);
 }
 
 .qi-pub-hero.qi-publishing-hero p {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--qi-color-ink-variant);
+}
+
+.qi-pub-hero.qi-publishing-hero .qi-pub-hero__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--qi-radius-xl);
+    box-shadow: var(--qi-shadow-card);
+    object-fit: cover;
 }
 
 /* "Our Publishing Approach" is a native Gutenberg outline button
    (.is-style-outline), not the theme's .button--outline — it inherits a
-   dark border/text from the block editor defaults, invisible against
-   the new dark overlay. */
+   dark border/text from the block editor defaults by default, so this
+   only needs to move it to the brand pink; hover/focus already fall
+   back to the same shared rule (style.css) used by every other outline
+   button on the site. */
 .qi-pub-hero.qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link {
-    border-color: rgba(255, 255, 255, 0.7);
-    color: #ffffff;
-}
-
-.qi-pub-hero.qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link:hover,
-.qi-pub-hero.qi-publishing-hero .wp-block-button.is-style-outline .wp-block-button__link:focus-visible {
-    border-color: #ffffff;
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--qi-color-primary);
+    color: var(--qi-color-primary);
 }
 
 /* ---------------- From the Archives band ---------------- */
@@ -379,8 +399,8 @@ html:has(body.page-id-11) {
 }
 
 .qi-pathway-step__icon .qi-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
 }
 
 .qi-pathway-step h3 {
@@ -423,7 +443,7 @@ html:has(body.page-id-11) {
     width: 34px;
 }
 
-.qi-pathway-band__heart svg {
+.qi-pathway-band__heart img {
     width: 100%;
     height: auto;
     display: block;
@@ -1100,9 +1120,11 @@ html:has(body.page-id-11) {
 }
 
 .qi-cta-band--illustrated .qi-cta-band__decor .qi-cta-band__illustration {
+    visibility: visible;
     display: block;
     width: 130px;
     height: auto;
+    margin: 0 1rem;
     background-color: transparent;
     border-radius: 0;
     opacity: 0.95;
@@ -1160,8 +1182,8 @@ html:has(body.page-id-11) {
         background: linear-gradient(90deg, rgba(255, 250, 248, 0.96) 0%, rgba(255, 250, 248, 0.88) 45%, rgba(255, 250, 248, 0.45) 75%, rgba(255, 250, 248, 0.18) 100%);
     }
 
-    .qi-pub-hero.qi-publishing-hero::before {
-        background: linear-gradient(90deg, rgba(8, 6, 5, 0.7) 0%, rgba(8, 6, 5, 0.6) 45%, rgba(8, 6, 5, 0.46) 75%, rgba(8, 6, 5, 0.38) 100%);
+    .qi-pub-hero.qi-publishing-hero .wp-block-columns {
+        gap: 2rem;
     }
 
     .qi-archives-band {
@@ -1283,18 +1305,16 @@ html:has(body.page-id-11) {
         max-width: 100%;
     }
 
-    /* Publishing only (.qi-publishing-hero — the other landing pages'
-       heroes share the bare .qi-pub-hero class and keep the light cream
-       scrim above, which already suits their photos/layouts). Text/button
-       colors are handled once, at the base rule above, since the dark
-       overlay now applies at every breakpoint — mobile only needs a
-       steeper gradient because the text stacks directly on top of the
-       image here (rather than sitting beside it, as on desktop), so a
-       stronger scrim keeps the bright, sunlit reading-room photo
-       recognisable while giving white text reliable contrast anywhere
-       in the frame. */
-    .qi-publishing-hero::before {
-        background: linear-gradient(180deg, rgba(20, 14, 10, 0.68) 0%, rgba(16, 11, 8, 0.78) 55%, rgba(12, 8, 6, 0.88) 100%);
+    /* Publishing only — .site-content carries no horizontal padding of
+       its own on mobile (see .qi-pathways-heading below), so the hero
+       needs its own 16px gutter here too now that it's a normal block
+       instead of a full-bleed photo background. */
+    .qi-pub-hero.qi-publishing-hero {
+        padding: 2rem 16px;
+    }
+
+    .qi-pub-hero.qi-publishing-hero .wp-block-columns {
+        gap: 2rem;
     }
 
     /* .qi-pathways-heading and .qi-archives-band are direct children of

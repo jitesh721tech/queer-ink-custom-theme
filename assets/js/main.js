@@ -232,4 +232,41 @@
             } );
         }
     }
+
+    // ---------------- Connect form: client-side validation ----------------
+    // Same 3 rules as the server-side check in
+    // queer_ink_handle_contact_form_submission() (inc/shortcodes.php) —
+    // the server re-checks everything regardless, so this only ever
+    // saves a visitor a round trip and gives a clearer message than the
+    // browser's own generic one; it never replaces the server check.
+    //
+    // Uses the native Constraint Validation API (setCustomValidity)
+    // rather than a submit handler: name/tel already get a pattern=""
+    // attribute and email a type="email" one (inc/shortcodes.php), so
+    // the browser already blocks submission on a mismatch and shows its
+    // own bubble UI — this only swaps that bubble's text for our
+    // clearer wording. Empty *required* fields are untouched here
+    // (validity.patternMismatch/typeMismatch are false for an empty
+    // value), so the browser's existing native "required" message and
+    // behavior keeps working exactly as before.
+    var qiValidateMessages = {
+        name: 'Please enter a valid name (letters only).',
+        email: 'Please enter a valid email address.',
+        tel: 'Please enter a valid mobile number (10-12 digits only).',
+    };
+
+    document.querySelectorAll( '[data-qi-validate]' ).forEach( function ( field ) {
+        var message = qiValidateMessages[ field.getAttribute( 'data-qi-validate' ) ];
+        if ( ! message ) {
+            return;
+        }
+
+        var updateValidity = function () {
+            var invalidFormat = field.validity.patternMismatch || field.validity.typeMismatch;
+            field.setCustomValidity( invalidFormat ? message : '' );
+        };
+
+        field.addEventListener( 'input', updateValidity );
+        field.addEventListener( 'invalid', updateValidity );
+    } );
 })();

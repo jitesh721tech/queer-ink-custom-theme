@@ -45,6 +45,17 @@
     color: var(--qi-color-primary-container);
 }
 
+/* Homepage hero only — .button--outline is a shared component reused by
+   buttons across the whole site (see style.css), so this override is
+   scoped to the front page's own .hero wrapper (template-parts/section-
+   hero.php) rather than changed globally. (.hero__eyebrow's color is
+   changed at its own shared rule in style.css instead, since every page's
+   hero eyebrow label needs the same color per the current request.) */
+.hero .button--outline {
+    border-color: var(--qi-color-primary);
+    color: var(--qi-color-primary);
+}
+
 .hero__description {
     margin: 0 0 2rem;
     font-size: 1rem;

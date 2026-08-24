@@ -10,6 +10,27 @@
     padding: 3rem 0;
 }
 
+/* Homepage-only entrance animation, initial load only — see the
+   matching .site-header rule/comment in header.css; same plain
+   CSS-keyframe approach (plays once on paint, ignores scroll/clicks/
+   navigation entirely) and the same prefers-reduced-motion guard. */
+@media (prefers-reduced-motion: no-preference) {
+    body.home .site-footer {
+        animation: qi-footer-enter 0.6s ease-out both;
+    }
+}
+
+@keyframes qi-footer-enter {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .site-footer-inner {
     width: min(100%, 1400px);
     margin: 0 auto;

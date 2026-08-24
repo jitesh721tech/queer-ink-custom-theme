@@ -310,7 +310,11 @@ html:has(body.page-id-16) {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 2rem 1.75rem;
-    align-items: start;
+    /* stretch (not start) so every card in a row shares the row's own
+       height — combined with .timeline-entry-card's own flex-column +
+       margin-top: auto on __link, the Explore link lands at the same
+       position on every card regardless of excerpt length. */
+    align-items: stretch;
     width: min(100%, 1400px);
     max-width: 1400px;
     margin-left: auto;
@@ -366,6 +370,16 @@ html:has(body.page-id-16) {
 
 .site-content:has(> .timeline-entry-card) > .archive-header {
     margin-top: 0.75rem;
+    /* The grid's own 2rem row-gap (above) already applies between this
+       header's row and the cards' row (grid gap doesn't collapse with a
+       child's own margin), so zeroing this margin-bottom leaves exactly
+       that 2rem as the only heading-to-list space — about half of the
+       previous 4rem (2rem margin + 2rem grid-gap stacked). */
+    margin-bottom: 0;
+}
+
+.site-content:has(> .timeline-entry-card) > .archive-header .archive-title {
+    font-size: 1.75rem;
 }
 
 .timeline-entry-card {
@@ -866,6 +880,28 @@ html:has(body.page-id-16) {
     padding-left: 32px;
     padding-right: 32px;
     box-sizing: border-box;
+}
+
+/* This page only (/journal/) — same left-align + halved-gap fix already
+   applied to the Books/Timeline archives (see .qi-page-back overrides
+   in publishing.css/archiving.css above), just missing here until now.
+   margin-left/right: 0 stops the shared .qi-page-back's default
+   auto-centering (this grid column is ~1336px wide, far past its own
+   704px max-width, so centering was pushing it to the middle of the
+   page instead of flush left like Books/Timeline). The gap to the
+   "Archives: Articles" heading was their own margins (16px + 24px)
+   *plus* this grid's own 24px row-gap on top (adjacent margins don't
+   collapse in a grid), for 64px total — halved to ~32px by trimming
+   just the two margins; this grid's own row-gap (needed for spacing
+   between the heading and the cards, and between cards) is untouched. */
+.site-content:has(> .article-card) > .qi-page-back {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+}
+
+.site-content:has(> .article-card) > .archive-header {
+    margin-top: 0.5rem;
 }
 
 /* Horizontal card: fixed-size image on the left, content on the right.

@@ -165,7 +165,6 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
     function queer_ink_register_block_patterns() {
 
         $publishing_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/publishing_hero.png' ) );
-        $publishing_hero_bg_image = esc_url( get_theme_file_uri( 'assets/images/hero/publishing_hero_bg.jpg' ) );
         $archiving_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/archiving_hero.png' ) );
         $digital_library_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/digital_library_hero.png' ) );
         $qi_journal_hero_image = esc_url( get_theme_file_uri( 'assets/images/hero/qi_journal_hero.png' ) );
@@ -189,6 +188,14 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
         $about_wwd_icon_digital_library_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-digital-library.png' ) );
         $about_wwd_icon_blog_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-blog.png' ) );
         $about_wwd_icon_conversations_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-conversations.png' ) );
+        $publishing_archives_band_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_2nd.png' ) );
+        $publishing_pathway_icon_bulb_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_bulb.svg' ) );
+        $publishing_pathway_icon_pencil_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_pencil.svg' ) );
+        $publishing_pathway_icon_shield_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_shield.svg' ) );
+        $publishing_pathway_icon_currency_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_currency.svg' ) );
+        $publishing_pathway_icon_speaker_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_speaker.svg' ) );
+        $publishing_pathway_heart_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_path_heart.png' ) );
+        $publishing_cta_illustration_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_last_sec.png' ) );
 
         // Site-relative destination URLs, resolved through home_url() so links
         // still work when WordPress is installed in a subdirectory (e.g. /queer-ink/).
@@ -212,7 +219,9 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
                 'categories' => array( 'queer-ink' ),
                 'content'    => <<<HTML
 <!-- wp:group {"className":"qi-pub-hero qi-publishing-hero"} -->
-<div class="wp-block-group qi-pub-hero qi-publishing-hero" style="background-image:url({$publishing_hero_bg_image})"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
+<div class="wp-block-group qi-pub-hero qi-publishing-hero"><!-- wp:columns -->
+<div class="wp-block-columns"><!-- wp:column -->
+<div class="wp-block-column"><!-- wp:paragraph {"className":"hero__eyebrow"} -->
 <p class="hero__eyebrow">PUBLISHING</p>
 <!-- /wp:paragraph -->
 
@@ -237,6 +246,14 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
 <div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="#pathways">Our Publishing Approach</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
+<!-- /wp:column -->
+
+<!-- wp:column -->
+<div class="wp-block-column"><!-- wp:image {"className":"qi-pub-hero__image"} -->
+<figure class="wp-block-image qi-pub-hero__image"><img src="{$publishing_hero_image}" alt="Queer Ink Publishing"/></figure>
+<!-- /wp:image --></div>
+<!-- /wp:column --></div>
+<!-- /wp:columns --></div>
 <!-- /wp:group -->
 HTML
                 ,
@@ -265,7 +282,7 @@ HTML
     <div class="qi-archives-band__media">
         <span class="qi-archives-band__decor qi-archives-band__decor--tr" aria-hidden="true"></span>
         <span class="qi-archives-band__decor qi-archives-band__decor--bl" aria-hidden="true"></span>
-        <img src="' . $archiving_hero_image . '" alt="Letters, photographs and ephemera from the Queer India Archives"/>
+        <img src="' . $publishing_archives_band_image . '" alt="From the Archives — Queer India Archives"/>
     </div>
 </div>
 <!-- /wp:html -->',
@@ -294,38 +311,38 @@ HTML
     <div class="qi-pathway-band__row">
         <div class="qi-pathway-band__steps">
             <div class="qi-pathway-step">
-                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'lightbulb' ) . '</div>
+                <div class="qi-pathway-step__icon"><img src="' . $publishing_pathway_icon_bulb_image . '" class="qi-icon" alt=""/></div>
                 <h3>Your Story Matters</h3>
                 <p>Every story holds value and deserves to be seen.</p>
             </div>
             <span class="qi-pathway-step__arrow" aria-hidden="true">→</span>
             <div class="qi-pathway-step">
-                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'pencil' ) . '</div>
+                <div class="qi-pathway-step__icon"><img src="' . $publishing_pathway_icon_pencil_image . '" class="qi-icon" alt=""/></div>
                 <h3>We Shape Your Book</h3>
                 <p>Professional editing, design and production that reflect your voice and vision.</p>
             </div>
             <span class="qi-pathway-step__arrow" aria-hidden="true">→</span>
             <div class="qi-pathway-step">
-                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'shield' ) . '</div>
+                <div class="qi-pathway-step__icon"><img src="' . $publishing_pathway_icon_shield_image . '" class="qi-icon" alt=""/></div>
                 <h3>You Own Your Rights</h3>
                 <p>You retain full rights to your work. Always.</p>
             </div>
             <span class="qi-pathway-step__arrow" aria-hidden="true">→</span>
             <div class="qi-pathway-step">
-                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'rupee' ) . '</div>
+                <div class="qi-pathway-step__icon"><img src="' . $publishing_pathway_icon_currency_image . '" class="qi-icon" alt=""/></div>
                 <h3>You Earn Your Royalties</h3>
                 <p>Transparent royalties, fair terms and financial independence.</p>
             </div>
             <span class="qi-pathway-step__arrow" aria-hidden="true">→</span>
             <div class="qi-pathway-step">
-                <div class="qi-pathway-step__icon">' . queer_ink_icon( 'megaphone' ) . '</div>
+                <div class="qi-pathway-step__icon"><img src="' . $publishing_pathway_icon_speaker_image . '" class="qi-icon" alt=""/></div>
                 <h3>You Sustain Your Voice</h3>
                 <p>We support your journey so your voice reaches further.</p>
             </div>
         </div>
         <span class="qi-pathway-band__divider" aria-hidden="true"></span>
         <div class="qi-pathway-band__tagline">
-            <div class="qi-pathway-band__heart">' . queer_ink_pride_heart_svg() . '</div>
+            <div class="qi-pathway-band__heart"><img src="' . $publishing_pathway_heart_image . '" alt=""/></div>
             <p>Your work.<br>Your legacy.<br>Your future.<br><span>On your terms.</span></p>
             <span class="qi-pathway-band__sparkle qi-pathway-band__sparkle--a">' . queer_ink_sparkle_svg() . '</span>
             <span class="qi-pathway-band__sparkle qi-pathway-band__sparkle--b">' . queer_ink_sparkle_svg() . '</span>
@@ -420,7 +437,7 @@ HTML
                 'content'    => '<!-- wp:html -->
 <div class="qi-cta-band qi-cta-band--illustrated">
     <div class="qi-cta-band__decor qi-cta-band__decor--left" aria-hidden="true">
-        <span class="qi-cta-band__illustration">' . queer_ink_books_illustration_svg() . '</span>
+        <img class="qi-cta-band__illustration" src="' . $publishing_cta_illustration_image . '" alt=""/>
     </div>
     <div class="qi-cta-band__body">
         <h2>Ready to begin?</h2>
@@ -431,7 +448,7 @@ HTML
         </div>
     </div>
     <div class="qi-cta-band__decor qi-cta-band__decor--right" aria-hidden="true">
-        <span class="qi-cta-band__illustration">' . queer_ink_books_illustration_svg() . '</span>
+        <img class="qi-cta-band__illustration" src="' . $publishing_cta_illustration_image . '" alt=""/>
     </div>
 </div>
 <!-- /wp:html -->',
