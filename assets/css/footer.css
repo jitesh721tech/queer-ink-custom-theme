@@ -76,7 +76,9 @@ footer .footer-logo {
     color: var(--qi-color-ink-variant);
     font-size: 0.95rem;
     line-height: 1.8;
-    font-weight: 400;
+    /* Was 400 (explicitly thinner than the global body baseline below),
+       reading noticeably lighter than the rest of the footer/header. */
+    font-weight: 500;
 }
 
 .footer-links-grid {
@@ -106,7 +108,7 @@ footer .footer-logo {
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--qi-color-primary);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .footer-links-column ul {

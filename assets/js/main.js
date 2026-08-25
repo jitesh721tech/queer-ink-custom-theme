@@ -138,8 +138,10 @@
         var sectionTabs = document.querySelectorAll( '.qi-section-tab[data-filter-section]' );
         var topicLinks = document.querySelectorAll( '.qi-topics-list a[data-filter-topic]' );
         var topicSelect = document.querySelector( '.qi-topics-select[data-nav-select]' );
+        var searchForm = document.querySelector( '[data-qi-journal-search]' );
+        var searchInput = searchForm ? searchForm.querySelector( 'input[type="search"]' ) : null;
 
-        var qiFilters = { section: '', topic: '' };
+        var qiFilters = { section: '', topic: '', search: '' };
         var qiBusy = false;
 
         var setActiveTab = function ( sectionSlug ) {
@@ -163,6 +165,7 @@
             body.set( 'paged', '1' );
             body.set( 'section', qiFilters.section );
             body.set( 'topic', qiFilters.topic );
+            body.set( 'search', qiFilters.search );
 
             fetch( window.qiJournalAjax.url, {
                 method: 'POST',
@@ -228,6 +231,18 @@
                 qiFilters.topic = selectedOption ? ( selectedOption.getAttribute( 'data-filter-topic' ) || '' ) : '';
                 qiFilters.section = '';
                 setActiveTab( '' );
+                fetchArticles();
+            } );
+        }
+
+        // Searches Articles only — qi_load_articles (inc/ajax.php) hardcodes
+        // post_type=qi_article, so this can never surface Books, Pages,
+        // Timelines or Collections. Combines with whatever section/topic
+        // filter is already active instead of resetting it.
+        if ( searchForm && searchInput ) {
+            searchForm.addEventListener( 'submit', function ( event ) {
+                event.preventDefault();
+                qiFilters.search = searchInput.value.trim();
                 fetchArticles();
             } );
         }

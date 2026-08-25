@@ -26,7 +26,7 @@ while ( have_posts() ) :
     <main id="site-content" class="site-content container" role="main">
         <article id="article-<?php the_ID(); ?>" <?php post_class( 'qi-single-book' ); ?>>
             <p class="qi-single-book__back qi-single-book__back--top">
-                <a href="<?php echo esc_url( home_url( '/qi-journal/' ) ); ?>">&larr; <?php esc_html_e( 'Back to QI Journal', 'queer-ink-theme' ); ?></a>
+                <a href="<?php echo esc_url( home_url( '/qi-journal/#qi-journal-articles' ) ); ?>">&larr; <?php esc_html_e( 'Back to QI Journal', 'queer-ink-theme' ); ?></a>
             </p>
             <div class="qi-single-book__layout">
                 <div class="qi-single-book__cover">

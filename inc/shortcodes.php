@@ -5,6 +5,60 @@
  * @package Queer_Ink_Theme
  */
 
+if ( ! function_exists( 'queer_ink_book_source_param' ) ) {
+    /**
+     * Book cards render from the same reusable carousel partial
+     * (template-parts/content-qi_book-carousel.php) on both Publishing and
+     * Digital Library. Tagging each card's link with which page it's
+     * rendering on lets a book's own "Back" link (single-qi_book.php) and
+     * the Books archive's "Back" link (archive.php) return a visitor to
+     * that specific page instead of a generic Books page.
+     */
+    function queer_ink_book_source_param() {
+        if ( is_page( 'publishing' ) ) {
+            return array( 'from' => 'publishing' );
+        }
+
+        if ( is_page( 'digital-library' ) ) {
+            return array( 'from' => 'digital-library' );
+        }
+
+        return array();
+    }
+}
+
+if ( ! function_exists( 'queer_ink_book_back_context' ) ) {
+    /**
+     * Resolves the ?from= query arg set by queer_ink_book_source_param()
+     * (and the Publishing/Digital Library "View all books" links) into a
+     * Back button URL + label. Falls back to the caller's own default when
+     * the arg is absent or unrecognised, so single-qi_book.php and
+     * archive.php can each keep their existing default destination.
+     */
+    function queer_ink_book_back_context( $default_url, $default_label ) {
+        $from = isset( $_GET['from'] ) ? sanitize_key( wp_unslash( $_GET['from'] ) ) : '';
+
+        if ( 'publishing' === $from ) {
+            return array(
+                'url'   => home_url( '/publishing/' ),
+                'label' => __( 'Back to Publishing', 'queer-ink-theme' ),
+            );
+        }
+
+        if ( 'digital-library' === $from ) {
+            return array(
+                'url'   => home_url( '/digital-library/' ),
+                'label' => __( 'Back to Digital Library', 'queer-ink-theme' ),
+            );
+        }
+
+        return array(
+            'url'   => $default_url,
+            'label' => $default_label,
+        );
+    }
+}
+
 if ( ! function_exists( 'queer_ink_latest_books_shortcode' ) ) {
     function queer_ink_latest_books_shortcode( $atts ) {
         $atts = shortcode_atts( array(
@@ -64,6 +118,12 @@ if ( ! function_exists( 'queer_ink_collections_shortcode' ) ) {
             'posts_per_page' => absint( $atts['count'] ),
             'orderby'        => 'date',
             'order'          => 'DESC',
+            // Only Collections an admin has explicitly featured (see the
+            // "Frontend Visibility" meta box, inc/meta-boxes.php) — capped
+            // at QI_COLLECTIONS_FEATURED_MAX there, so this never returns
+            // more than that regardless of how many Collections exist.
+            'meta_key'       => '_qi_collection_featured',
+            'meta_value'     => '1',
         ) );
 
         ob_start();

@@ -1,12 +1,36 @@
 <?php
 /**
- * Site-wide search: relevance ranking for the main search query, plus
- * helpers to pull in matching Book/Article authors — a taxonomy term
- * match (e.g. searching an author's name) isn't something WP_Query's
- * native 's' parameter can find, since it only searches post fields.
+ * Site-wide search: restricts the main search query to Books, Articles,
+ * Timeline entries and Collections; relevance ranking for that query;
+ * plus helpers to pull in matching Book/Article authors — a taxonomy
+ * term match (e.g. searching an author's name) isn't something
+ * WP_Query's native 's' parameter can find, since it only searches post
+ * fields.
  *
  * @package Queer_Ink_Theme
  */
+
+if ( ! function_exists( 'queer_ink_restrict_search_post_types' ) ) {
+    /**
+     * Global site search (the header search box, landing on /?s=... via
+     * search.php) should only return Books, Articles, Timeline entries
+     * and Collections — not WordPress Pages (hero/footer/static section
+     * content lives inside page content, not a post type of its own to
+     * exclude individually) or any other post type. Scoped to the
+     * front-end main search query only, so wp-admin's own list-table
+     * search and the QI Journal page's own AJAX article filter (a
+     * separate WP_Query that never touches the main query) are both
+     * unaffected.
+     */
+    function queer_ink_restrict_search_post_types( $query ) {
+        if ( is_admin() || ! $query->is_search() || ! $query->is_main_query() ) {
+            return;
+        }
+
+        $query->set( 'post_type', array( 'qi_book', 'qi_article', 'qi_timeline', 'qi_collection' ) );
+    }
+}
+add_action( 'pre_get_posts', 'queer_ink_restrict_search_post_types' );
 
 if ( ! function_exists( 'queer_ink_search_relevance_clauses' ) ) {
     function queer_ink_search_relevance_clauses( $clauses, $query ) {

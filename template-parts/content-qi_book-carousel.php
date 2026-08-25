@@ -7,9 +7,13 @@
  *
  * @package Queer_Ink_Theme
  */
+
+// Tags this card's link with the current page (Publishing or Digital
+// Library) so the book's own "Back" link knows where to return to.
+$qi_book_carousel_permalink = esc_url( add_query_arg( queer_ink_book_source_param(), get_permalink() ) );
 ?>
 <article id="book-carousel-<?php the_ID(); ?>" <?php post_class( 'qi-book-carousel__item' ); ?>>
-    <a class="qi-book-carousel__cover-link" href="<?php the_permalink(); ?>">
+    <a class="qi-book-carousel__cover-link" href="<?php echo $qi_book_carousel_permalink; ?>">
         <div class="qi-book-carousel__cover">
             <?php if ( has_post_thumbnail() ) : ?>
                 <?php the_post_thumbnail( 'medium', array( 'class' => 'qi-book-carousel__cover-img' ) ); ?>
@@ -26,7 +30,7 @@
             <span class="qi-book-carousel__tag"><?php echo esc_html( $qi_carousel_subjects[0]->name ); ?></span>
         <?php endif; ?>
         <h3 class="qi-book-carousel__title">
-            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+            <a href="<?php echo $qi_book_carousel_permalink; ?>"><?php the_title(); ?></a>
         </h3>
         <?php
         $qi_carousel_authors = get_the_terms( get_the_ID(), 'qi_book_author' );

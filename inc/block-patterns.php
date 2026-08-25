@@ -365,7 +365,7 @@ HTML
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"qi-current-list__view-all"} -->
-<p class="qi-current-list__view-all"><a href="' . $url_books . '">View all books →</a></p>
+<p class="qi-current-list__view-all"><a href="' . esc_url( add_query_arg( 'from', 'publishing', $url_books ) ) . '">View all books →</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -775,7 +775,7 @@ HTML
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"qi-current-list__view-all"} -->
-<p class="qi-current-list__view-all"><a href="' . $url_books . '">View all books →</a></p>
+<p class="qi-current-list__view-all"><a href="' . esc_url( add_query_arg( 'from', 'digital-library', $url_books ) ) . '">View all books →</a></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
@@ -927,10 +927,20 @@ HTML
                 'title'      => esc_html__( 'Queer Ink: Journal Filter Bar', 'queer-ink-theme' ),
                 'categories' => array( 'queer-ink' ),
                 'content'    => '<!-- wp:html -->
-<div class="qi-filter-bar">
+<div class="qi-filter-bar" id="qi-journal-articles">
     <div class="qi-filter-bar__tabs">[qi_article_sections]</div>
     <div class="qi-filter-bar__controls">
         [qi_subjects_dropdown taxonomy="qi_article_topic"]
+        <form class="qi-search-form qi-journal-search-form" role="search" data-qi-journal-search>
+            <label class="screen-reader-text" for="qi-journal-search-input">Search articles</label>
+            <input type="search" id="qi-journal-search-input" name="search" placeholder="Search articles&hellip;">
+            <button type="submit" aria-label="Submit search">
+                <svg class="qi-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="2" fill="none" />
+                    <line x1="15" y1="15" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </form>
     </div>
 </div>
 <!-- /wp:html -->',
@@ -985,7 +995,7 @@ HTML
             <a class="qi-journal-channel__link" href="' . $url_connect . '">Join on Telegram ↗</a>
         </div>
     </div>
-    <p class="qi-journal-widget__note">No newsletters. No spam. Just what matters.</p>
+    <p class="qi-journal-widget__note"><span class="qi-journal-widget__note-highlight">No newsletters.</span> No spam. Just what matters.</p>
 </div>
 <!-- /wp:html --></div>
 <!-- /wp:column --></div>

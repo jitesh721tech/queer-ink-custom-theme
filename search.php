@@ -2,11 +2,13 @@
 /**
  * Search results template.
  *
- * Combines the native WP_Query post search (Books, Articles, Pages, and
- * any other public post type — relevance-ordered via the posts_clauses
- * filter in inc/search.php) with a lookup of matching Author/Writer
- * taxonomy terms, since WP_Query's 's' parameter only searches post
- * fields and can't match a taxonomy term name.
+ * Combines the native WP_Query post search — restricted to Books,
+ * Articles, Timeline entries and Collections only (see
+ * queer_ink_restrict_search_post_types() in inc/search.php), relevance-
+ * ordered via the posts_clauses filter in the same file — with a lookup
+ * of matching Author/Writer taxonomy terms, since WP_Query's 's'
+ * parameter only searches post fields and can't match a taxonomy term
+ * name.
  *
  * @package Queer_Ink_Theme
  */
@@ -53,7 +55,7 @@ $qi_total_results    = (int) $wp_query->found_posts + count( $qi_matching_author
     <?php if ( $qi_query_is_empty ) : ?>
 
         <section class="search-empty-state">
-            <p><?php esc_html_e( 'Enter a keyword above to search across Books, Articles, Pages, and Authors.', 'queer-ink-theme' ); ?></p>
+            <p><?php esc_html_e( 'Enter a keyword above to search across Books, Articles, Timelines, Collections, and Authors.', 'queer-ink-theme' ); ?></p>
         </section>
 
     <?php elseif ( ! $qi_has_posts && ! $qi_matching_authors ) : ?>

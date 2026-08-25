@@ -157,6 +157,12 @@
     color: #4a4a4a;
 }
 
+/* "No newsletters." only — the rest of the note ("No spam. Just what
+   matters.") stays the note's own default color/size. */
+.qi-journal-widget__note-highlight {
+    color: #c0185b;
+}
+
 .qi-topics-list {
     list-style: none;
     margin: 0;

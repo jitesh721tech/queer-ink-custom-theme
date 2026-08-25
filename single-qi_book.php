@@ -18,12 +18,17 @@ while ( have_posts() ) :
     $qi_book_language = get_the_terms( get_the_ID(), 'qi_language' );
     $qi_book_pdf_id   = absint( get_post_meta( get_the_ID(), '_qi_book_pdf_id', true ) );
     $qi_book_pdf_url  = $qi_book_pdf_id ? wp_get_attachment_url( $qi_book_pdf_id ) : '';
+
+    // Returns to wherever this book was opened from (Publishing or
+    // Digital Library) when reached via their own book listings; falls
+    // back to the generic Books archive otherwise.
+    $qi_book_back = queer_ink_book_back_context( home_url( '/books/' ), __( 'Back to Books', 'queer-ink-theme' ) );
     ?>
 
     <main id="site-content" class="site-content container" role="main">
         <article id="book-<?php the_ID(); ?>" <?php post_class( 'qi-single-book' ); ?>>
             <p class="qi-single-book__back qi-single-book__back--top">
-                <a href="<?php echo esc_url( home_url( '/books/' ) ); ?>">&larr; <?php esc_html_e( 'Back to Books', 'queer-ink-theme' ); ?></a>
+                <a href="<?php echo esc_url( $qi_book_back['url'] ); ?>">&larr; <?php echo esc_html( $qi_book_back['label'] ); ?></a>
             </p>
             <div class="qi-single-book__layout">
                 <div class="qi-single-book__cover">

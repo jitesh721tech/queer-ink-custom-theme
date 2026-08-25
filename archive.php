@@ -18,10 +18,14 @@ if ( is_post_type_archive( 'qi_timeline' ) ) {
     $qi_archive_back_url   = home_url( '/archiving/' );
     $qi_archive_back_label = __( 'Back to Archiving', 'queer-ink-theme' );
 } elseif ( is_post_type_archive( 'qi_book' ) ) {
-    $qi_archive_back_url   = home_url( '/publishing/' );
-    $qi_archive_back_label = __( 'Back to Publishing', 'queer-ink-theme' );
+    // Returns to wherever "View all books" was clicked from (Publishing
+    // or Digital Library) via the same ?from= arg used on single books;
+    // falls back to the existing Publishing default otherwise.
+    $qi_book_archive_back = queer_ink_book_back_context( home_url( '/publishing/' ), __( 'Back to Publishing', 'queer-ink-theme' ) );
+    $qi_archive_back_url   = $qi_book_archive_back['url'];
+    $qi_archive_back_label = $qi_book_archive_back['label'];
 } elseif ( is_post_type_archive( 'qi_article' ) ) {
-    $qi_archive_back_url   = home_url( '/qi-journal/' );
+    $qi_archive_back_url   = home_url( '/qi-journal/#qi-journal-articles' );
     $qi_archive_back_label = __( 'Back to QI Journal', 'queer-ink-theme' );
 }
 

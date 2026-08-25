@@ -188,6 +188,16 @@
     object-fit: cover;
 }
 
+/* Book covers only — post_class() already adds type-qi_book here, so no
+   template change is needed. Book covers are portrait (2:3-3:4), unlike
+   the landscape photos every other result type uses; object-fit: cover
+   in this landscape 4:3 box was cropping off the cover's own title/
+   author text. contain shows the whole cover, undistorted, inside the
+   same card/image area — just letterboxed instead of cropped. */
+.search-result-card.type-qi_book .search-result-card__media-img {
+    object-fit: contain;
+}
+
 .search-result-card__media-placeholder {
     width: 60%;
     height: 60%;

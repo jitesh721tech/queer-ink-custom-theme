@@ -150,6 +150,11 @@ html:has(body.page-id-25) {
     margin-top: 0.2rem;
 }
 
+.qi-connect-form .button--primary {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+
 .qi-connect-form__consent a {
     color: #c0185b;
     font-weight: 700;

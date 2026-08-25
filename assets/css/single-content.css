@@ -20,6 +20,17 @@ Supports single-qi_book.php and single-qi_article.php.
     align-items: start;
 }
 
+/* Book/Article/Timeline/Collection singles all share this same
+   .entry-title/.qi-single-book__body markup, so scoped via
+   body_class()'s native single-{post_type} class instead of a new
+   template change. */
+body.single-qi_book .qi-single-book__body .entry-title,
+body.single-qi_article .qi-single-book__body .entry-title,
+body.single-qi_timeline .qi-single-book__body .entry-title,
+body.single-qi_collection .qi-single-book__body .entry-title {
+    color: var(--qi-color-primary);
+}
+
 /* top offset must clear the sticky site header (82px tall + 1px border,
    see .site-header__inner in header.css) plus the admin bar when logged
    in — otherwise the header visually overlaps and hides the top slice
@@ -127,9 +138,8 @@ body.admin-bar .qi-single-book__cover {
     text-decoration: none;
 }
 
-/* Book/Article/Timeline only — same link, moved above .qi-single-book__layout
-   instead of below the content. Single Collection still uses the bare
-   .qi-single-book__back class, unchanged, at the bottom. The compound
+/* Book/Article/Timeline/Collection — the back link, moved above
+   .qi-single-book__layout instead of below the content. The compound
    selector (both classes) outranks .qi-single-book__back above so the
    margin flip always wins regardless of source order. */
 .qi-single-book__back.qi-single-book__back--top {

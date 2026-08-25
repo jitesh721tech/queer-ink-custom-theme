@@ -135,6 +135,39 @@ if ( ! function_exists( 'queer_ink_categories_screen_notice' ) ) {
 }
 add_action( 'admin_notices', 'queer_ink_categories_screen_notice' );
 
+/**
+ * ---------------- "Manage Categories" link on Add/Edit Article ----------------
+ *
+ * The block editor's Categories panel (used for the Category field on
+ * this screen) can tick existing categories and add new ones, but has no
+ * delete action — that's a Gutenberg limitation on every hierarchical
+ * taxonomy, not something specific to this one. Deleting a category is
+ * already fully supported by the native Articles → Categories screen
+ * (edit-tags.php, see queer_ink_categories_screen_notice() above); this
+ * just links to it directly from the Add/Edit Article screen so an
+ * admin cleaning up a wrong category doesn't have to go hunting for it
+ * in the admin menu.
+ */
+
+if ( ! function_exists( 'queer_ink_article_manage_categories_notice' ) ) {
+    function queer_ink_article_manage_categories_notice() {
+        $screen = get_current_screen();
+        if ( ! $screen || 'qi_article' !== $screen->post_type || ! in_array( $screen->base, array( 'post', 'post-new' ), true ) ) {
+            return;
+        }
+        ?>
+        <div class="notice notice-info">
+            <p>
+                <?php esc_html_e( 'To remove an incorrect or unwanted Category entirely (not just for this article), use', 'queer-ink-theme' ); ?>
+                <a href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=qi_article_section&post_type=qi_article' ) ); ?>"><?php esc_html_e( 'Manage Categories', 'queer-ink-theme' ); ?></a>.
+                <?php esc_html_e( 'Removing a category there never deletes any articles.', 'queer-ink-theme' ); ?>
+            </p>
+        </div>
+        <?php
+    }
+}
+add_action( 'admin_notices', 'queer_ink_article_manage_categories_notice' );
+
 if ( ! function_exists( 'queer_ink_ajax_toggle_popular_topic' ) ) {
     function queer_ink_ajax_toggle_popular_topic() {
         check_ajax_referer( 'qi_toggle_popular_topic', 'nonce' );

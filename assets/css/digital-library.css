@@ -31,6 +31,25 @@ body.page-id-17 .qi-current-list__header {
     margin-bottom: 0.75rem; /* was 1.5rem — ~50% less space between the heading and the carousel below it */
 }
 
+/* Featured Books: left-align instead of the shared --centered modifier's
+   default centering (Publishing's own "Our Current List" keeps that
+   centered layout untouched — scoped to this page/anchor only), same
+   left-title/right-link split already used by Browse by Subjects below. */
+#featured-books .qi-current-list__header--centered .wp-block-group__inner-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+#featured-books .qi-current-list__header--centered h2 {
+    text-align: left;
+}
+
+#featured-books h2,
+#subjects h2 {
+    color: var(--qi-color-primary);
+}
+
 /* Browse by Subjects: drop its own top divider/spacing entirely so it
    reads as a continuation of Featured Books rather than a new section,
    and tighten its own bottom padding so the .qi-reading-room's existing
@@ -60,15 +79,11 @@ body.page-id-17 .qi-current-list--subjects {
     width: 100%;
 }
 
-/* The source photo is portrait (taller than wide), unlike every other
-   pathway hero's landscape crop — left to scale by width alone it grew
-   far taller than the text column and inflated the whole hero band.
-   The Archiving hero's image renders at its default equal-column width
-   (658px at desktop) and a height of 446px (its landscape photo's own
-   natural aspect ratio at that width, with no cropping). That 658×446
-   box is the basis used here: same equal column split, same box size,
-   with object-fit:cover to crop this portrait photo down to it since it
-   can't reach that ratio on its own. */
+/* height: auto (not a fixed pixel height + object-fit: cover) so the
+   full photo is always visible at its own natural aspect ratio, never
+   cropped — sized by the column's own width at every breakpoint, so no
+   per-breakpoint pixel tuning is needed either. align-items: center
+   keeps it balanced within the row if the text column ends up taller. */
 .qi-dl-hero .qi-pub-hero__image {
     display: flex;
     align-items: center;
@@ -77,21 +92,15 @@ body.page-id-17 .qi-current-list--subjects {
 
 .qi-dl-hero .qi-pub-hero__image img {
     width: 100%;
-    height: 446px;
-    object-fit: cover;
+    height: auto;
     border-radius: 20px;
 }
 
-@media (max-width: 980px) {
-    .qi-dl-hero .qi-pub-hero__image img {
-        height: 340px;
-    }
-}
-
-@media (max-width: 680px) {
-    .qi-dl-hero .qi-pub-hero__image img {
-        height: 275px;
-    }
+/* "About the Library" is a native Gutenberg outline button
+   (.is-style-outline), not the theme's .button--outline. */
+.qi-dl-hero .wp-block-button.is-style-outline .wp-block-button__link {
+    border-color: var(--qi-color-primary);
+    color: var(--qi-color-primary);
 }
 
 /* ---------------- Pillars ---------------- */
@@ -286,10 +295,10 @@ body.page-id-147 .qi-subject-pill {
 .qi-reading-room {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 20%) minmax(0, 52%) minmax(0, 28%);
+    grid-template-columns: minmax(0, 25%) minmax(0, 47%) minmax(0, 28%);
     gap: 2rem;
     align-items: center;
-    padding: 2.25rem 3rem; /* was 3rem all around — tightens height without touching horizontal breathing room */
+    padding: 2rem 3rem; /* was 3rem all around — tightens height without touching horizontal breathing room */
     margin: 3rem 0;
     background-color: #fdf2f1;
     border: 1px solid var(--qi-color-outline-variant);
@@ -305,7 +314,7 @@ body.page-id-147 .qi-subject-pill {
 .qi-reading-room__media img {
     display: block;
     width: 100%;
-    max-width: 210px;
+    max-width: 250px;
     height: auto;
 }
 
@@ -314,16 +323,17 @@ body.page-id-147 .qi-subject-pill {
 }
 
 .qi-reading-room__body h2 {
-    margin: 0 0 0.75rem;
+    margin: 0 0 0.6rem;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 1.9rem;
+    font-size: 1.7rem;
     color: #1a1a1a;
 }
 
 .qi-reading-room__body > p {
-    margin: 0 0 1.5rem;
+    margin: 0 0 1.1rem;
+    font-size: 0.92rem;
     color: #4a4a4a;
-    line-height: 1.65;
+    line-height: 1.6;
     max-width: 32rem;
 }
 
@@ -331,7 +341,7 @@ body.page-id-147 .qi-subject-pill {
     display: flex;
     align-items: flex-start;
     gap: 1.25rem;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.25rem;
 }
 
 .qi-reading-room__feature {
@@ -365,6 +375,16 @@ body.page-id-147 .qi-subject-pill {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+}
+
+.qi-reading-room__actions .button {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+
+.qi-reading-room__actions .button--outline {
+    border-color: var(--qi-color-primary);
+    color: var(--qi-color-primary);
 }
 
 .qi-reading-room__quote {
@@ -422,6 +442,8 @@ body.page-id-147 .qi-subject-pill {
     padding: 1.1rem 1.75rem;
     margin: 0 0 3rem;
     background-color: #fdf2f1;
+    /* Matches .qi-reading-room's own border treatment above. */
+    border: 1px solid var(--qi-color-outline-variant);
     border-radius: 14px;
 }
 

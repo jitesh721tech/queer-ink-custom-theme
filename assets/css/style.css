@@ -67,6 +67,12 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.5;
+    /* Baseline weight for all body copy (paragraphs, list items, form
+       fields, etc.) — was the browser default 400, reading as noticeably
+       thinner than the header/menu text (500) and headings/buttons
+       (600-700) elsewhere on the site. Anything with its own explicit
+       font-weight (headings, buttons, menu, labels) is unaffected. */
+    font-weight: 500;
     background-color: var(--qi-color-surface);
     overflow-x: hidden;
 }

@@ -310,3 +310,212 @@ if ( ! function_exists( 'queer_ink_timeline_admin_column_content' ) ) {
     }
 }
 add_action( 'manage_qi_timeline_posts_custom_column', 'queer_ink_timeline_admin_column_content', 10, 2 );
+
+/**
+ * Collection "Featured on Archiving page" toggle — caps how many
+ * qi_collection posts can appear in the frontend "Our Collections"
+ * section (archiving.css / [qi_collections]) at 4, regardless of how
+ * many Collections exist in wp-admin overall. Mirrors the qi_book PDF
+ * meta box's nonce/capability/save shape above.
+ */
+
+define( 'QI_COLLECTIONS_FEATURED_MAX', 4 );
+
+if ( ! function_exists( 'queer_ink_count_featured_collections' ) ) {
+    /**
+     * Counts Collections currently flagged as featured, optionally
+     * excluding one post (the one being saved/rendered), across every
+     * non-trashed status — the cap applies to the act of selecting a
+     * Collection, independent of whether it's published yet.
+     */
+    function queer_ink_count_featured_collections( $exclude_post_id = 0 ) {
+        $args = array(
+            'post_type'      => 'qi_collection',
+            'post_status'    => array( 'publish', 'draft', 'pending', 'future', 'private' ),
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+            'meta_key'       => '_qi_collection_featured',
+            'meta_value'     => '1',
+        );
+
+        if ( $exclude_post_id ) {
+            $args['post__not_in'] = array( $exclude_post_id );
+        }
+
+        return count( get_posts( $args ) );
+    }
+}
+
+if ( ! function_exists( 'queer_ink_register_collection_meta_box' ) ) {
+    function queer_ink_register_collection_meta_box( $post_type ) {
+        add_meta_box(
+            'qi_collection_featured',
+            esc_html__( 'Frontend Visibility', 'queer-ink-theme' ),
+            'queer_ink_render_collection_meta_box',
+            'qi_collection',
+            'side',
+            'default'
+        );
+    }
+}
+// Scoped to add_meta_boxes_qi_collection (not the generic add_meta_boxes
+// hook) so this only ever runs on the Collection screen.
+add_action( 'add_meta_boxes_qi_collection', 'queer_ink_register_collection_meta_box' );
+
+if ( ! function_exists( 'queer_ink_render_collection_meta_box' ) ) {
+    function queer_ink_render_collection_meta_box( $post ) {
+        wp_nonce_field( 'queer_ink_save_collection_meta', 'queer_ink_collection_meta_nonce' );
+
+        $is_featured    = (bool) get_post_meta( $post->ID, '_qi_collection_featured', true );
+        $other_featured = queer_ink_count_featured_collections( $post->ID );
+        $limit_reached  = ! $is_featured && $other_featured >= QI_COLLECTIONS_FEATURED_MAX;
+        ?>
+        <p>
+            <label>
+                <input type="checkbox" name="qi_collection_featured" value="1" <?php checked( $is_featured ); ?> <?php disabled( $limit_reached ); ?>>
+                <?php esc_html_e( 'Show in "Our Collections" on the Archiving page', 'queer-ink-theme' ); ?>
+            </label>
+        </p>
+        <?php if ( $limit_reached ) : ?>
+            <p class="description" style="color:#b32d2e;">
+                <?php
+                printf(
+                    /* translators: %d: maximum number of featured collections. */
+                    esc_html__( 'Maximum of %d featured Collections already selected. Deselect another Collection first, then try again.', 'queer-ink-theme' ),
+                    (int) QI_COLLECTIONS_FEATURED_MAX
+                );
+                ?>
+            </p>
+        <?php else : ?>
+            <p class="description">
+                <?php
+                printf(
+                    /* translators: 1: number currently featured, 2: maximum allowed. */
+                    esc_html__( '%1$d of %2$d selected.', 'queer-ink-theme' ),
+                    (int) ( $other_featured + ( $is_featured ? 1 : 0 ) ),
+                    (int) QI_COLLECTIONS_FEATURED_MAX
+                );
+                ?>
+            </p>
+        <?php endif; ?>
+        <?php
+    }
+}
+
+if ( ! function_exists( 'queer_ink_save_collection_meta' ) ) {
+    function queer_ink_save_collection_meta( $post_id ) {
+        if ( ! isset( $_POST['queer_ink_collection_meta_nonce'] ) || ! wp_verify_nonce( $_POST['queer_ink_collection_meta_nonce'], 'queer_ink_save_collection_meta' ) ) {
+            return;
+        }
+
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
+        }
+
+        $currently_featured = (bool) get_post_meta( $post_id, '_qi_collection_featured', true );
+        $requested_featured = isset( $_POST['qi_collection_featured'] );
+
+        // Only re-check the cap when newly selecting — unchecking, or
+        // re-saving an already-featured Collection, never needs it.
+        if ( $requested_featured && ! $currently_featured ) {
+            $other_featured = queer_ink_count_featured_collections( $post_id );
+
+            if ( $other_featured >= QI_COLLECTIONS_FEATURED_MAX ) {
+                set_transient( 'qi_collection_limit_notice_' . get_current_user_id(), 1, MINUTE_IN_SECONDS );
+                return; // Leave the existing (unfeatured) value in place.
+            }
+        }
+
+        update_post_meta( $post_id, '_qi_collection_featured', $requested_featured ? 1 : 0 );
+    }
+}
+add_action( 'save_post_qi_collection', 'queer_ink_save_collection_meta' );
+
+if ( ! function_exists( 'queer_ink_collection_limit_notice' ) ) {
+    function queer_ink_collection_limit_notice() {
+        $screen = get_current_screen();
+        if ( ! $screen || 'qi_collection' !== $screen->post_type ) {
+            return;
+        }
+
+        $key = 'qi_collection_limit_notice_' . get_current_user_id();
+        if ( ! get_transient( $key ) ) {
+            return;
+        }
+
+        delete_transient( $key );
+        ?>
+        <div class="notice notice-error is-dismissible">
+            <p>
+                <?php
+                printf(
+                    /* translators: %d: maximum number of featured collections. */
+                    esc_html__( 'This Collection was not marked as featured — the maximum of %d has already been selected. Deselect another Collection first, then try again.', 'queer-ink-theme' ),
+                    (int) QI_COLLECTIONS_FEATURED_MAX
+                );
+                ?>
+            </p>
+        </div>
+        <?php
+    }
+}
+add_action( 'admin_notices', 'queer_ink_collection_limit_notice' );
+
+if ( ! function_exists( 'queer_ink_collection_admin_columns' ) ) {
+    function queer_ink_collection_admin_columns( $columns ) {
+        $columns['qi_collection_featured'] = esc_html__( 'Featured', 'queer-ink-theme' );
+        return $columns;
+    }
+}
+add_filter( 'manage_qi_collection_posts_columns', 'queer_ink_collection_admin_columns' );
+
+if ( ! function_exists( 'queer_ink_collection_admin_column_content' ) ) {
+    function queer_ink_collection_admin_column_content( $column, $post_id ) {
+        if ( 'qi_collection_featured' !== $column ) {
+            return;
+        }
+
+        echo get_post_meta( $post_id, '_qi_collection_featured', true )
+            ? esc_html__( 'Yes', 'queer-ink-theme' )
+            : esc_html__( '—', 'queer-ink-theme' );
+    }
+}
+add_action( 'manage_qi_collection_posts_custom_column', 'queer_ink_collection_admin_column_content', 10, 2 );
+
+if ( ! function_exists( 'queer_ink_migrate_featured_collections' ) ) {
+    /**
+     * One-time migration: this feature replaces "show every published
+     * Collection" with "show only the ones an admin has featured", so
+     * without this, every existing Collection would silently disappear
+     * from the Archiving page the moment this ships. Featuring the first
+     * QI_COLLECTIONS_FEATURED_MAX (existing display order — newest
+     * first) preserves what's currently visible on the frontend; the
+     * 'qi_collections_featured_migrated' option ensures this only ever
+     * runs once, so it never overrides an admin's later selections.
+     */
+    function queer_ink_migrate_featured_collections() {
+        if ( get_option( 'qi_collections_featured_migrated' ) ) {
+            return;
+        }
+
+        $collections = get_posts( array(
+            'post_type'      => 'qi_collection',
+            'post_status'    => 'publish',
+            'posts_per_page' => QI_COLLECTIONS_FEATURED_MAX,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'fields'         => 'ids',
+        ) );
+
+        foreach ( $collections as $collection_id ) {
+            update_post_meta( $collection_id, '_qi_collection_featured', 1 );
+        }
+
+        update_option( 'qi_collections_featured_migrated', 1 );
+    }
+}
+add_action( 'init', 'queer_ink_migrate_featured_collections' );

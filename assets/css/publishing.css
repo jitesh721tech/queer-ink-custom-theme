@@ -818,6 +818,12 @@ html:has(body.page-id-11) {
 
 .site-content:has(> .book-card) > .archive-header {
     margin-top: 0.75rem;
+    /* The grid's own 1.75rem row-gap (above) already applies between this
+       header's row and the cards' row (grid gap doesn't collapse with a
+       child's own margin), so zeroing this margin-bottom leaves that
+       1.75rem as the only heading-to-list space — about half of the
+       previous ~3.75rem (2rem margin + 1.75rem grid-gap stacked). */
+    margin-bottom: 0;
 }
 
 .archive-header {
@@ -1122,7 +1128,7 @@ html:has(body.page-id-11) {
 .qi-cta-band--illustrated .qi-cta-band__decor .qi-cta-band__illustration {
     visibility: visible;
     display: block;
-    width: 130px;
+    width: 165px;
     height: auto;
     margin: 0 1rem;
     background-color: transparent;
