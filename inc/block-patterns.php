@@ -49,8 +49,7 @@ if ( ! function_exists( 'queer_ink_icon' ) ) {
 if ( ! function_exists( 'queer_ink_pride_heart_svg' ) ) {
     /**
      * Small rainbow-gradient heart used in the Publishing Pathway band's
-     * "Your work. Your legacy..." tagline (matches the stitch-reference
-     * pride-flag heart art).
+     * "Your work. Your legacy..." tagline.
      */
     function queer_ink_pride_heart_svg() {
         return '<svg viewBox="0 0 32 28" aria-hidden="true" focusable="false"><defs><linearGradient id="qiPrideHeart" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e40303"/><stop offset="16.6%" stop-color="#e40303"/><stop offset="16.6%" stop-color="#ff8c00"/><stop offset="33.3%" stop-color="#ff8c00"/><stop offset="33.3%" stop-color="#ffed00"/><stop offset="50%" stop-color="#ffed00"/><stop offset="50%" stop-color="#008026"/><stop offset="66.6%" stop-color="#008026"/><stop offset="66.6%" stop-color="#004dff"/><stop offset="83.3%" stop-color="#004dff"/><stop offset="83.3%" stop-color="#750787"/><stop offset="100%" stop-color="#750787"/></linearGradient></defs><path fill="url(#qiPrideHeart)" d="M16 26.5C16 26.5 2 17.8 2 8.8 2 4 6 1 10.2 1 13.4 1 15.4 2.9 16 5.4 16.6 2.9 18.6 1 21.8 1 26 1 30 4 30 8.8 30 17.8 16 26.5 16 26.5Z"/></svg>';
@@ -66,9 +65,9 @@ if ( ! function_exists( 'queer_ink_sparkle_svg' ) ) {
 if ( ! function_exists( 'queer_ink_books_illustration_svg' ) ) {
     /**
      * Small flat-style "stack of books + potted plant" illustration used to
-     * bookend the Publishing page's "Ready to begin?" band (matches the
-     * stitch-reference art). The right-hand placement mirrors this same
-     * markup with a CSS scaleX(-1) rather than a second SVG.
+     * bookend the Publishing page's "Ready to begin?" band. The right-hand
+     * placement mirrors this same markup with a CSS scaleX(-1) rather than
+     * a second SVG.
      */
     function queer_ink_books_illustration_svg() {
         return '<svg viewBox="0 0 140 110" aria-hidden="true" focusable="false"><ellipse cx="14" cy="101" rx="15" ry="4" fill="#f1d9df"/><path d="M8 78c-3-8 1-16 6-16s9 8 6 16" fill="none" stroke="#7a9e6b" stroke-width="2.5" stroke-linecap="round"/><path d="M14 62c-2-9 3-15 3-15s5 6 3 15" fill="none" stroke="#7a9e6b" stroke-width="2.5" stroke-linecap="round"/><rect x="2" y="76" width="24" height="6" rx="2" fill="#e3355e"/><rect x="4" y="78" width="20" height="19" rx="3" fill="#c4033f"/><rect x="26" y="88" width="46" height="10" rx="2" fill="#f4b183"/><rect x="30" y="78" width="40" height="10" rx="2" fill="#f6d9a6"/><rect x="34" y="68" width="34" height="10" rx="2" fill="#e39ab0"/><rect x="72" y="14" width="34" height="84" rx="3" fill="#8f6fce"/><rect x="72" y="14" width="8" height="84" rx="3" fill="#7658b3"/><circle cx="93" cy="34" r="7" fill="#fbe9c8"/><path d="M89 34l3 3 5-6" stroke="#8f6fce" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -188,14 +187,14 @@ if ( ! function_exists( 'queer_ink_register_block_patterns' ) ) {
         $about_wwd_icon_digital_library_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-digital-library.png' ) );
         $about_wwd_icon_blog_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-blog.png' ) );
         $about_wwd_icon_conversations_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-about-wwd-conversations.png' ) );
-        $publishing_archives_band_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_2nd.png' ) );
-        $publishing_pathway_icon_bulb_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_bulb.svg' ) );
-        $publishing_pathway_icon_pencil_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_pencil.svg' ) );
-        $publishing_pathway_icon_shield_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_shield.svg' ) );
-        $publishing_pathway_icon_currency_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_currency.svg' ) );
-        $publishing_pathway_icon_speaker_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_speaker.svg' ) );
-        $publishing_pathway_heart_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_path_heart.png' ) );
-        $publishing_cta_illustration_image = esc_url( get_theme_file_uri( 'stitch-reference/publi_last_sec.png' ) );
+        $publishing_archives_band_image = esc_url( get_theme_file_uri( 'assets/images/sections/qi-publishing-archives-band.png' ) );
+        $publishing_pathway_icon_bulb_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-publishing-pathway-story.svg' ) );
+        $publishing_pathway_icon_pencil_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-publishing-pathway-craft.svg' ) );
+        $publishing_pathway_icon_shield_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-publishing-pathway-rights.svg' ) );
+        $publishing_pathway_icon_currency_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-publishing-pathway-royalties.svg' ) );
+        $publishing_pathway_icon_speaker_image = esc_url( get_theme_file_uri( 'assets/images/icons/qi-publishing-pathway-voice.svg' ) );
+        $publishing_pathway_heart_image = esc_url( get_theme_file_uri( 'assets/images/sections/qi-publishing-pathway-heart.png' ) );
+        $publishing_cta_illustration_image = esc_url( get_theme_file_uri( 'assets/images/sections/qi-publishing-cta-illustration.png' ) );
 
         // Site-relative destination URLs, resolved through home_url() so links
         // still work when WordPress is installed in a subdirectory (e.g. /queer-ink/).

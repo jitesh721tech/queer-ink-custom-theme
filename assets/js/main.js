@@ -21,6 +21,33 @@
         window.addEventListener( 'scroll', updateHeaderScrolled, { passive: true } );
     }
 
+    // ---------------- Homepage: feature strip zoom-in entrance ----------------
+    // The 4-icon "feature strip" section (2nd section on the homepage) zooms
+    // in from a slightly larger scale with a fade as it enters the viewport.
+    // One-shot: the observer disconnects after the first trigger so it never
+    // replays on scroll-back. See assets/css/feature-strip.css for the actual
+    // animation (`is-in-view` class); prefers-reduced-motion is handled there.
+    var featureStrip = document.querySelector( '.feature-strip' );
+
+    if ( featureStrip ) {
+        var prefersReducedMotion = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+
+        if ( ! prefersReducedMotion && 'IntersectionObserver' in window ) {
+            var featureStripObserver = new IntersectionObserver( function ( entries, observer ) {
+                entries.forEach( function ( entry ) {
+                    if ( entry.isIntersecting ) {
+                        featureStrip.classList.add( 'is-in-view' );
+                        observer.unobserve( entry.target );
+                    }
+                } );
+            }, { threshold: 0.2 } );
+
+            featureStripObserver.observe( featureStrip );
+        } else {
+            featureStrip.classList.add( 'is-in-view' );
+        }
+    }
+
     var toggle = document.querySelector( '.menu-toggle' );
     var nav = document.querySelector( '.primary-navigation' );
 
