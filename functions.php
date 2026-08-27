@@ -14,6 +14,7 @@ require_once get_theme_file_path( 'inc/shortcodes.php' );
 require_once get_theme_file_path( 'inc/search.php' );
 require_once get_theme_file_path( 'inc/ajax.php' );
 require_once get_theme_file_path( 'inc/block-patterns.php' );
+require_once get_theme_file_path( 'inc/customizer.php' );
 
 if ( ! function_exists( 'queer_ink_theme_setup' ) ) {
     function queer_ink_theme_setup() {

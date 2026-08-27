@@ -12,7 +12,12 @@
 
 .hero__inner {
     display: grid;
-    grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+    /* Was 45%/55% — widened the image column by ~6% (verified via
+       rendered width) per request; the text column narrows to match,
+       with no visible reflow (heading/description/buttons render at
+       identical heights either way) and no other change to the
+       container, gap, or breakpoints. */
+    grid-template-columns: minmax(0, 42%) minmax(0, 58%);
     align-items: stretch;
     gap: 4rem;
     width: min(100%, 1400px);

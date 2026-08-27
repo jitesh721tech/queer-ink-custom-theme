@@ -12,6 +12,7 @@ $primary_label   = get_theme_mod( 'queer_ink_hero_primary_label', esc_html__( 'E
 $primary_url     = get_theme_mod( 'queer_ink_hero_primary_url', esc_url( home_url( '/publishing' ) ) );
 $secondary_label = get_theme_mod( 'queer_ink_hero_secondary_label', esc_html__( 'Learn More About Us', 'queer-ink-theme' ) );
 $secondary_url   = get_theme_mod( 'queer_ink_hero_secondary_url', esc_url( home_url( '/about' ) ) );
+$hero_image      = get_theme_mod( 'queer_ink_hero_image', get_theme_file_uri( 'assets/images/hero/homepage_hero.png' ) );
 ?>
 
 <section class="hero" aria-labelledby="hero-title">
@@ -29,7 +30,7 @@ $secondary_url   = get_theme_mod( 'queer_ink_hero_secondary_url', esc_url( home_
             <figure class="hero__image-container">
                 <img
                     class="hero__image"
-                    src="<?php echo esc_url( get_theme_file_uri( 'assets/images/hero/homepage_hero.png' ) ); ?>"
+                    src="<?php echo esc_url( $hero_image ); ?>"
                     alt="Queer Ink collage image"
                 />
             </figure>
