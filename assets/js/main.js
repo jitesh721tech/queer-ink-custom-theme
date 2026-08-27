@@ -48,6 +48,102 @@
         }
     }
 
+    // ---------------- Site-wide scroll reveal: zoom / left-reveal / mask ----------------
+    // Same one-shot IntersectionObserver pattern as the feature-strip block
+    // above, generalized to the additional sections/elements from the
+    // entrance-animation spec. See assets/css/animations.css for the actual
+    // keyframes (`is-in-view` per element); reduced motion is handled there
+    // too and mirrored here so unsupported browsers reveal instantly either way.
+    var qiPrefersReducedMotion = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+
+    function qiInitScrollReveal( selectors ) {
+        var elements = [];
+        selectors.forEach( function ( selector ) {
+            document.querySelectorAll( selector ).forEach( function ( el ) {
+                elements.push( el );
+            } );
+        } );
+
+        if ( ! elements.length ) {
+            return;
+        }
+
+        if ( qiPrefersReducedMotion || ! ( 'IntersectionObserver' in window ) ) {
+            elements.forEach( function ( el ) {
+                el.classList.add( 'is-in-view' );
+            } );
+            return;
+        }
+
+        var observer = new IntersectionObserver( function ( entries, obs ) {
+            entries.forEach( function ( entry ) {
+                if ( entry.isIntersecting ) {
+                    entry.target.classList.add( 'is-in-view' );
+                    obs.unobserve( entry.target );
+                }
+            } );
+        }, { threshold: 0.15 } );
+
+        elements.forEach( function ( el ) {
+            observer.observe( el );
+        } );
+    }
+
+    // Animation 1 — zoom + fade, whole section as one unit.
+    qiInitScrollReveal( [
+        '.channel-band',
+        '.qi-archives-band',
+        '.qi-pathway-band',
+        '.qi-cta-band',
+        '.qi-why-archive',
+        '.qi-model',
+        '.qi-dl-pillars',
+        '.qi-reading-room',
+        '.qi-dl-tagline',
+        '.qi-journal-cta',
+        '.qi-about-info-row',
+        '.qi-connect-form',
+        '.qi-connect-info',
+        '.qi-connect-together',
+    ] );
+
+    // Animation 2 — left-to-right reveal, Publishing "Beyond the Book /
+    // From Book to Archive / Why Queer Ink?" cards (staggered via CSS nth-child).
+    qiInitScrollReveal( [ '.qi-info-columns' ] );
+
+    // Animation 3 — bottom-to-top mask reveal, About page.
+    qiInitScrollReveal( [
+        '.qi-about-wwd__intro p',
+        '.qi-about-wwd__grid',
+        '.qi-about-why__quote',
+        '.qi-about-founder__card',
+        '.qi-about-founder__more',
+    ] );
+
+    // Animation 4 — hero zoom + fade, left content + right visual
+    // (staggered via CSS animation-delay). '.hero' is the homepage-only
+    // hero; '.qi-pub-hero' is the shared hero group reused by Publishing,
+    // Archiving, Digital Library, QI Journal, About and Connect.
+    qiInitScrollReveal( [ '.hero', '.qi-pub-hero' ] );
+
+    // ---------------- Sitemap: smart Back button ----------------
+    // The Sitemap page's .qi-page-back link is reachable from every page
+    // (footer), so unlike the other .qi-page-back usages (Subjects, Our
+    // Principles, About QI Journal — untouched, no data attribute) it
+    // can't hard-code a single "parent" page. Its href already points to
+    // Home as a safe fallback for direct visits/new tabs/no-JS; here we
+    // prefer real browser history when there is somewhere to go back to.
+    var smartBackLink = document.querySelector( '[data-qi-smart-back]' );
+
+    if ( smartBackLink ) {
+        smartBackLink.addEventListener( 'click', function ( event ) {
+            if ( window.history.length > 1 ) {
+                event.preventDefault();
+                window.history.back();
+            }
+        } );
+    }
+
     var toggle = document.querySelector( '.menu-toggle' );
     var nav = document.querySelector( '.primary-navigation' );
 

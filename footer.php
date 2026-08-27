@@ -56,7 +56,7 @@
                     <li><a href="#">Privacy policy</a></li>
                     <li><a href="#">Terms of use</a></li>
                     <li><a href="#">Accessibility</a></li>
-                    <li><a href="#">Sitemap</a></li>
+                    <li><a href="<?php echo esc_url( home_url( '/sitemap/' ) ); ?>">Sitemap</a></li>
                 </ul>
             </div>
             <div class="footer-links-column footer-social-column">

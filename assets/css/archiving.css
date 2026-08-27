@@ -374,6 +374,18 @@ html:has(body.page-id-16) {
     margin-bottom: 0.5rem;
 }
 
+/* Same left-align + halved gap as above, but keyed to WordPress's own
+   post-type-archive body class instead of :has(> .timeline-entry-card)
+   — that selector only matches once a timeline entry actually renders,
+   so with zero published entries the Back button silently fell back to
+   the shared .qi-page-back's default centering. The body class is
+   always present on this archive regardless of published entry count. */
+body.post-type-archive-qi_timeline .qi-page-back {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+}
+
 .site-content:has(> .timeline-entry-card) > .archive-header {
     margin-top: 0.75rem;
     /* The grid's own 2rem row-gap (above) already applies between this
@@ -673,6 +685,20 @@ html:has(body.page-id-16) {
     gap: 1.5rem;
 }
 
+/* .publishing-empty (shared by several "nothing published yet" states —
+   Subjects, Timeline, Collections) sits as a direct grid item of
+   .qi-connections when there are no featured Collections. .qi-connections
+   uses align-items: start so .qi-connections__intro's shorter content
+   isn't stretched tall to match the (usually taller) right column, but
+   that same "start" alignment leaves this small message pinned to the
+   top of that now-empty right column instead of centered in it. Scoped
+   to .qi-connections > .publishing-empty only, so Timeline's and
+   Subjects' own .publishing-empty instances (different parent grids)
+   are unaffected. */
+.qi-connections > .publishing-empty {
+    align-self: center;
+}
+
 .qi-collection-card {
     display: flex;
     flex-direction: column;
@@ -908,6 +934,18 @@ html:has(body.page-id-16) {
    just the two margins; this grid's own row-gap (needed for spacing
    between the heading and the cards, and between cards) is untouched. */
 .site-content:has(> .article-card) > .qi-page-back {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+}
+
+/* Same left-align as above, but keyed to WordPress's own
+   post-type-archive body class instead of :has(> .article-card) — that
+   selector only matches once an article actually renders, so with zero
+   published articles the Back button silently fell back to the shared
+   .qi-page-back's default centering. The body class is always present
+   on this archive regardless of published article count. */
+body.post-type-archive-qi_article .qi-page-back {
     margin-left: 0;
     margin-right: 0;
     margin-bottom: 0;

@@ -816,6 +816,18 @@ html:has(body.page-id-11) {
     margin-bottom: 0.5rem;
 }
 
+/* Same left-align + halved gap as above, but keyed to WordPress's own
+   post-type-archive body class instead of :has(> .book-card) — that
+   selector only matches once a book actually renders, so with zero
+   published books the Back button silently fell back to the shared
+   .qi-page-back's default centering. The body class is always present
+   on this archive regardless of how many (if any) books are published. */
+body.post-type-archive-qi_book .qi-page-back {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+}
+
 .site-content:has(> .book-card) > .archive-header {
     margin-top: 0.75rem;
     /* The grid's own 1.75rem row-gap (above) already applies between this

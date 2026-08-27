@@ -1,0 +1,226 @@
+/*
+ * Queer Ink Theme — shared scroll-triggered entrance animations.
+ *
+ * Same architecture as the homepage feature-strip icons (see
+ * feature-strip.css): the `.js` class (added by main.js) gates the
+ * initial hidden state so content never disappears without JS, and
+ * `is-in-view` — added once per element by the IntersectionObserver in
+ * main.js — plays the actual reveal. Selectors here target existing
+ * markup only; no HTML/PHP was changed to add these animations.
+ *
+ * @package Queer_Ink_Theme
+ */
+
+/* ---------------- Animation 1: zoom + fade (whole section as one unit) ---------------- */
+.js .channel-band,
+.js .qi-archives-band,
+.js .qi-pathway-band,
+.js .qi-cta-band,
+.js .qi-why-archive,
+.js .qi-model,
+.js .qi-dl-pillars,
+.js .qi-reading-room,
+.js .qi-dl-tagline,
+.js .qi-journal-cta,
+.js .qi-about-info-row,
+.js .qi-connect-form,
+.js .qi-connect-info,
+.js .qi-connect-together {
+    opacity: 0;
+}
+
+.js .channel-band.is-in-view,
+.js .qi-archives-band.is-in-view,
+.js .qi-pathway-band.is-in-view,
+.js .qi-cta-band.is-in-view,
+.js .qi-why-archive.is-in-view,
+.js .qi-model.is-in-view,
+.js .qi-dl-pillars.is-in-view,
+.js .qi-reading-room.is-in-view,
+.js .qi-dl-tagline.is-in-view,
+.js .qi-journal-cta.is-in-view,
+.js .qi-about-info-row.is-in-view,
+.js .qi-connect-form.is-in-view,
+.js .qi-connect-info.is-in-view,
+.js .qi-connect-together.is-in-view {
+    animation: qi-reveal-zoom 0.9s ease-out both;
+}
+
+@keyframes qi-reveal-zoom {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ---------------- Animation 2: left-to-right reveal (Publishing "Beyond the Book / From Book to Archive / Why Queer Ink?" cards) ---------------- */
+.js .qi-info-columns .qi-info-card {
+    opacity: 0;
+    transform: translateX(-24px);
+}
+
+.js .qi-info-columns.is-in-view .qi-info-card {
+    animation: qi-reveal-left 0.8s ease-out both;
+}
+
+.js .qi-info-columns.is-in-view .qi-info-card:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+.js .qi-info-columns.is-in-view .qi-info-card:nth-child(3) {
+    animation-delay: 0.24s;
+}
+
+@keyframes qi-reveal-left {
+    from {
+        opacity: 0;
+        transform: translateX(-24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ---------------- Animation 3: bottom-to-top mask reveal (About page) ---------------- */
+.js .qi-about-wwd__intro p,
+.js .qi-about-wwd__grid,
+.js .qi-about-why__quote,
+.js .qi-about-founder__card,
+.js .qi-about-founder__more {
+    opacity: 0;
+}
+
+.js .qi-about-wwd__intro p.is-in-view,
+.js .qi-about-wwd__grid.is-in-view,
+.js .qi-about-why__quote.is-in-view,
+.js .qi-about-founder__card.is-in-view,
+.js .qi-about-founder__more.is-in-view {
+    animation: qi-reveal-mask 0.9s ease-out both;
+}
+
+@keyframes qi-reveal-mask {
+    from {
+        opacity: 0;
+        clip-path: inset(100% 0 0 0);
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+        transform: translateY(0);
+    }
+}
+
+/*
+ * ---------------- Animation 4: hero zoom + fade (left content + right
+ * visual, staggered) ----------------
+ * .hero is the homepage-only hero (template-parts/section-hero.php).
+ * .qi-pub-hero is the shared hero group reused by the Publishing,
+ * Archiving, Digital Library, QI Journal, About and Connect page heroes
+ * (see inc/block-patterns.php) — a single rule here covers all six
+ * without page-specific classes, since .qi-pub-hero/.qi-pub-hero__image
+ * aren't used anywhere outside these hero patterns. The left column is
+ * reached via the generic Gutenberg `.wp-block-column` only *inside*
+ * `.qi-pub-hero .wp-block-columns`, so this can't leak into the many
+ * other two-column blocks elsewhere on these same pages.
+ */
+.js .hero .hero__copy,
+.js .hero .hero__media,
+.js .qi-pub-hero .wp-block-columns > .wp-block-column:first-child,
+.js .qi-pub-hero .qi-pub-hero__image {
+    opacity: 0;
+}
+
+.js .hero.is-in-view .hero__copy,
+.js .qi-pub-hero.is-in-view .wp-block-columns > .wp-block-column:first-child {
+    animation: qi-hero-reveal 0.9s ease-out both;
+}
+
+.js .hero.is-in-view .hero__media,
+.js .qi-pub-hero.is-in-view .qi-pub-hero__image {
+    animation: qi-hero-reveal 0.9s ease-out both;
+    animation-delay: 0.12s;
+}
+
+@keyframes qi-hero-reveal {
+    from {
+        opacity: 0;
+        transform: scale(1.04);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ---------------- Accessibility: reduced motion ---------------- */
+/*
+ * Selectors are repeated with `.is-in-view` appended so this block's
+ * specificity matches (rather than loses to) the `.is-in-view` trigger
+ * rules above once JS adds that class — otherwise the animation rules
+ * above would still win the cascade and the keyframe would keep running.
+ */
+@media (prefers-reduced-motion: reduce) {
+    .js .channel-band,
+    .js .qi-archives-band,
+    .js .qi-pathway-band,
+    .js .qi-cta-band,
+    .js .qi-why-archive,
+    .js .qi-model,
+    .js .qi-dl-pillars,
+    .js .qi-reading-room,
+    .js .qi-dl-tagline,
+    .js .qi-journal-cta,
+    .js .qi-about-info-row,
+    .js .qi-connect-form,
+    .js .qi-connect-info,
+    .js .qi-connect-together,
+    .js .qi-info-columns .qi-info-card,
+    .js .qi-about-wwd__intro p,
+    .js .qi-about-wwd__grid,
+    .js .qi-about-why__quote,
+    .js .qi-about-founder__card,
+    .js .qi-about-founder__more,
+    .js .hero .hero__copy,
+    .js .hero .hero__media,
+    .js .qi-pub-hero .wp-block-columns > .wp-block-column:first-child,
+    .js .qi-pub-hero .qi-pub-hero__image,
+    .js .channel-band.is-in-view,
+    .js .qi-archives-band.is-in-view,
+    .js .qi-pathway-band.is-in-view,
+    .js .qi-cta-band.is-in-view,
+    .js .qi-why-archive.is-in-view,
+    .js .qi-model.is-in-view,
+    .js .qi-dl-pillars.is-in-view,
+    .js .qi-reading-room.is-in-view,
+    .js .qi-dl-tagline.is-in-view,
+    .js .qi-journal-cta.is-in-view,
+    .js .qi-about-info-row.is-in-view,
+    .js .qi-connect-form.is-in-view,
+    .js .qi-connect-info.is-in-view,
+    .js .qi-connect-together.is-in-view,
+    .js .qi-info-columns.is-in-view .qi-info-card,
+    .js .qi-about-wwd__intro p.is-in-view,
+    .js .qi-about-wwd__grid.is-in-view,
+    .js .qi-about-why__quote.is-in-view,
+    .js .qi-about-founder__card.is-in-view,
+    .js .qi-about-founder__more.is-in-view,
+    .js .hero.is-in-view .hero__copy,
+    .js .hero.is-in-view .hero__media,
+    .js .qi-pub-hero.is-in-view .wp-block-columns > .wp-block-column:first-child,
+    .js .qi-pub-hero.is-in-view .qi-pub-hero__image {
+        opacity: 1;
+        animation: none;
+        transform: none;
+        clip-path: none;
+    }
+}
