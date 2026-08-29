@@ -40,7 +40,7 @@ if ( ! function_exists( 'queer_ink_theme_setup' ) ) {
             array(
                 'name'  => esc_html__( 'Body Gray', 'queer-ink-theme' ),
                 'slug'  => 'qi-gray',
-                'color' => '#4a4a4a',
+                'color' => '#000000',
             ),
             array(
                 'name'  => esc_html__( 'Soft Pink', 'queer-ink-theme' ),
@@ -100,6 +100,19 @@ if ( ! function_exists( 'queer_ink_theme_scripts' ) ) {
             'url'   => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce( 'qi_journal_filter' ),
         ) );
+
+        // Same country -> expected-digit-count map the server validates
+        // against (queer_ink_contact_country_codes(), inc/shortcodes.php)
+        // — the Connect form's Mobile Number field reads this to enforce
+        // each country's length live as the visitor types, never letting
+        // the client and server rules drift apart.
+        if ( function_exists( 'queer_ink_contact_country_codes' ) ) {
+            $qi_contact_digit_lengths = array();
+            foreach ( queer_ink_contact_country_codes() as $qi_country_key => $qi_country ) {
+                $qi_contact_digit_lengths[ $qi_country_key ] = (int) $qi_country['digits'];
+            }
+            wp_localize_script( 'queer-ink-main', 'qiContactCountryDigits', $qi_contact_digit_lengths );
+        }
     }
 }
 add_action( 'wp_enqueue_scripts', 'queer_ink_theme_scripts' );

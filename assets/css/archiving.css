@@ -23,7 +23,7 @@ html:has(body.page-id-16) {
 
 .qi-arc-hero__note {
     font-size: 0.9rem;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 /* The shared .qi-pub-hero rule (publishing.css) draws a full-bleed
@@ -87,7 +87,7 @@ html:has(body.page-id-16) {
     align-items: center;
     gap: 0.4rem;
     margin: 0;
-    color: #4a4a4a;
+    color: #000000;
     font-size: 0.9rem;
 }
 
@@ -272,7 +272,7 @@ html:has(body.page-id-16) {
     margin: 0 0 0.75rem;
     font-size: 0.85rem;
     line-height: 1.6;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .qi-timeline__item:nth-child(even) .qi-timeline__card .qi-pathway-card__link {
@@ -544,7 +544,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
 
 .qi-why-archive__intro p {
     margin: 0 0 0.75rem;
-    color: #4a4a4a;
+    color: #000000;
     line-height: 1.7;
 }
 
@@ -602,7 +602,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
 .qi-why-archive__card p {
     margin: 0;
     font-size: 0.85rem;
-    color: #4a4a4a;
+    color: #000000;
     line-height: 1.6;
     min-height: 4.8em;
 }
@@ -640,7 +640,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
     margin: 0 0 1.5rem;
     font-size: 0.92rem;
     line-height: 1.6;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .qi-connections__request-card {
@@ -671,7 +671,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
        (was a slightly smaller 0.88rem). */
     font-size: 0.92rem;
     line-height: 1.6;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .qi-connections__request-card .button {
@@ -751,7 +751,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
     margin: 0 0 0.6rem;
     font-size: 0.85rem;
     line-height: 1.55;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .qi-collection-card__link {
@@ -834,7 +834,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
     padding: 0.15rem 0.6rem;
     border: 1px solid #e5e2e2;
     border-radius: 999px;
-    color: #4a4a4a;
+    color: #000000;
     text-decoration: none;
     white-space: nowrap;
 }
@@ -850,7 +850,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
     gap: 0.4rem;
     margin: -0.2rem 0 0;
     font-size: 0.82rem;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .article-card__byline-sep {
@@ -858,7 +858,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
 }
 
 .article-card__date {
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .article-card__title {
@@ -886,7 +886,7 @@ body.post-type-archive-qi_timeline .qi-page-back {
     margin: 0;
     font-size: 0.9rem;
     line-height: 1.55;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .article-card__link {
@@ -1055,7 +1055,7 @@ body.post-type-archive-qi_article .qi-page-back {
 
 .qi-model__intro p {
     margin: 0 0 0.75rem;
-    color: #4a4a4a;
+    color: #000000;
     line-height: 1.55;
     font-size: 0.88rem;
 }
@@ -1238,7 +1238,7 @@ body.post-type-archive-qi_article .qi-page-back {
     display: inline-block;
     margin: 0.5rem 0 0;
     padding-left: 1.1rem;
-    color: #4a4a4a;
+    color: #000000;
     font-size: 0.85rem;
     line-height: 1.7;
     text-align: left;
@@ -1253,7 +1253,7 @@ body.post-type-archive-qi_article .qi-page-back {
 .qi-model__diagram-footer {
     margin: 1rem 0 0;
     text-align: center;
-    color: #4a4a4a;
+    color: #000000;
     font-size: 0.85rem;
     line-height: 1.5;
     max-width: 46rem;

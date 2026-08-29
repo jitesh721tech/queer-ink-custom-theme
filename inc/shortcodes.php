@@ -399,6 +399,47 @@ if ( ! function_exists( 'queer_ink_subjects_dropdown_shortcode' ) ) {
 }
 add_shortcode( 'qi_subjects_dropdown', 'queer_ink_subjects_dropdown_shortcode' );
 
+if ( ! function_exists( 'queer_ink_contact_country_codes' ) ) {
+    /**
+     * Country-code options for the Connect form's Mobile Number field —
+     * the single source of truth for the compact <select> rendered next
+     * to the number input (queer_ink_render_form_field() below), the
+     * server-side per-country digit-length check
+     * (queer_ink_handle_contact_form_submission()), and the client-side
+     * max-length enforcement (main.js, via wp_localize_script in
+     * functions.php) — all three read this same list, so they can never
+     * drift out of sync. India is first/default since Queer Ink is based
+     * in Mumbai; 'digits' is the exact expected national number length
+     * for that country (India's is authoritative per spec — always 10;
+     * the rest are common real-world lengths, not exhaustively verified
+     * per carrier).
+     */
+    function queer_ink_contact_country_codes() {
+        return array(
+            'IN' => array( 'name' => 'India',          'code' => '+91',  'digits' => 10 ),
+            'US' => array( 'name' => 'United States',   'code' => '+1',   'digits' => 10 ),
+            'GB' => array( 'name' => 'United Kingdom',  'code' => '+44',  'digits' => 10 ),
+            'AU' => array( 'name' => 'Australia',       'code' => '+61',  'digits' => 9 ),
+            'PK' => array( 'name' => 'Pakistan',        'code' => '+92',  'digits' => 10 ),
+            'BD' => array( 'name' => 'Bangladesh',      'code' => '+880', 'digits' => 10 ),
+            'LK' => array( 'name' => 'Sri Lanka',       'code' => '+94',  'digits' => 9 ),
+            'NP' => array( 'name' => 'Nepal',           'code' => '+977', 'digits' => 10 ),
+            'AE' => array( 'name' => 'United Arab Emirates', 'code' => '+971', 'digits' => 9 ),
+            'SG' => array( 'name' => 'Singapore',       'code' => '+65',  'digits' => 8 ),
+            'DE' => array( 'name' => 'Germany',         'code' => '+49',  'digits' => 10 ),
+            'FR' => array( 'name' => 'France',          'code' => '+33',  'digits' => 9 ),
+            'ZA' => array( 'name' => 'South Africa',    'code' => '+27',  'digits' => 9 ),
+            'NZ' => array( 'name' => 'New Zealand',     'code' => '+64',  'digits' => 9 ),
+            'KE' => array( 'name' => 'Kenya',           'code' => '+254', 'digits' => 9 ),
+            'NG' => array( 'name' => 'Nigeria',         'code' => '+234', 'digits' => 10 ),
+            'PH' => array( 'name' => 'Philippines',     'code' => '+63',  'digits' => 10 ),
+            'MY' => array( 'name' => 'Malaysia',        'code' => '+60',  'digits' => 9 ),
+            'ID' => array( 'name' => 'Indonesia',       'code' => '+62',  'digits' => 10 ),
+            'BR' => array( 'name' => 'Brazil',          'code' => '+55',  'digits' => 11 ),
+        );
+    }
+}
+
 if ( ! function_exists( 'queer_ink_form_field_validation_attrs' ) ) {
     /**
      * HTML5 pattern/inputmode/data-qi-validate attributes for the 3 field
@@ -417,7 +458,13 @@ if ( ! function_exists( 'queer_ink_form_field_validation_attrs' ) ) {
             case 'email':
                 return ' data-qi-validate="email" autocomplete="email"';
             case 'tel':
-                return ' pattern="[0-9]{10,12}" inputmode="numeric" data-qi-validate="tel" autocomplete="tel"';
+                // No static pattern — the valid digit count now depends on
+                // the paired country-code <select> (see
+                // queer_ink_render_form_field()'s 'tel' branch and
+                // main.js's data-qi-tel-input handling), so length is
+                // enforced dynamically (maxlength updated on country
+                // change) rather than with a single fixed pattern here.
+                return ' inputmode="numeric" data-qi-validate="tel" autocomplete="tel-national"';
             default:
                 return '';
         }
@@ -463,6 +510,21 @@ if ( ! function_exists( 'queer_ink_render_form_field' ) ) {
                     }
                     ?>
                 </select>
+            <?php elseif ( 'tel' === $type ) : ?>
+                <?php
+                $countries       = queer_ink_contact_country_codes();
+                $default_country = 'IN'; // Queer Ink is based in Mumbai — India is the sensible default.
+                ?>
+                <div class="qi-connect-form__tel">
+                    <select class="qi-connect-form__tel-code" name="<?php echo esc_attr( $field_name ); ?>_country_code" aria-label="<?php esc_attr_e( 'Country code', 'queer-ink-theme' ); ?>" data-qi-country-select>
+                        <?php foreach ( $countries as $country_key => $country ) : ?>
+                            <option value="<?php echo esc_attr( $country_key ); ?>" data-digits="<?php echo esc_attr( $country['digits'] ); ?>" <?php selected( $default_country, $country_key ); ?>>
+                                <?php echo esc_html( $country['code'] . ' ' . $country['name'] ); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="tel" id="<?php echo esc_attr( $field_id ); ?>" class="qi-connect-form__tel-number" name="<?php echo esc_attr( $field_name ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" <?php echo $required ? 'required aria-required="true"' : ''; ?><?php echo queer_ink_form_field_validation_attrs( $type ); // phpcs:ignore -- fixed, trusted attribute string, not user input. ?> maxlength="<?php echo esc_attr( $countries[ $default_country ]['digits'] ); ?>" data-qi-tel-input>
+                </div>
             <?php else : ?>
                 <input type="<?php echo esc_attr( $input_type ); ?>" id="<?php echo esc_attr( $field_id ); ?>" name="<?php echo esc_attr( $field_name ); ?>" placeholder="<?php echo esc_attr( $placeholder ); ?>" <?php echo $required ? 'required aria-required="true"' : ''; ?><?php echo queer_ink_form_field_validation_attrs( $type ); // phpcs:ignore -- fixed, trusted attribute string, not user input. ?>>
             <?php endif; ?>
@@ -504,18 +566,31 @@ if ( ! function_exists( 'queer_ink_contact_form_shortcode' ) ) {
         $status = isset( $_GET['qi_contact'] ) ? sanitize_key( wp_unslash( $_GET['qi_contact'] ) ) : '';
 
         $status_messages = array(
-            'success'          => array( 'type' => 'success', 'text' => esc_html__( "Thanks — your message has been sent. We'll get back to you soon.", 'queer-ink-theme' ) ),
             'validation_error' => array( 'type' => 'error', 'text' => esc_html__( 'Please fill in all required fields before sending.', 'queer-ink-theme' ) ),
             'invalid_name'     => array( 'type' => 'error', 'text' => esc_html__( 'Please enter a valid name (letters only).', 'queer-ink-theme' ) ),
             'invalid_email'    => array( 'type' => 'error', 'text' => esc_html__( 'Please enter a valid email address.', 'queer-ink-theme' ) ),
-            'invalid_mobile'   => array( 'type' => 'error', 'text' => esc_html__( 'Please enter a valid mobile number (10-12 digits only).', 'queer-ink-theme' ) ),
-            'mail_error'       => array( 'type' => 'error', 'text' => esc_html__( "Sorry, your message couldn't be sent right now. Please try again shortly or email us directly.", 'queer-ink-theme' ) ),
+            'invalid_mobile'   => array( 'type' => 'error', 'text' => esc_html__( 'Please enter a valid mobile number for the selected country.', 'queer-ink-theme' ) ),
+            'invalid_country'  => array( 'type' => 'error', 'text' => esc_html__( 'Please select a valid country code.', 'queer-ink-theme' ) ),
+            'save_error'       => array( 'type' => 'error', 'text' => esc_html__( "Sorry, your message couldn't be sent right now. Please try again shortly or email us directly.", 'queer-ink-theme' ) ),
+            'rate_limited'     => array( 'type' => 'error', 'text' => esc_html__( "You've sent several messages in a short time. Please wait a few minutes and try again.", 'queer-ink-theme' ) ),
             'error'            => array( 'type' => 'error', 'text' => esc_html__( 'Your session expired before sending — please try again.', 'queer-ink-theme' ) ),
         );
 
         ob_start();
 
-        if ( isset( $status_messages[ $status ] ) ) {
+        // Success gets a small dismissible popup (data-qi-popup, wired up
+        // in main.js) instead of the inline banner every other status
+        // uses below — matches the existing green success palette
+        // (.qi-connect-form__message--success) but floats above the page
+        // rather than pushing the form down, and self-dismisses.
+        if ( 'success' === $status ) {
+            ?>
+            <div class="qi-connect-popup qi-connect-popup--success" role="status" data-qi-popup>
+                <p><?php esc_html_e( "Thanks — your message has been sent. We'll get back to you soon.", 'queer-ink-theme' ); ?></p>
+                <button type="button" class="qi-connect-popup__close" aria-label="<?php esc_attr_e( 'Close', 'queer-ink-theme' ); ?>">&times;</button>
+            </div>
+            <?php
+        } elseif ( isset( $status_messages[ $status ] ) ) {
             printf(
                 '<p class="qi-connect-form__message qi-connect-form__message--%1$s" role="status">%2$s</p>',
                 esc_attr( $status_messages[ $status ]['type'] ),
@@ -527,6 +602,10 @@ if ( ! function_exists( 'queer_ink_contact_form_shortcode' ) ) {
             <input type="hidden" name="action" value="qi_contact_form_submit">
             <input type="hidden" name="qi_contact_redirect" value="<?php echo esc_url( get_permalink() ); ?>">
             <?php wp_nonce_field( 'qi_contact_form_submit', 'qi_contact_form_nonce' ); ?>
+            <p class="qi-connect-form__hp" aria-hidden="true">
+                <label for="qi_contact_hp">Leave this field empty</label>
+                <input type="text" id="qi_contact_hp" name="qi_contact_hp" value="" tabindex="-1" autocomplete="off">
+            </p>
             <?php
             if ( empty( $fields ) ) {
                 if ( current_user_can( 'edit_theme_options' ) || current_user_can( 'manage_options' ) ) {
@@ -612,6 +691,30 @@ if ( ! function_exists( 'queer_ink_handle_contact_form_submission' ) ) {
             exit;
         }
 
+        // Honeypot — a real visitor never sees or fills #qi_contact_hp
+        // (hidden off-screen, see connect.css), so a filled value almost
+        // certainly means a bot blindly filling every input. Pretending
+        // success avoids teaching the bot which signal gave it away,
+        // without saving or emailing anything.
+        if ( ! empty( $_POST['qi_contact_hp'] ) ) {
+            wp_safe_redirect( add_query_arg( 'qi_contact', 'success', $redirect_url ) . '#contact-form' );
+            exit;
+        }
+
+        // Basic rate limit — a native transient keyed by IP, no external
+        // service. Caps abuse (a script hammering the endpoint) without
+        // affecting normal use; a genuine visitor essentially never
+        // submits this form 6 times in 10 minutes.
+        $rate_limit_key = 'qi_contact_rl_' . md5( (string) ( $_SERVER['REMOTE_ADDR'] ?? '' ) );
+        $recent_count   = (int) get_transient( $rate_limit_key );
+        if ( $recent_count >= 5 ) {
+            wp_safe_redirect( add_query_arg( 'qi_contact', 'rate_limited', $redirect_url ) . '#contact-form' );
+            exit;
+        }
+        set_transient( $rate_limit_key, $recent_count + 1, 10 * MINUTE_IN_SECONDS );
+
+        $countries = queer_ink_contact_country_codes();
+
         $fields = get_posts( array(
             'post_type'      => 'qi_form_field',
             'post_status'    => 'publish',
@@ -630,6 +733,20 @@ if ( ! function_exists( 'queer_ink_handle_contact_form_submission' ) ) {
         $format_error = '';
         $email_value  = '';
         $lines        = array();
+
+        // Populated by type below (name/email/tel+country/select/textarea)
+        // for saving into the qi_inquiry post after validation
+        // passes — kept separate from $lines (the email body) since the
+        // two need slightly different shapes (e.g. country code + number
+        // stored as distinct fields here, joined into one line for email).
+        $submission = array(
+            'name'         => '',
+            'email'        => '',
+            'country_code' => '',
+            'mobile'       => '',
+            'regarding'    => '',
+            'message'      => '',
+        );
 
         foreach ( $fields as $field_post ) {
             $type       = get_post_meta( $field_post->ID, '_qi_field_type', true ) ?: 'text';
@@ -655,18 +772,33 @@ if ( ! function_exists( 'queer_ink_handle_contact_form_submission' ) ) {
                         $format_error = 'invalid_email';
                     }
                 } elseif ( '' !== $value ) {
-                    $email_value = $value;
+                    $email_value          = $value;
+                    $submission['email']  = $value;
                 }
             } elseif ( 'tel' === $type ) {
-                // sanitize_text_field() first (strips tags/extra
-                // whitespace), then the digits-only, 10-12-length check —
-                // letters, symbols (+, -, spaces, etc.) and wrong lengths
-                // are all rejected, matching the "10-12 digits only" rule.
-                $value = sanitize_text_field( $raw );
-                if ( '' !== $value && ! preg_match( '/^[0-9]{10,12}$/', $value ) ) {
-                    $valid = false;
-                    if ( ! $format_error ) {
-                        $format_error = 'invalid_mobile';
+                // The number is digits-only (extra characters stripped —
+                // the country select is a separate POST field, so no
+                // "+91" prefix ever reaches this value). Required length
+                // depends on the submitted country code rather than one
+                // fixed range, e.g. exactly 10 for India.
+                $value        = preg_replace( '/\D/', '', (string) $raw );
+                $country_key  = isset( $_POST[ $field_name . '_country_code' ] ) ? sanitize_text_field( wp_unslash( $_POST[ $field_name . '_country_code' ] ) ) : '';
+
+                if ( '' !== $value || $required ) {
+                    if ( ! isset( $countries[ $country_key ] ) ) {
+                        $valid = false;
+                        if ( ! $format_error ) {
+                            $format_error = 'invalid_country';
+                        }
+                    } elseif ( '' !== $value && strlen( $value ) !== $countries[ $country_key ]['digits'] ) {
+                        $valid = false;
+                        if ( ! $format_error ) {
+                            $format_error = 'invalid_mobile';
+                        }
+                    } elseif ( '' !== $value ) {
+                        $submission['country_code'] = $countries[ $country_key ]['code'];
+                        $submission['mobile']       = $value;
+                        $value                      = $countries[ $country_key ]['code'] . ' ' . $value; // For the $lines email body only.
                     }
                 }
             } elseif ( 'name' === $type ) {
@@ -676,9 +808,34 @@ if ( ! function_exists( 'queer_ink_handle_contact_form_submission' ) ) {
                     if ( ! $format_error ) {
                         $format_error = 'invalid_name';
                     }
+                } elseif ( '' !== $value ) {
+                    $submission['name'] = $value;
+                }
+            } elseif ( 'select' === $type ) {
+                $value = sanitize_text_field( $raw );
+                if ( '' !== $value ) {
+                    // Stored/emailed as the human-readable option label
+                    // (e.g. "General inquiry") rather than its slugified
+                    // value ("general-inquiry") — friendlier to read back
+                    // in wp-admin. Falls back to the raw value if for some
+                    // reason it doesn't match one of the field's own options.
+                    $options_raw = get_post_meta( $field_post->ID, '_qi_field_options', true );
+                    $option_label = $value;
+                    foreach ( preg_split( '/\r\n|\r|\n/', (string) $options_raw ) as $option ) {
+                        $option = trim( $option );
+                        if ( '' !== $option && sanitize_title( $option ) === $value ) {
+                            $option_label = $option;
+                            break;
+                        }
+                    }
+                    $submission['regarding'] = $option_label;
+                    $value                   = $option_label; // For the $lines email body.
                 }
             } elseif ( 'textarea' === $type ) {
                 $value = sanitize_textarea_field( $raw );
+                if ( '' !== $value ) {
+                    $submission['message'] = $value;
+                }
             } else {
                 $value = sanitize_text_field( $raw );
             }
@@ -702,6 +859,30 @@ if ( ! function_exists( 'queer_ink_handle_contact_form_submission' ) ) {
             wp_safe_redirect( add_query_arg( 'qi_contact', $format_error ? $format_error : 'validation_error', $redirect_url ) . '#contact-form' );
             exit;
         }
+
+        // The database save is the source of truth for "did this
+        // submission succeed" — not wp_mail() below. Where inquiries get
+        // emailed to is a separate, not-yet-configured concern (see the
+        // function docblock); a visitor's message is safely recorded the
+        // moment it's in the database regardless of whether outbound mail
+        // is set up on this install, so that's what "success" means here.
+        $submission_id = wp_insert_post( array(
+            'post_type'   => 'qi_inquiry',
+            'post_title'  => $submission['name'] ? $submission['name'] : esc_html__( '(no name)', 'queer-ink-theme' ),
+            'post_status' => 'private',
+        ), true );
+
+        if ( is_wp_error( $submission_id ) ) {
+            wp_safe_redirect( add_query_arg( 'qi_contact', 'save_error', $redirect_url ) . '#contact-form' );
+            exit;
+        }
+
+        update_post_meta( $submission_id, '_qi_submission_name', $submission['name'] );
+        update_post_meta( $submission_id, '_qi_submission_email', $submission['email'] );
+        update_post_meta( $submission_id, '_qi_submission_country_code', $submission['country_code'] );
+        update_post_meta( $submission_id, '_qi_submission_mobile', $submission['mobile'] );
+        update_post_meta( $submission_id, '_qi_submission_regarding', $submission['regarding'] );
+        update_post_meta( $submission_id, '_qi_submission_message', $submission['message'] );
 
         $to      = 'info@queer-ink.com';
         $subject = sprintf(
@@ -730,11 +911,65 @@ if ( ! function_exists( 'queer_ink_handle_contact_form_submission' ) ) {
             $headers[] = 'Reply-To: ' . $email_value;
         }
 
-        $sent = wp_mail( $to, $subject, $body, $headers );
+        // Best-effort only — a failure here (e.g. no mail transport
+        // configured on this install) no longer blocks "success" above.
+        wp_mail( $to, $subject, $body, $headers );
 
-        wp_safe_redirect( add_query_arg( 'qi_contact', $sent ? 'success' : 'mail_error', $redirect_url ) . '#contact-form' );
+        wp_safe_redirect( add_query_arg( 'qi_contact', 'success', $redirect_url ) . '#contact-form' );
         exit;
     }
 }
 add_action( 'admin_post_nopriv_qi_contact_form_submit', 'queer_ink_handle_contact_form_submission' );
 add_action( 'admin_post_qi_contact_form_submit', 'queer_ink_handle_contact_form_submission' );
+
+if ( ! function_exists( 'queer_ink_annual_reports_shortcode' ) ) {
+    /**
+     * Renders the About page's "Annual report" card reading list from
+     * qi_annual_report posts (inc/post-types.php), newest year first.
+     * Reports with no PDF selected are skipped — a report is only ever a
+     * dead end if an admin explicitly leaves it without one. Publishing,
+     * unpublishing or deleting a report in wp-admin is reflected here
+     * immediately since this queries live on every page render, no cache
+     * or manual sync step involved.
+     */
+    function queer_ink_annual_reports_shortcode() {
+        $reports = new WP_Query( array(
+            'post_type'      => 'qi_annual_report',
+            'post_status'    => 'publish',
+            'posts_per_page' => -1,
+            'meta_key'       => '_qi_annual_report_year',
+            'orderby'        => 'meta_value_num',
+            'order'          => 'DESC',
+        ) );
+
+        $links = array();
+
+        if ( $reports->have_posts() ) {
+            while ( $reports->have_posts() ) {
+                $reports->the_post();
+
+                $year    = get_post_meta( get_the_ID(), '_qi_annual_report_year', true );
+                $pdf_id  = absint( get_post_meta( get_the_ID(), '_qi_annual_report_pdf_id', true ) );
+                $pdf_url = $pdf_id ? wp_get_attachment_url( $pdf_id ) : '';
+
+                if ( ! $year || ! $pdf_url ) {
+                    continue;
+                }
+
+                $links[] = sprintf(
+                    '<a href="%1$s" target="_blank" rel="noopener">%2$s (PDF)</a>',
+                    esc_url( $pdf_url ),
+                    esc_html( $year )
+                );
+            }
+            wp_reset_postdata();
+        }
+
+        if ( ! $links ) {
+            return '';
+        }
+
+        return '<p class="qi-about-info-col__reports">' . esc_html__( 'Read the annual reports:', 'queer-ink-theme' ) . ' ' . implode( ' &middot; ', $links ) . '</p>';
+    }
+}
+add_shortcode( 'qi_annual_reports', 'queer_ink_annual_reports_shortcode' );

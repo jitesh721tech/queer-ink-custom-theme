@@ -1140,7 +1140,8 @@ HTML
         <div class="qi-about-founder__overlay">
             <span class="qi-about-founder__label">Founder</span>
             <h2>Shobhna S Kumar</h2>
-            <p>Shobhna S Kumar founded Queer Ink in 2010 as India\'s first online queer bookstore. In 2012 she published <em>Out! Stories from the New Queer India</em>, edited by Minal Hajratwala — Queer Ink\'s first book, the foundational anthology of contemporary queer Indian writing.</p>
+            <p class="qi-about-founder__desc">Shobhna S Kumar founded Queer Ink in 2010 as India\'s first online queer bookstore. In 2012 she published <em>Out! Stories from the New Queer India</em>, edited by Minal Hajratwala — Queer Ink\'s first book, the foundational anthology of contemporary queer Indian writing.</p>
+            <button type="button" class="qi-about-founder__toggle" aria-expanded="false">Read More</button>
         </div>
     </div>
     <div class="qi-about-founder__more">
@@ -1176,8 +1177,14 @@ HTML
         <img class="qi-icon-img" src="' . $about_annual_report_icon_image . '" alt="" loading="lazy">
         <h3>Annual report.</h3>
         <p>Queer Ink publishes an annual report each April, marking the imprint\'s founding date. The report covers the year\'s work — books published, archive collections expanded, library growth, QConversations engagement, and finances at a level appropriate to a small independent organisation.</p>
-        <p class="qi-about-info-col__reports">Read the annual reports: <a href="mailto:shobhna@queer-ink.com">2025 (PDF)</a> &middot; <a href="mailto:shobhna@queer-ink.com">2024 (PDF)</a> &middot; <a href="mailto:shobhna@queer-ink.com">2023 (PDF)</a></p>
-        <p><a href="mailto:shobhna@queer-ink.com">Earlier reports on request</a></p>
+<!-- /wp:html -->
+
+<!-- wp:shortcode -->
+[qi_annual_reports]
+<!-- /wp:shortcode -->
+
+<!-- wp:html -->
+        <p><a href="' . $url_connect . '#contact-form">Earlier reports on request</a></p>
     </div>
 </div>
 <!-- /wp:html -->',

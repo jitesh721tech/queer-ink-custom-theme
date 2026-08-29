@@ -38,9 +38,23 @@ html:has(body.page-id-11) {
     margin-right: -50vw;
     min-height: 34rem;
     display: flex;
-    align-items: center;
-    padding: 4rem 32px;
-    padding-left: max(32px, calc((100vw - 1400px) / 2 + 32px));
+    /* Was center — with align-items:center, a page whose text+image block
+       is naturally shorter than min-height (34rem) gets vertically
+       centered as a whole, pushing its eyebrow/heading start down by a
+       varying, page-dependent amount (e.g. Connect, whose hero has no
+       button row) instead of sitting a small, consistent distance below
+       the header like every other hero. flex-start makes that gap purely
+       padding-driven and therefore identical everywhere; pages whose
+       content already filled the min-height (Archiving, Digital Library,
+       About) render pixel-identical either way, so this is a no-op there. */
+    align-items: flex-start;
+    padding: 1rem 64px 4rem;
+    /* 64px (not 32px) — matches the homepage hero's own left inset, which
+       is doubled up from two nested 32px layers (.site-content.container
+       + .hero__inner); this full-bleed hero has only one padding layer of
+       its own, so it needs the full 64px directly to land on the same
+       start position. */
+    padding-left: max(64px, calc((100vw - 1400px) / 2 + 64px));
     box-sizing: border-box;
     background-size: cover;
     background-position: center;
@@ -99,7 +113,14 @@ html:has(body.page-id-11) {
     right: auto;
     margin-left: 0;
     margin-right: 0;
-    padding: 3rem 0;
+    /* Publishing isn't full-bleed (width:auto above) — it flows inside
+       .site-content.container like a normal page, which already supplies
+       one 32px padding layer of its own. The other qi-pub-hero pages get
+       their matching second layer from the padding-left calc above; this
+       variant gets it here instead, landing on the same start position
+       as the homepage hero (see the align-items comment above) and the
+       other qi-pub-hero pages. Top padding matches the shared 1rem too. */
+    padding: 1rem 32px 3rem;
     background-image: none;
     overflow: visible;
 }
@@ -113,9 +134,11 @@ html:has(body.page-id-11) {
     gap: 3rem;
 }
 
-.qi-pub-hero.qi-publishing-hero h1 {
-    color: var(--qi-color-primary);
-}
+/* No color override here — falls back to the shared .qi-pub-hero h1 rule
+   (var(--qi-color-ink), standard black). The heading's own inline
+   <span style="color:#c0185b"> already colors just "deserve." pink; this
+   rule previously repainted the *entire* heading pink, leaving no black
+   left for "Writing the future we". */
 
 .qi-pub-hero.qi-publishing-hero p {
     color: var(--qi-color-ink-variant);
@@ -1194,6 +1217,10 @@ body.post-type-archive-qi_book .qi-page-back {
     .qi-pub-hero {
         min-height: 30rem;
         padding-left: 24px;
+        /* Matches the site-wide 24px gutter at this width (.container);
+           previously unset here, so it silently kept the desktop 64px
+           value on the right only. */
+        padding-right: 24px;
     }
 
     .qi-pub-hero::before {
@@ -1294,11 +1321,13 @@ body.post-type-archive-qi_book .qi-page-back {
 /* Portrait tablet only (768x1024). */
 @media (min-width: 768px) and (max-width: 980px) {
     /* .qi-pub-hero's own left gutter was 24px above (padding-right stayed
-       at its base 32px, since the 980px tier only ever overrode
-       padding-left) — matches the same 32px bump used site-wide for this
-       width, and also makes the hero's own left/right padding symmetric. */
+       at its 980px-tier 24px too, since this tier previously only ever
+       overrode padding-left) — matches the same 32px bump used site-wide
+       for this width, and also keeps the hero's own left/right padding
+       symmetric. */
     .qi-pub-hero {
         padding-left: 32px;
+        padding-right: 32px;
     }
 
     /* 3 cards -> 2 in the first row + the 3rd centered on its own row,

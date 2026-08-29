@@ -106,7 +106,6 @@ footer .footer-logo {
     margin: 0 0 1rem;
     font-size: 0.8rem;
     letter-spacing: 0.14em;
-    text-transform: uppercase;
     color: var(--qi-color-primary);
     font-weight: 700;
 }

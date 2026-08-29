@@ -43,7 +43,7 @@
     border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 700;
-    color: #4a4a4a;
+    color: #000000;
     text-decoration: none;
 }
 
@@ -148,13 +148,13 @@
     margin: 0 0 0.75rem;
     font-size: 0.88rem;
     line-height: 1.6;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .qi-journal-widget__note {
     margin: 1rem 0 0;
     font-size: 0.8rem;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 /* "No newsletters." only — the rest of the note ("No spam. Just what
@@ -257,7 +257,7 @@
 
 .qi-journal-cta__body p {
     margin: 0 0 1.25rem;
-    color: #4a4a4a;
+    color: #000000;
     line-height: 1.55;
     font-size: 0.9rem;
     max-width: 30rem;

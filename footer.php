@@ -13,7 +13,7 @@
                 <?php the_custom_logo(); ?>
             <?php else : ?>
                 <a class="footer-logo-link" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-                    <img class="footer-logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/logo/queer_ink_logo.png' ) ); ?>" alt="<?php bloginfo( 'name' ); ?>" />
+                    <img class="footer-logo" src="<?php echo esc_url( get_theme_file_uri( 'assets/images/logo/queer_ink_logo.jpeg' ) ); ?>" alt="<?php bloginfo( 'name' ); ?>" width="174" height="58" />
                 </a>
             <?php endif; ?>
         </div>
@@ -24,7 +24,7 @@
 
         <div class="footer-links-grid">
             <div class="footer-links-column">
-                <h3>EXPLORE</h3>
+                <h3>Explore</h3>
                 <ul>
                     <li><a href="#">Publishing</a></li>
                     <li><a href="#">Archiving</a></li>
@@ -33,34 +33,34 @@
                 </ul>
             </div>
             <div class="footer-links-column">
-                <h3>ABOUT</h3>
+                <h3>About</h3>
                 <ul>
-                    <li><a href="#">Our story</a></li>
-                    <li><a href="#">Our approach</a></li>
-                    <li><a href="#">The team</a></li>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#">Our Approach</a></li>
+                    <li><a href="#">The Team</a></li>
                     <li><a href="#">Careers</a></li>
                 </ul>
             </div>
             <div class="footer-links-column">
-                <h3>CONNECT</h3>
+                <h3>Connect</h3>
                 <ul>
-                    <li><a href="#">Get in touch</a></li>
+                    <li><a href="#">Get In Touch</a></li>
                     <li><a href="#">Collaborate</a></li>
                     <li><a href="#">Internship</a></li>
-                    <li><a href="#">Press &amp; media</a></li>
+                    <li><a href="#">Press &amp; Media</a></li>
                 </ul>
             </div>
             <div class="footer-links-column">
-                <h3>LEGAL</h3>
+                <h3>Legal</h3>
                 <ul>
-                    <li><a href="#">Privacy policy</a></li>
-                    <li><a href="#">Terms of use</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms Of Use</a></li>
                     <li><a href="#">Accessibility</a></li>
                     <li><a href="<?php echo esc_url( home_url( '/sitemap/' ) ); ?>">Sitemap</a></li>
                 </ul>
             </div>
             <div class="footer-links-column footer-social-column">
-                <h3>FIND US</h3>
+                <h3>Find Us</h3>
                 <div class="footer-social-icons">
                     <a class="footer-social-icon" href="#" aria-label="Instagram">
                         <img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/social/instagram.png' ) ); ?>" alt="Instagram" />

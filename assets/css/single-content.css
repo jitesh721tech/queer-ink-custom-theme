@@ -81,7 +81,7 @@ body.admin-bar .qi-single-book__cover {
 .qi-single-article__authors {
     margin: 0 0 0.75rem;
     font-size: 1rem;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .qi-single-book__authors a,
@@ -97,7 +97,7 @@ body.admin-bar .qi-single-book__cover {
 .qi-single-article__taxonomy-line {
     margin: 0 0 0.5rem;
     font-size: 0.9rem;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .qi-single-article__taxonomy-label {
@@ -185,7 +185,7 @@ body.admin-bar .qi-single-book__cover {
     gap: 0.75rem;
     margin: 0 0 1rem;
     font-size: 0.85rem;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 .qi-single-article__section {

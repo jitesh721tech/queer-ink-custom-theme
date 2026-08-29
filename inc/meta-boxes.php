@@ -312,6 +312,136 @@ if ( ! function_exists( 'queer_ink_timeline_admin_column_content' ) ) {
 add_action( 'manage_qi_timeline_posts_custom_column', 'queer_ink_timeline_admin_column_content', 10, 2 );
 
 /**
+ * Annual Report "Year" + "PDF" meta box — the two fields an admin needs
+ * to publish a report (see [qi_annual_reports], inc/shortcodes.php, for
+ * how they're rendered on the About page). Mirrors the qi_book PDF meta
+ * box's media-library pattern and the qi_timeline Year meta box's
+ * nonce/capability/save shape above, combined into one box since both
+ * fields are this CPT's only content.
+ */
+
+if ( ! function_exists( 'queer_ink_enqueue_annual_report_media_uploader' ) ) {
+    /**
+     * Loads the WP media library JS only on the qi_annual_report edit
+     * screen, so the PDF meta box's "Select PDF" button can open the
+     * native uploader.
+     */
+    function queer_ink_enqueue_annual_report_media_uploader( $hook ) {
+        if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
+            return;
+        }
+
+        $screen = get_current_screen();
+        if ( ! $screen || 'qi_annual_report' !== $screen->post_type ) {
+            return;
+        }
+
+        wp_enqueue_media();
+        wp_enqueue_script( 'queer-ink-annual-report-meta', get_theme_file_uri( 'assets/js/admin-annual-report-meta.js' ), array( 'jquery', 'media-editor' ), wp_get_theme()->get( 'Version' ), true );
+    }
+}
+add_action( 'admin_enqueue_scripts', 'queer_ink_enqueue_annual_report_media_uploader' );
+
+if ( ! function_exists( 'queer_ink_register_annual_report_meta_box' ) ) {
+    function queer_ink_register_annual_report_meta_box( $post_type ) {
+        add_meta_box(
+            'qi_annual_report_details',
+            esc_html__( 'Report Details', 'queer-ink-theme' ),
+            'queer_ink_render_annual_report_meta_box',
+            'qi_annual_report',
+            'normal',
+            'high'
+        );
+    }
+}
+// Scoped to add_meta_boxes_qi_annual_report (not the generic add_meta_boxes
+// hook) so this only ever runs on the Annual Report screen.
+add_action( 'add_meta_boxes_qi_annual_report', 'queer_ink_register_annual_report_meta_box' );
+
+if ( ! function_exists( 'queer_ink_render_annual_report_meta_box' ) ) {
+    function queer_ink_render_annual_report_meta_box( $post ) {
+        wp_nonce_field( 'queer_ink_save_annual_report_meta', 'queer_ink_annual_report_meta_nonce' );
+
+        $year    = get_post_meta( $post->ID, '_qi_annual_report_year', true );
+        $pdf_id  = absint( get_post_meta( $post->ID, '_qi_annual_report_pdf_id', true ) );
+        $pdf_url = $pdf_id ? wp_get_attachment_url( $pdf_id ) : '';
+        ?>
+        <p>
+            <label for="qi_annual_report_year"><strong><?php esc_html_e( 'Year', 'queer-ink-theme' ); ?></strong></label><br>
+            <input type="number" id="qi_annual_report_year" name="qi_annual_report_year" value="<?php echo esc_attr( $year ); ?>" placeholder="<?php esc_attr_e( 'e.g. 2025', 'queer-ink-theme' ); ?>">
+        </p>
+        <p class="description"><?php esc_html_e( 'Reports are listed on the About page newest year first.', 'queer-ink-theme' ); ?></p>
+        <p>
+            <label><strong><?php esc_html_e( 'PDF', 'queer-ink-theme' ); ?></strong></label><br>
+            <input type="hidden" id="qi_report_pdf_id" name="qi_report_pdf_id" value="<?php echo esc_attr( $pdf_id ); ?>">
+            <span id="qi_report_pdf_filename"><?php echo $pdf_url ? esc_html( basename( $pdf_url ) ) : esc_html__( 'No PDF selected.', 'queer-ink-theme' ); ?></span>
+        </p>
+        <p>
+            <button type="button" class="button" id="qi_report_pdf_select"><?php esc_html_e( 'Select PDF', 'queer-ink-theme' ); ?></button>
+            <button type="button" class="button" id="qi_report_pdf_remove" <?php echo $pdf_id ? '' : 'style="display:none;"'; ?>><?php esc_html_e( 'Remove', 'queer-ink-theme' ); ?></button>
+        </p>
+        <p class="description"><?php esc_html_e( 'A report with no PDF selected is never shown on the About page.', 'queer-ink-theme' ); ?></p>
+        <?php
+    }
+}
+
+if ( ! function_exists( 'queer_ink_save_annual_report_meta' ) ) {
+    function queer_ink_save_annual_report_meta( $post_id ) {
+        if ( ! isset( $_POST['queer_ink_annual_report_meta_nonce'] ) || ! wp_verify_nonce( $_POST['queer_ink_annual_report_meta_nonce'], 'queer_ink_save_annual_report_meta' ) ) {
+            return;
+        }
+
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
+        }
+
+        if ( isset( $_POST['qi_annual_report_year'] ) ) {
+            update_post_meta( $post_id, '_qi_annual_report_year', absint( $_POST['qi_annual_report_year'] ) );
+        }
+
+        if ( isset( $_POST['qi_report_pdf_id'] ) ) {
+            update_post_meta( $post_id, '_qi_annual_report_pdf_id', absint( $_POST['qi_report_pdf_id'] ) );
+        }
+    }
+}
+add_action( 'save_post_qi_annual_report', 'queer_ink_save_annual_report_meta' );
+
+if ( ! function_exists( 'queer_ink_annual_report_admin_columns' ) ) {
+    function queer_ink_annual_report_admin_columns( $columns ) {
+        $columns['qi_annual_report_year'] = esc_html__( 'Year', 'queer-ink-theme' );
+        $columns['qi_annual_report_pdf']  = esc_html__( 'PDF', 'queer-ink-theme' );
+        return $columns;
+    }
+}
+add_filter( 'manage_qi_annual_report_posts_columns', 'queer_ink_annual_report_admin_columns' );
+
+if ( ! function_exists( 'queer_ink_annual_report_admin_column_content' ) ) {
+    function queer_ink_annual_report_admin_column_content( $column, $post_id ) {
+        if ( 'qi_annual_report_year' === $column ) {
+            $year = get_post_meta( $post_id, '_qi_annual_report_year', true );
+            echo $year ? esc_html( $year ) : esc_html__( '—', 'queer-ink-theme' );
+            return;
+        }
+
+        if ( 'qi_annual_report_pdf' === $column ) {
+            $pdf_id  = absint( get_post_meta( $post_id, '_qi_annual_report_pdf_id', true ) );
+            $pdf_url = $pdf_id ? wp_get_attachment_url( $pdf_id ) : '';
+
+            if ( $pdf_url ) {
+                printf( '<a href="%1$s" target="_blank" rel="noopener">%2$s</a>', esc_url( $pdf_url ), esc_html__( 'View', 'queer-ink-theme' ) );
+            } else {
+                esc_html_e( '—', 'queer-ink-theme' );
+            }
+        }
+    }
+}
+add_action( 'manage_qi_annual_report_posts_custom_column', 'queer_ink_annual_report_admin_column_content', 10, 2 );
+
+/**
  * Collection "Featured on Archiving page" toggle — caps how many
  * qi_collection posts can appear in the frontend "Our Collections"
  * section (archiving.css / [qi_collections]) at 4, regardless of how
@@ -519,3 +649,113 @@ if ( ! function_exists( 'queer_ink_migrate_featured_collections' ) ) {
     }
 }
 add_action( 'init', 'queer_ink_migrate_featured_collections' );
+
+/**
+ * Read-only admin view for qi_inquiry posts (inc/post-types.php)
+ * — every field the Connect page's contact form collects (see
+ * queer_ink_handle_contact_form_submission(), inc/shortcodes.php), plain
+ * text only. There's nothing here to edit or save: submissions are
+ * created exclusively by the form handler, so no nonce/save hook exists
+ * for this meta box on purpose. The default Publish box's Trash/Delete
+ * action is left as-is, so an admin can still remove a submission.
+ */
+
+if ( ! function_exists( 'queer_ink_register_contact_submission_meta_box' ) ) {
+    function queer_ink_register_contact_submission_meta_box( $post_type ) {
+        add_meta_box(
+            'qi_inquiry_details',
+            esc_html__( 'Inquiry Details', 'queer-ink-theme' ),
+            'queer_ink_render_contact_submission_meta_box',
+            'qi_inquiry',
+            'normal',
+            'high'
+        );
+    }
+}
+// Scoped to add_meta_boxes_qi_inquiry (not the generic
+// add_meta_boxes hook) so this only ever runs on the Inquiry screen.
+add_action( 'add_meta_boxes_qi_inquiry', 'queer_ink_register_contact_submission_meta_box' );
+
+if ( ! function_exists( 'queer_ink_render_contact_submission_meta_box' ) ) {
+    function queer_ink_render_contact_submission_meta_box( $post ) {
+        $name         = get_post_meta( $post->ID, '_qi_submission_name', true );
+        $email        = get_post_meta( $post->ID, '_qi_submission_email', true );
+        $country_code = get_post_meta( $post->ID, '_qi_submission_country_code', true );
+        $mobile       = get_post_meta( $post->ID, '_qi_submission_mobile', true );
+        $regarding    = get_post_meta( $post->ID, '_qi_submission_regarding', true );
+        $message      = get_post_meta( $post->ID, '_qi_submission_message', true );
+
+        $rows = array(
+            esc_html__( 'Name', 'queer-ink-theme' )      => $name,
+            esc_html__( 'Email', 'queer-ink-theme' )     => $email,
+            esc_html__( 'Mobile', 'queer-ink-theme' )    => trim( $country_code . ' ' . $mobile ),
+            esc_html__( 'Regarding', 'queer-ink-theme' ) => $regarding,
+        );
+        ?>
+        <table class="form-table" role="presentation">
+            <tbody>
+                <?php foreach ( $rows as $field_label => $value ) : ?>
+                    <tr>
+                        <th scope="row"><?php echo esc_html( $field_label ); ?></th>
+                        <td><?php echo $value ? esc_html( $value ) : '—'; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <tr>
+                    <th scope="row"><?php esc_html_e( 'Message', 'queer-ink-theme' ); ?></th>
+                    <td><?php echo $message ? nl2br( esc_html( $message ) ) : '—'; ?></td>
+                </tr>
+                <tr>
+                    <th scope="row"><?php esc_html_e( 'Submitted', 'queer-ink-theme' ); ?></th>
+                    <td><?php echo esc_html( get_the_date( 'F j, Y \a\t g:i a', $post ) ); ?></td>
+                </tr>
+            </tbody>
+        </table>
+        <?php
+    }
+}
+
+if ( ! function_exists( 'queer_ink_contact_submission_admin_columns' ) ) {
+    function queer_ink_contact_submission_admin_columns( $columns ) {
+        // Replaces the default Title column — submissions have no
+        // meaningful title of their own beyond the visitor's name.
+        $columns = array(
+            'cb'                     => $columns['cb'],
+            'qi_submission_name'     => esc_html__( 'Name', 'queer-ink-theme' ),
+            'qi_submission_email'    => esc_html__( 'Email', 'queer-ink-theme' ),
+            'qi_submission_mobile'   => esc_html__( 'Mobile', 'queer-ink-theme' ),
+            'qi_submission_regarding' => esc_html__( 'Regarding', 'queer-ink-theme' ),
+            'date'                   => esc_html__( 'Submitted', 'queer-ink-theme' ),
+        );
+        return $columns;
+    }
+}
+add_filter( 'manage_qi_inquiry_posts_columns', 'queer_ink_contact_submission_admin_columns' );
+
+if ( ! function_exists( 'queer_ink_contact_submission_admin_column_content' ) ) {
+    function queer_ink_contact_submission_admin_column_content( $column, $post_id ) {
+        switch ( $column ) {
+            case 'qi_submission_name':
+                $name = get_post_meta( $post_id, '_qi_submission_name', true );
+                printf(
+                    '<a href="%1$s"><strong>%2$s</strong></a>',
+                    esc_url( get_edit_post_link( $post_id ) ),
+                    $name ? esc_html( $name ) : esc_html__( '(no name)', 'queer-ink-theme' )
+                );
+                break;
+            case 'qi_submission_email':
+                $email = get_post_meta( $post_id, '_qi_submission_email', true );
+                echo $email ? esc_html( $email ) : '—';
+                break;
+            case 'qi_submission_mobile':
+                $country_code = get_post_meta( $post_id, '_qi_submission_country_code', true );
+                $mobile       = get_post_meta( $post_id, '_qi_submission_mobile', true );
+                echo $mobile ? esc_html( trim( $country_code . ' ' . $mobile ) ) : '—';
+                break;
+            case 'qi_submission_regarding':
+                $regarding = get_post_meta( $post_id, '_qi_submission_regarding', true );
+                echo $regarding ? esc_html( $regarding ) : '—';
+                break;
+        }
+    }
+}
+add_action( 'manage_qi_inquiry_posts_custom_column', 'queer_ink_contact_submission_admin_column_content', 10, 2 );

@@ -142,7 +142,7 @@ body.page-id-17 .qi-current-list--subjects {
     margin: 0;
     font-size: 0.82rem;
     line-height: 1.55;
-    color: #4a4a4a;
+    color: #000000;
 }
 
 /* Featured Books now reuses Publishing's .qi-book-carousel component
@@ -332,7 +332,7 @@ body.page-id-147 .qi-subject-pill {
 .qi-reading-room__body > p {
     margin: 0 0 1.1rem;
     font-size: 0.92rem;
-    color: #4a4a4a;
+    color: #000000;
     line-height: 1.6;
     max-width: 32rem;
 }
@@ -469,7 +469,7 @@ body.page-id-147 .qi-subject-pill {
 
 .qi-dl-tagline p {
     margin: 0;
-    color: #4a4a4a;
+    color: #000000;
     font-size: 0.85rem;
 }
 

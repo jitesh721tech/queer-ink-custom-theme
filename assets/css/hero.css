@@ -6,7 +6,7 @@
 
 .hero {
     background-color: inherit;
-    padding: 5rem 0;
+    padding: 1rem 0 5rem;
     border-bottom: 1px solid var(--qi-color-outline-variant);
 }
 
@@ -36,7 +36,7 @@
 }
 
 .hero__title {
-    margin: 0 0 1.5rem;
+    margin: 0 0 1rem;
     font-size: clamp(3rem, 5vw, 5.5rem);
     line-height: 1.05;
     font-weight: 700;
@@ -61,8 +61,16 @@
     color: var(--qi-color-primary);
 }
 
+/* Tightened from the shared .hero__eyebrow rule's 1rem (style.css),
+   homepage hero only — frees enough vertical room, together with the
+   .hero__title/.hero__description/.hero__actions spacing below, for both
+   hero buttons to clear the fold on common laptop viewport heights. */
+.hero .hero__eyebrow {
+    margin-bottom: 0.5rem;
+}
+
 .hero__description {
-    margin: 0 0 2rem;
+    margin: 0 0 1.25rem;
     font-size: 1rem;
     line-height: 1.8;
     color: var(--qi-color-ink-variant);
@@ -73,20 +81,35 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-top: 1.25rem;
+    margin-top: 0.75rem;
 }
 
 .hero__media {
     display: flex;
     align-items: stretch;
     justify-content: center;
-    min-height: 28rem;
+    /* align-self (not the container's own align-items: stretch above,
+       which still governs .hero__copy) — previously this column was
+       force-stretched to match the text column's full height, including
+       the button row, making the image far taller than its own
+       proportions. "start" makes it size to its content instead: the
+       image-container's aspect-ratio below, computed from the width the
+       grid column already gives it. (An aspect-ratio on .hero__media
+       itself doesn't work here — with a still-stretched, definite height,
+       aspect-ratio solves for width instead and overflows the grid
+       column.) Ends up top-aligned with the text column, at its natural
+       height — near the end of the description rather than stretching
+       down past the buttons. */
+    align-self: start;
 }
 
 .hero__image-container {
     width: 100%;
     max-width: 100%;
-    height: 100%;
+    /* Natural photo ratio (1586x992 source), not a stretched height (see
+       .hero__media above) — determines .hero__media's actual rendered
+       height, since that column no longer has one of its own. */
+    aspect-ratio: 1586 / 992;
     display: block;
     border-radius: var(--qi-radius-xl);
     overflow: hidden;
@@ -119,6 +142,11 @@
     }
 
     .hero__media {
+        /* Cancels the desktop-only aspect-ratio fix above — tablet/mobile
+           already size this via min-height (here) or the absolute
+           full-bleed background treatment below, both unrelated to the
+           homepage-image-height fix and left exactly as they were. */
+        aspect-ratio: auto;
         min-height: 22rem;
     }
 }
