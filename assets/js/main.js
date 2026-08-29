@@ -7,24 +7,36 @@
 (function () {
     'use strict';
 
-    document.documentElement.classList.remove( 'no-js' );
-    document.documentElement.classList.add( 'js' );
-
-    // ---------------- Entrance animations: fail-safe reveal ----------------
+    // ---------------- Entrance animations: progressive enhancement ----------------
     // Every entrance animation works by hiding content with `.js .selector
     // { opacity: 0 }` in CSS (see feature-strip.css / animations.css) until
-    // JS adds `is-in-view`. That is only safe if `is-in-view` is *guaranteed*
-    // to be added — previously, one uncaught error anywhere earlier in this
-    // file (a plugin conflict, a missing element, a host-specific quirk)
-    // would stop the whole script and strand every not-yet-revealed section
-    // invisible forever, since `.js` had already been added above. Two
-    // independent safety nets now guarantee that can't happen again:
-    //   1. Every block below that sets up an observer/animation is wrapped
-    //      in its own try/catch, so a failure in one can't block the others.
-    //   2. qiForceRevealAll() is called from every catch block, and also
-    //      unconditionally a few seconds after window "load" — so even a
-    //      failure mode nobody anticipated (or an observer that silently
-    //      never fires) still ends with every section visible.
+    // JS adds `is-in-view`. On a slow/loaded host (seen in production on
+    // TasteWP, not reproducible on localhost) this used to fail two ways:
+    //
+    //   1. `.js` was added to <html> *unconditionally*, as the very first
+    //      thing this file did — so CSS started hiding every section
+    //      immediately, before a single IntersectionObserver had actually
+    //      been attached. Any error, slow script evaluation, or the
+    //      browser simply not getting around to running the observer setup
+    //      in time left content sitting at opacity:0 with nothing ever
+    //      going to reveal it.
+    //   2. The one safety net that existed (qiForceRevealAll(), below) only
+    //      ran a fixed delay *after* the "load" event — which slow/ad- or
+    //      tracker-heavy hosting can delay far longer than a visitor will
+    //      wait, or which can be blocked from firing at all by a single
+    //      slow third-party resource.
+    //
+    // Fixed by flipping the guarantee around: `.js` (the class every hide
+    // rule in CSS is scoped under) is now added only at the very end of the
+    // try block below, *after* every observer has been attached — see that
+    // line for the full reasoning. Content is visible by default and JS is
+    // never required for it to be visible; JS only ever adds a temporary,
+    // already-covered-by-a-real-observer hidden state, never the other way
+    // around. The two extra safety nets below (an immediate, "load"-
+    // independent timer, and a bfcache/"pageshow" handler) then guarantee
+    // that even a successfully-hidden section can't stay that way forever
+    // if its own observer never fires (e.g. throttled/backgrounded tabs) or
+    // the page is restored from cache mid-animation.
     var qiRevealSelectors = [
         '.feature-strip',
         '.channel-band',
@@ -51,6 +63,11 @@
         '.qi-pub-hero',
     ];
 
+    // Unconditional — every matching element gets `is-in-view` regardless
+    // of scroll position. Reserved for the truly-last-resort cases below
+    // (bfcache restore, a setup error) where something has gone wrong
+    // enough that showing content out of its normal scroll-triggered order
+    // is clearly better than leaving it hidden.
     function qiForceRevealAll() {
         qiRevealSelectors.forEach( function ( selector ) {
             document.querySelectorAll( selector ).forEach( function ( el ) {
@@ -59,8 +76,73 @@
         } );
     }
 
-    window.addEventListener( 'load', function () {
-        setTimeout( qiForceRevealAll, 4000 );
+    function qiIsInViewport( el ) {
+        var rect = el.getBoundingClientRect();
+        return rect.bottom > 0 && rect.right > 0 &&
+            rect.top < ( window.innerHeight || document.documentElement.clientHeight ) &&
+            rect.left < ( window.innerWidth || document.documentElement.clientWidth );
+    }
+
+    // Reveals only elements that are *currently on screen* and still
+    // hidden — unlike qiForceRevealAll() above, this never spoils the
+    // scroll-triggered animation for a section further down the page the
+    // visitor hasn't scrolled to yet (an earlier version of this fix used
+    // a single blanket timeout instead, which — verified against a real
+    // page load — reveals every section, seen or not, the moment it fires,
+    // defeating the animation for anyone who takes a few seconds to start
+    // scrolling). Only ever *adds* the class, so it's always safe to call
+    // repeatedly.
+    function qiRevealVisibleStuck() {
+        qiRevealSelectors.forEach( function ( selector ) {
+            document.querySelectorAll( selector ).forEach( function ( el ) {
+                if ( ! el.classList.contains( 'is-in-view' ) && qiIsInViewport( el ) ) {
+                    el.classList.add( 'is-in-view' );
+                }
+            } );
+        } );
+    }
+
+    // Catches the residual failure this fix's move of `.js` to only load
+    // after every observer is attached (see the try block below) doesn't:
+    // an observer that *is* attached but whose callback never arrives for
+    // some element (e.g. background-tab timer/observer throttling). Counts
+    // from script execution, not "load" (which waits for every image/font/
+    // third-party script and can be delayed far longer on slow hosting, or
+    // blocked entirely by one hanging request) — an early check plus a
+    // later one covers both "was already visible when JS ran" and "still
+    // hadn't been revealed a few seconds in". A throttled scroll listener
+    // then keeps checking for as long as the visitor keeps scrolling, so a
+    // section whose own observer never fires still reveals itself the
+    // moment it's actually scrolled into view, instead of only being
+    // caught by one fixed-time check.
+    setTimeout( qiRevealVisibleStuck, 1200 );
+    setTimeout( qiRevealVisibleStuck, 4000 );
+
+    var qiScrollCheckPending = false;
+    window.addEventListener( 'scroll', function () {
+        if ( qiScrollCheckPending ) {
+            return;
+        }
+        qiScrollCheckPending = true;
+        ( window.requestAnimationFrame || window.setTimeout )( function () {
+            qiScrollCheckPending = false;
+            qiRevealVisibleStuck();
+        } );
+    }, { passive: true } );
+
+    // A back-forward-cache restore (visitor taps the browser's Back
+    // button) does not re-run this script, but does fire "pageshow" with
+    // event.persisted true — force a reveal so a page frozen mid-animation
+    // before being cached can never come back from the cache still
+    // showing hidden sections. Unlike the checks above, this one really
+    // does reveal everything unconditionally: a bfcache restore drops the
+    // visitor back exactly where they were, including anywhere they'd
+    // already scrolled past, so there's no "hasn't seen it yet" case to
+    // preserve here the way there is on a fresh page load.
+    window.addEventListener( 'pageshow', function ( event ) {
+        if ( event.persisted ) {
+            qiForceRevealAll();
+        }
     } );
 
     try {
@@ -90,7 +172,9 @@
         if ( featureStrip ) {
             var prefersReducedMotion = window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 
-            if ( ! prefersReducedMotion && 'IntersectionObserver' in window ) {
+            if ( qiIsInViewport( featureStrip ) ) {
+                featureStrip.classList.add( 'is-in-view' );
+            } else if ( ! prefersReducedMotion && 'IntersectionObserver' in window ) {
                 var featureStripObserver = new IntersectionObserver( function ( entries, observer ) {
                     entries.forEach( function ( entry ) {
                         if ( entry.isIntersecting ) {
@@ -143,7 +227,11 @@
             }, { threshold: 0.15 } );
 
             elements.forEach( function ( el ) {
-                observer.observe( el );
+                if ( qiIsInViewport( el ) ) {
+                    el.classList.add( 'is-in-view' );
+                } else {
+                    observer.observe( el );
+                }
             } );
         };
 
@@ -183,8 +271,19 @@
         // hero; '.qi-pub-hero' is the shared hero group reused by Publishing,
         // Archiving, Digital Library, QI Journal, About and Connect.
         qiInitScrollReveal( [ '.hero', '.qi-pub-hero' ] );
+
+        // Only now — every observer above is already attached (or its
+        // synchronous no-observer-needed fallback already ran) — do we let
+        // the `.js`-scoped hide rules in animations.css/feature-strip.css
+        // start hiding anything. If any statement above throws, execution
+        // never reaches this line, `.js` is never added, and every section
+        // simply stays at its plain, visible-by-default state instead of
+        // being left hidden with nothing left to reveal it.
+        document.documentElement.classList.remove( 'no-js' );
+        document.documentElement.classList.add( 'js' );
     } catch ( animationError ) {
-        // Anything above failing must never leave content invisible.
+        // `.js` was never reached above, so nothing was hidden — this is
+        // defense-in-depth only, in case any earlier line partially ran.
         qiForceRevealAll();
     }
 
@@ -207,6 +306,26 @@
             } );
         }
     } catch ( backButtonError ) {
+        // Non-visibility-critical.
+    }
+
+    try {
+        // ---------------- About: mobile founder "Read More" ----------------
+        // Mobile only (see about.css) — .qi-about-founder__desc is clamped to
+        // ~3 lines and .qi-about-founder__more stays hidden until expanded.
+        // Desktop/tablet never render the button (about.css hides it), so
+        // this is a no-op there even though the listener is always attached.
+        var founderToggle = document.querySelector( '.qi-about-founder__toggle' );
+        var founderSection = founderToggle ? founderToggle.closest( '.qi-about-founder' ) : null;
+
+        if ( founderToggle && founderSection ) {
+            founderToggle.addEventListener( 'click', function () {
+                var isExpanded = founderSection.classList.toggle( 'is-expanded' );
+                founderToggle.setAttribute( 'aria-expanded', isExpanded ? 'true' : 'false' );
+                founderToggle.textContent = isExpanded ? 'Read Less' : 'Read More';
+            } );
+        }
+    } catch ( founderToggleError ) {
         // Non-visibility-critical.
     }
 
@@ -453,25 +572,29 @@
 
     try {
         // ---------------- Connect form: client-side validation ----------------
-        // Same 3 rules as the server-side check in
+        // Mirrors the server-side checks in
         // queer_ink_handle_contact_form_submission() (inc/shortcodes.php) —
         // the server re-checks everything regardless, so this only ever
         // saves a visitor a round trip and gives a clearer message than the
         // browser's own generic one; it never replaces the server check.
         //
         // Uses the native Constraint Validation API (setCustomValidity)
-        // rather than a submit handler: name/tel already get a pattern=""
-        // attribute and email a type="email" one (inc/shortcodes.php), so
-        // the browser already blocks submission on a mismatch and shows its
-        // own bubble UI — this only swaps that bubble's text for our
-        // clearer wording. Empty *required* fields are untouched here
+        // rather than a submit handler: name still gets a pattern="" and
+        // email a type="email" one (inc/shortcodes.php), so the browser
+        // already blocks submission on a mismatch and shows its own bubble
+        // UI — this only swaps that bubble's text for our clearer wording.
+        // Empty *required* fields are untouched here
         // (validity.patternMismatch/typeMismatch are false for an empty
         // value), so the browser's existing native "required" message and
-        // behavior keeps working exactly as before.
+        // behavior keeps working exactly as before. Mobile Number no
+        // longer has a single fixed pattern (its valid length depends on
+        // the paired country-code <select>), so it's excluded from this
+        // message map and handled by the real-time digit filter below
+        // instead, which never lets an out-of-range value be typed in the
+        // first place.
         var qiValidateMessages = {
             name: 'Please enter a valid name (letters only).',
             email: 'Please enter a valid email address.',
-            tel: 'Please enter a valid mobile number (10-12 digits only).',
         };
 
         document.querySelectorAll( '[data-qi-validate]' ).forEach( function ( field ) {
@@ -488,7 +611,98 @@
             field.addEventListener( 'input', updateValidity );
             field.addEventListener( 'invalid', updateValidity );
         } );
+
+        // Your Name: block digits/symbols as they're typed (not just flag
+        // them on submit) — same allowed set as the server (letters,
+        // spaces, apostrophes, hyphens, periods).
+        document.querySelectorAll( 'input[data-qi-validate="name"]' ).forEach( function ( field ) {
+            field.addEventListener( 'input', function () {
+                var cleaned = field.value.replace( /[^A-Za-zÀ-ÖØ-öø-ÿ\s'.-]/g, '' );
+                if ( cleaned !== field.value ) {
+                    field.value = cleaned;
+                }
+            } );
+        } );
+
+        // Mobile Number: the paired country-code <select> decides how many
+        // digits are valid (qiContactCountryDigits is localized from the
+        // same list the server validates against —
+        // queer_ink_contact_country_codes(), inc/shortcodes.php via
+        // functions.php) — non-digits are stripped and the value is
+        // truncated to that country's length on every keystroke, so more
+        // digits than the selected country allows can never be entered.
+        document.querySelectorAll( '[data-qi-tel-input]' ).forEach( function ( field ) {
+            var wrapper       = field.closest( '.qi-connect-form__tel' );
+            var countrySelect = wrapper ? wrapper.querySelector( '[data-qi-country-select]' ) : null;
+            var digitLengths  = window.qiContactCountryDigits || {};
+
+            var maxDigitsFor = function () {
+                if ( countrySelect && digitLengths[ countrySelect.value ] ) {
+                    return digitLengths[ countrySelect.value ];
+                }
+                return 15; // Fallback cap only if the list ever fails to load.
+            };
+
+            var enforce = function () {
+                var max        = maxDigitsFor();
+                field.maxLength = max;
+                var digitsOnly = field.value.replace( /\D/g, '' ).slice( 0, max );
+                if ( digitsOnly !== field.value ) {
+                    field.value = digitsOnly;
+                }
+            };
+
+            enforce();
+            field.addEventListener( 'input', enforce );
+            if ( countrySelect ) {
+                countrySelect.addEventListener( 'change', enforce );
+            }
+        } );
     } catch ( formValidationError ) {
+        // Non-visibility-critical.
+    }
+
+    try {
+        // ---------------- Connect form: success popup ----------------
+        // Server-rendered only on ?qi_contact=success
+        // (queer_ink_contact_form_shortcode(), inc/shortcodes.php) — this
+        // just wires its close button and an auto-dismiss timer, and
+        // tidies the URL so a manual page refresh doesn't keep re-showing
+        // the same popup.
+        var qiPopup = document.querySelector( '[data-qi-popup]' );
+
+        if ( qiPopup ) {
+            // Re-parented to <body> — as rendered, it sits inside
+            // .qi-connect-form, which the scroll-entrance animation
+            // (animations.css) gives a `transform` once revealed. Even an
+            // identity transform makes an element the containing block
+            // for any position:fixed descendant, so left in place this
+            // popup would anchor to that card's box instead of the actual
+            // viewport corner.
+            document.body.appendChild( qiPopup );
+
+            var qiDismissPopup = function () {
+                if ( qiPopup.parentNode ) {
+                    qiPopup.parentNode.removeChild( qiPopup );
+                }
+            };
+
+            var qiPopupClose = qiPopup.querySelector( '.qi-connect-popup__close' );
+            if ( qiPopupClose ) {
+                qiPopupClose.addEventListener( 'click', qiDismissPopup );
+            }
+
+            setTimeout( qiDismissPopup, 6000 );
+
+            if ( window.history && window.history.replaceState && window.URLSearchParams ) {
+                var qiParams = new URLSearchParams( window.location.search );
+                qiParams.delete( 'qi_contact' );
+                var qiQueryString = qiParams.toString();
+                var qiCleanUrl    = window.location.pathname + ( qiQueryString ? '?' + qiQueryString : '' ) + '#contact-form';
+                window.history.replaceState( null, '', qiCleanUrl );
+            }
+        }
+    } catch ( popupError ) {
         // Non-visibility-critical.
     }
 })();
