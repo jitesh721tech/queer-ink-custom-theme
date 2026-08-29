@@ -237,11 +237,21 @@
     .hero {
         position: relative;
         min-height: 26rem;
-        padding: 2.5rem 0;
+        /* Top halved from 2.5rem (~50% reduction of the header-to-eyebrow
+           gap on mobile only); bottom unchanged. */
+        padding: 1.25rem 0 2.5rem;
         overflow: hidden;
         border-bottom: none;
         display: flex;
-        align-items: center;
+        /* Was center — .hero__media (the background photo) is
+           position:absolute;inset:0 below, unaffected either way, but
+           .hero__copy is a normal flex child: with align-items:center and
+           content shorter than min-height, half of any padding-top change
+           was being redistributed into top/bottom centering slack instead
+           of actually shrinking the visible header-to-eyebrow gap.
+           flex-start makes the gap purely padding-driven, matching the
+           qi-pub-hero pages (already flex-start at this breakpoint). */
+        align-items: flex-start;
     }
 
     .hero::before {
@@ -274,7 +284,12 @@
     }
 
     .hero__title {
-        font-size: 2.75rem;
+        /* ~50% of the 2.75rem this rule replaces, mobile only. */
+        font-size: 1.375rem;
+        /* Slightly looser than the shared 1.05 (this file, base rule) —
+           that ratio was tuned for the large desktop size; at this much
+           smaller mobile size wrapped lines read as visually cramped. */
+        line-height: 1.3;
         max-width: 100%;
         color: #ffffff;
     }
