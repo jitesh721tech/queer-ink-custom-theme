@@ -518,7 +518,7 @@ if ( ! function_exists( 'queer_ink_render_form_field' ) ) {
                 <div class="qi-connect-form__tel">
                     <select class="qi-connect-form__tel-code" name="<?php echo esc_attr( $field_name ); ?>_country_code" aria-label="<?php esc_attr_e( 'Country code', 'queer-ink-theme' ); ?>" data-qi-country-select>
                         <?php foreach ( $countries as $country_key => $country ) : ?>
-                            <option value="<?php echo esc_attr( $country_key ); ?>" data-digits="<?php echo esc_attr( $country['digits'] ); ?>" <?php selected( $default_country, $country_key ); ?>>
+                            <option value="<?php echo esc_attr( $country_key ); ?>" data-digits="<?php echo esc_attr( $country['digits'] ); ?>" data-code="<?php echo esc_attr( $country['code'] ); ?>" <?php selected( $default_country, $country_key ); ?>>
                                 <?php echo esc_html( $country['code'] . ' ' . $country['name'] ); ?>
                             </option>
                         <?php endforeach; ?>

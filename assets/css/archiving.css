@@ -355,6 +355,18 @@ html:has(body.page-id-16) {
         padding-left: 16px;
         padding-right: 16px;
     }
+
+    /* Fallback for when there are no published timeline entries yet —
+       :has() above only applies once a .timeline-entry-card actually
+       renders. .site-content.container gets no gutter of its own on
+       mobile (style.css only adds one at tablet/desktop widths), so
+       without this the archive header, Back link and "Milestones are
+       being added" message sit flush against the screen edges. Same
+       16px used everywhere else at this width. */
+    body.post-type-archive-qi_timeline .site-content.container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
 }
 
 .site-content:has(> .timeline-entry-card) > .qi-page-back,
@@ -1016,6 +1028,13 @@ body.post-type-archive-qi_article .qi-page-back {
         padding-right: 16px;
     }
 
+    /* Fallback for when there are no published articles yet — same
+       reasoning as body.post-type-archive-qi_timeline above. */
+    body.post-type-archive-qi_article .site-content.container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
     .site-content:has(> .article-card) .article-card__media-link {
         flex-basis: 110px;
     }
@@ -1289,6 +1308,18 @@ body.post-type-archive-qi_article .qi-page-back {
     }
 }
 
+/* Tablet landscape only (1024x768) — the hero's two wp:columns are equal
+   width by default; growing just the image column's share gives it a
+   noticeably larger image (still width:100%/height:auto — the same
+   natural-aspect-ratio scaling as every other width, so nothing crops or
+   distorts) without touching the text column's own font size or the
+   image's existing desktop/tablet-portrait sizing. */
+@media (min-width: 981px) and (max-width: 1024px) {
+    .qi-arc-hero .wp-block-columns > .wp-block-column:has(.qi-pub-hero__image) {
+        flex-grow: 1.25;
+    }
+}
+
 /* ---------------- Tablet ---------------- */
 
 @media (max-width: 980px) {
@@ -1339,6 +1370,11 @@ body.post-type-archive-qi_article .qi-page-back {
     .qi-timeline__header .button {
         padding: 0.6rem 1.1rem;
         font-size: 0.85rem;
+        /* .qi-timeline__header is flex-direction:column at this width
+           (max-width:980px rule above), which left this button aligned
+           with the heading text on the left; align-self right-aligns
+           just the button, leaving the heading block untouched. */
+        align-self: flex-end;
     }
 
     .qi-timeline__track {

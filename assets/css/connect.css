@@ -389,6 +389,24 @@ html:has(body.page-id-25) {
     flex: 0 0 auto;
 }
 
+/* Tablet landscape only (1024x768) — halves the gap between the hero and
+   the contact cards below it (was 3rem, .qi-connect-contact's own
+   top padding; bottom padding/border-top are untouched). */
+@media (min-width: 981px) and (max-width: 1024px) {
+    .qi-connect-contact {
+        padding-top: 1.5rem;
+    }
+}
+
+/* Small laptop only (1280x720) — same ~50% gap reduction as the tablet-
+   landscape tier above; the default 3rem top padding is otherwise
+   unaffected up to 1280px (nothing between 1024px and here reduces it). */
+@media (min-width: 1025px) and (max-width: 1280px) {
+    .qi-connect-contact {
+        padding-top: 1.5rem;
+    }
+}
+
 /* ---------------- Tablet ---------------- */
 
 @media (max-width: 980px) {
@@ -476,10 +494,13 @@ html:has(body.page-id-25) {
         gap: 0.4rem;
     }
 
-    .qi-connect-form__tel-code {
+    /* select.qi-connect-form__tel-code (not just the class alone) matches
+       .qi-connect-form select's own specificity so this wins by source
+       order instead of losing to that shared rule's 1rem padding. */
+    select.qi-connect-form__tel-code {
         max-width: 6.25rem;
         padding-left: 0.6rem;
-        padding-right: 0.6rem;
+        padding-right: 0.5rem;
     }
 
     .qi-connect-form__consent {

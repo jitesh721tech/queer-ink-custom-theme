@@ -518,6 +518,23 @@
     .qi-about-wwd__col:nth-child(5) {
         grid-column: 4 / 6;
     }
+
+    /* Hero: the two wp:columns are equal width by default; growing just
+       the image column's share gives it a noticeably larger image (still
+       width:100%/height:auto, so nothing crops or distorts) without
+       touching the text column's font size. */
+    .qi-about-hero .wp-block-columns > .wp-block-column:has(.qi-pub-hero__image) {
+        flex-grow: 1.25;
+    }
+}
+
+/* Small laptop only (1280x720) — same hero image increase as the tablet-
+   landscape tier above, just a smaller boost since the column already
+   has more room to work with at this width. */
+@media (min-width: 1025px) and (max-width: 1280px) {
+    .qi-about-hero .wp-block-columns > .wp-block-column:has(.qi-pub-hero__image) {
+        flex-grow: 1.2;
+    }
 }
 
 /* ---------------- Tablet ---------------- */

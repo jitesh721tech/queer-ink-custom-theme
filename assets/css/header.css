@@ -211,15 +211,35 @@ body.admin-bar .site-header{
     }
 }
 
-/* Small laptop and up (1280x720, 1366x768, 1440x900 all land here) —
-   always opens to the right of the icon instead. Overrides the base
-   left-opening rule directly (not just the --right variant) so this is
-   guaranteed even in the unlikely case JS's own measurement doesn't add
-   that class at these widths. */
+/* Small laptop and up — always opens to the right of the icon instead.
+   Overrides the base left-opening rule directly (not just the --right
+   variant) so this is guaranteed even in the unlikely case JS's own
+   measurement doesn't add that class at these widths. At 1280-1366px
+   specifically (the narrower part of this range) the fixed 320px-wide
+   panel opened here overflowed off the right edge of the viewport —
+   verified up to ~1397px wide before there's enough natural room; the
+   more specific rule just below opens it downward instead across that
+   whole span, leaving 1400px and up (where it already fit) unchanged. */
 @media (min-width: 1280px){
     .header-search-panel{
         left:calc(100% + 10px);
         right:auto;
+    }
+}
+
+/* Laptop only (1280x720, 1366x768) — see the comment above: the
+   right-opening panel overflowed the viewport at these widths. Opening
+   it downward instead, right-aligned to the icon itself (.header-search-
+   wrap, its own positioning parent, is exactly icon-width so right:0
+   lines up with the icon's own right edge), keeps it fully on-screen
+   without shifting any page content and without needing to touch
+   .primary-navigation's own spacing. */
+@media (min-width: 1280px) and (max-width: 1399px){
+    .header-search-panel{
+        top:calc(100% + 10px);
+        right:0;
+        left:auto;
+        transform:none;
     }
 }
 

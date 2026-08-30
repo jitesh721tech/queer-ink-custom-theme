@@ -151,6 +151,32 @@
     }
 }
 
+/* Tablet landscape only (1024x768) — still the desktop 2-column grid
+   (>980px), whose text column was too narrow for both buttons on one
+   line, wrapping "Learn More About Us" onto its own row. padding-left/
+   right and gap reuse the exact values the ≤980px tier above already
+   uses; the button spacing is new but scoped to .hero__actions only, so
+   no other button anywhere else on the site is affected. Net effect
+   also grows the image column a little, covering the "slightly larger
+   hero image" request without touching the 42/58 column split itself. */
+@media (min-width: 981px) and (max-width: 1024px) {
+    .hero__inner {
+        padding-left: 24px;
+        padding-right: 24px;
+        gap: 2.5rem;
+    }
+
+    .hero__actions {
+        flex-wrap: nowrap;
+        gap: 0.6rem;
+    }
+
+    .hero__actions .button {
+        padding-left: 1.15rem;
+        padding-right: 1.15rem;
+    }
+}
+
 @media (min-width: 768px) and (max-width: 980px) {
     /* Portrait tablet only (768x1024) — same full-bleed background-image
        treatment as mobile below, but with a lighter overlay than
@@ -229,58 +255,28 @@
 }
 
 @media (max-width: 680px) {
-    /* Mobile: the hero photo becomes a full-bleed background behind the
-       copy instead of a separate image below the buttons. A dark scrim
-       keeps the text readable without fading the photo out — DOM order
-       is unchanged (media still follows copy in markup), this is purely
-       a stacking-context change via position/z-index. */
+    /* Mobile: the hero image now sits in normal document flow below the
+       buttons, matching the stacked structure the qi-pub-hero pages
+       already use on mobile (Publishing, Archiving, etc. — see
+       publishing.css) — replacing the previous full-bleed background-
+       photo-behind-text treatment. .hero__inner is already a single-
+       column grid from the 980px breakpoint above, so .hero__copy and
+       .hero__media (unchanged DOM order — copy already comes first in
+       template-parts/section-hero.php) simply stack; no position/z-index/
+       scrim tricks needed. Image proportions/rounded corners/shadow now
+       come from the same base (desktop) rules, unflattened, and text
+       returns to its normal ink/pink colors instead of the white used
+       for the old dark photo backdrop. */
     .hero {
-        position: relative;
-        min-height: 26rem;
         /* Top halved from 2.5rem (~50% reduction of the header-to-eyebrow
            gap on mobile only); bottom unchanged. */
         padding: 1.25rem 0 2.5rem;
-        overflow: hidden;
-        border-bottom: none;
-        display: flex;
-        /* Was center — .hero__media (the background photo) is
-           position:absolute;inset:0 below, unaffected either way, but
-           .hero__copy is a normal flex child: with align-items:center and
-           content shorter than min-height, half of any padding-top change
-           was being redistributed into top/bottom centering slack instead
-           of actually shrinking the visible header-to-eyebrow gap.
-           flex-start makes the gap purely padding-driven, matching the
-           qi-pub-hero pages (already flex-start at this breakpoint). */
-        align-items: flex-start;
-    }
-
-    .hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        /* The source photo is a busy light-pink/white collage grid, not
-           a moody dark photo — its light patches are scattered across
-           the whole frame, not just the top, so a mostly-uniform strong
-           scrim (rather than a light-top/dark-bottom fade) is needed to
-           keep white text readable no matter which tile ends up behind
-           it at any given screen height. */
-        background: linear-gradient(180deg, rgba(15, 7, 10, 0.74) 0%, rgba(13, 6, 9, 0.8) 50%, rgba(11, 5, 7, 0.88) 100%);
-        z-index: 1;
     }
 
     .hero__inner {
         gap: 2rem;
         padding-left: 16px;
         padding-right: 16px;
-    }
-
-    /* Positioned on .hero__copy (not .hero__inner) so .hero__inner
-       stays position:static — otherwise it would become the containing
-       block for .hero__media's inset:0 below, shrinking the background
-       to just the text's own content box instead of the full section. */
-    .hero__copy {
-        position: relative;
-        z-index: 2;
     }
 
     .hero__title {
@@ -291,47 +287,12 @@
            smaller mobile size wrapped lines read as visually cramped. */
         line-height: 1.3;
         max-width: 100%;
-        color: #ffffff;
-    }
-
-    .hero__title--accent {
-        color: #ff6b9d;
-    }
-
-    .hero .hero__eyebrow {
-        color: #ff9dbd;
-    }
-
-    .hero__description {
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    .hero .button--outline {
-        border-color: rgba(255, 255, 255, 0.7);
-        color: #ffffff;
-    }
-
-    .hero .button--outline:hover,
-    .hero .button--outline:focus-visible {
-        border-color: #ffffff;
-        color: #ffffff;
-        background-color: rgba(255, 255, 255, 0.12);
     }
 
     .hero__media {
-        position: absolute;
-        inset: 0;
+        /* The 980px breakpoint's min-height:22rem (above) would otherwise
+           fight the image's own aspect-ratio at this narrow a width — 0
+           lets aspect-ratio alone size it, same as the base/desktop rule. */
         min-height: 0;
-        z-index: 0;
-    }
-
-    .hero__image-container {
-        height: 100%;
-        border-radius: 0;
-        box-shadow: none;
-    }
-
-    .hero__image {
-        border-radius: 0;
     }
 }

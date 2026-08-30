@@ -308,6 +308,14 @@
     color: #1a1a1a;
 }
 
+/* Tablet landscape only (1024x768) — halves the gap between the hero and
+   the filter bar below it (was 1.5rem, the filter bar's own margin-top). */
+@media (min-width: 981px) and (max-width: 1024px) {
+    .qi-filter-bar {
+        margin-top: 0.75rem;
+    }
+}
+
 /* ---------------- Tablet ---------------- */
 
 @media (max-width: 980px) {
@@ -356,6 +364,16 @@
 @media (min-width: 768px) and (max-width: 980px) {
     .qi-journal-widget {
         text-align: center;
+    }
+
+    /* text-align above centers the "Stay in the Loop" widget's own text
+       (title, note), but .qi-journal-channel (the WhatsApp/Telegram logo
+       + text rows) is a flex container — text-align doesn't affect how
+       flex items are laid out, so the row was still full-width with its
+       logo pinned to the left while just the text centered next to it.
+       justify-content centers the logo+text as one group instead. */
+    .qi-journal-channel {
+        justify-content: center;
     }
 }
 

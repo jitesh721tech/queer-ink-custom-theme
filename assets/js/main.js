@@ -449,9 +449,18 @@
         // AJAX action (qi_load_articles, see inc/ajax.php) so the visitor never
         // leaves /qi-journal/ and cards always render through the same
         // content-qi_article.php partial as the first page. "View All Articles"
-        // (replacing the old Load More button) is a plain link to /journal/,
-        // so it needs no JS.
+        // stays in sync with whichever category is active: each tab already
+        // carries its own real term-archive href (queer_ink_article_sections_
+        // shortcode, inc/shortcodes.php) — including "Latest", which links to
+        // the plain /journal/ archive — so copying the active tab's href onto
+        // this link is enough to make it open that category (and only that
+        // category) with no new PHP/taxonomy data needed. It's also hidden
+        // whenever the current filter has 6 or fewer matches (data.has_more,
+        // already computed server-side from the same query), since there's
+        // nothing more to see beyond the cards already showing.
         var journalGrid = document.querySelector( '.qi-journal-main .publishing-grid--current-list' );
+        var qiViewAllWrap = document.querySelector( '.qi-journal-load-more' );
+        var qiViewAllLink = qiViewAllWrap ? qiViewAllWrap.querySelector( 'a' ) : null;
 
         if ( journalGrid && window.qiJournalAjax ) {
             var sectionTabs = document.querySelectorAll( '.qi-section-tab[data-filter-section]' );
@@ -465,7 +474,11 @@
 
             var setActiveTab = function ( sectionSlug ) {
                 sectionTabs.forEach( function ( tab ) {
-                    tab.classList.toggle( 'is-active', tab.getAttribute( 'data-filter-section' ) === sectionSlug );
+                    var isActive = tab.getAttribute( 'data-filter-section' ) === sectionSlug;
+                    tab.classList.toggle( 'is-active', isActive );
+                    if ( isActive && qiViewAllLink ) {
+                        qiViewAllLink.setAttribute( 'href', tab.getAttribute( 'href' ) );
+                    }
                 } );
             };
 
@@ -505,6 +518,10 @@
 
                         if ( ! data.found ) {
                             journalGrid.innerHTML = '<p class="publishing-empty">No articles found.</p>';
+                        }
+
+                        if ( qiViewAllWrap ) {
+                            qiViewAllWrap.hidden = ! data.has_more;
                         }
                     } )
                     .catch( function () {
@@ -657,6 +674,43 @@
             if ( countrySelect ) {
                 countrySelect.addEventListener( 'change', enforce );
             }
+        } );
+
+        // Mobile Number country code: show just the dialing code (e.g. "+91")
+        // once the <select> is closed, on every viewport — a native <select>
+        // always mirrors its selected <option>'s own text in the closed box,
+        // so the only way to show something different there than in the open
+        // list is to rewrite that option's actual text (not a CSS overlay)
+        // right before/after it's shown. Same option list and value either
+        // way, so validation/submission (queer_ink_contact_country_codes(),
+        // inc/shortcodes.php) is untouched.
+        document.querySelectorAll( '[data-qi-country-select]' ).forEach( function ( select ) {
+            Array.prototype.forEach.call( select.options, function ( option ) {
+                option.dataset.qiFullLabel = option.textContent;
+            } );
+
+            var showFullLabels = function () {
+                Array.prototype.forEach.call( select.options, function ( option ) {
+                    option.textContent = option.dataset.qiFullLabel;
+                } );
+            };
+
+            var showCodeOnly = function () {
+                var selected = select.options[ select.selectedIndex ];
+                if ( selected && selected.getAttribute( 'data-code' ) ) {
+                    selected.textContent = selected.getAttribute( 'data-code' );
+                }
+            };
+
+            showCodeOnly();
+
+            select.addEventListener( 'mousedown', showFullLabels );
+            select.addEventListener( 'focus', showFullLabels );
+            select.addEventListener( 'change', function () {
+                showFullLabels();
+                showCodeOnly();
+            } );
+            select.addEventListener( 'blur', showCodeOnly );
         } );
     } catch ( formValidationError ) {
         // Non-visibility-critical.

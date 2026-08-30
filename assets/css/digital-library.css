@@ -264,6 +264,34 @@ body.page-id-147 .qi-subject-pill {
     justify-content: center;
 }
 
+@media (max-width: 680px) {
+    /* .qi-page-back sits outside the <article> wrapper (page-subjects.php),
+       so it doesn't get a gutter from the general
+       .site-content > article > .entry-header/.entry-content rule
+       (style.css) the way the "Subjects" title/intro below it already do
+       — body.page-id-147's own margin-left/right:0 above (left-aligning
+       it instead of the shared .qi-page-back's default centering) leaves
+       it flush against the screen edge on mobile without this. Same 16px
+       used everywhere else at this width. */
+    body.page-id-147 .qi-page-back {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* Subject-detail archive (/subject/{slug}/, a qi_subject term — no
+       dedicated taxonomy-qi_subject.php, so this renders via archive.php
+       like the Books/Timeline/Articles archives). Its .book-card grid
+       already gets a mobile gutter from the shared
+       .site-content:has(> .book-card) rule (publishing.css) once a book
+       actually renders; this is the fallback for a term with none yet,
+       matching the equivalent post-type-archive-qi_timeline/qi_article
+       rules in archiving.css. */
+    body.tax-qi_subject .site-content.container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
 .qi-subject-pill {
     flex-shrink: 0;
     scroll-snap-align: start;
@@ -572,6 +600,14 @@ body.page-id-147 .qi-subject-pill {
        tier, just spanning both columns as its own row now. */
     .qi-reading-room {
         grid-template-columns: minmax(0, 32%) minmax(0, 68%);
+    }
+
+    /* Slightly larger than the general ≤980px tier's 150px (above) — the
+       two-column layout just above gives the image its own ~32% column
+       again (unlike the single-column 980px tier, where it stacks above
+       the much wider text), so it reads as undersized/lost at 150px. */
+    .qi-reading-room__media img {
+        max-width: 190px;
     }
 
     .qi-reading-room__quote {

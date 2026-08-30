@@ -1211,6 +1211,65 @@ body.post-type-archive-qi_book .qi-page-back {
     }
 }
 
+/* Tablet landscape only (1024x768). */
+@media (min-width: 981px) and (max-width: 1024px) {
+    /* Publishing hero: the "Explore Publications" / "Our Publishing
+       Approach" buttons wrapped onto two lines at this width (their
+       combined width + gap exceeded the text column). Reducing the gap
+       between the hero's two columns gives both a little more room —
+       covering "slightly increase hero image" too, since the image
+       column grows along with it — and nowrap plus trimming just the
+       buttons' own horizontal padding is enough for both to fit on one
+       line without changing their font size or the desktop/tablet-
+       portrait layout above/below this range. */
+    .qi-pub-hero.qi-publishing-hero .wp-block-columns {
+        gap: 1.5rem;
+    }
+
+    .qi-pub-hero .wp-block-buttons {
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+    }
+
+    .qi-pub-hero .wp-block-buttons .wp-block-button__link {
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
+    }
+
+    /* Publishing Pathway: the 5-step row plus the divider plus the
+       tagline no longer fit their desktop widths at 1024px, so the steps
+       shrink to their 100px floor (.qi-pathway-step, above) and overflow
+       past their own container — landing the divider on top of the last
+       (speaker/voice) icon. Trimming the row's own gap gives the steps
+       enough extra room to avoid that overflow. */
+    .qi-pathway-band__row {
+        gap: 1.5rem;
+    }
+
+    /* Was 34px — visibly smaller than the other steps' 56px icons; not
+       matched to the same size (that would need matching the circular
+       background/padding those have too, which isn't asked for here),
+       just brought closer in scale. */
+    .qi-pathway-band__heart {
+        width: 42px;
+    }
+
+    /* Recentres the carousel's prev/next arrows against the covers —
+       same recalculation as the existing tablet-portrait fix above
+       (cover top offset + half the cover/button height difference), this
+       time for the desktop-sized 200px cover this width still renders
+       (>980px, so none of the tablet/mobile cover-size rules apply). */
+    .qi-book-carousel__nav {
+        margin-top: 146px;
+    }
+}
+
+@media (min-width: 981px) and (max-width: 1024px) and (hover: hover) and (pointer: fine) {
+    .qi-book-carousel__nav {
+        margin-top: 166px;
+    }
+}
+
 /* ---------------- Tablet ---------------- */
 
 @media (max-width: 980px) {
@@ -1336,6 +1395,30 @@ body.post-type-archive-qi_book .qi-page-back {
         grid-column: 1 / -1;
         max-width: calc((100% - 1.5rem) / 2);
         margin: 0 auto;
+    }
+
+    /* Portrait tablet only — the general ≤980px rule's 42vw covers (used
+       from tablet landscape down through mobile) read oversized at this
+       width specifically; a slightly narrower 34vw is still comfortably
+       tappable while showing more of the next cover as a scroll hint.
+       .qi-book-carousel__nav's margin-top re-centers it against the
+       resulting shorter cover (was tuned for the wider/taller 42vw cover)
+       — recalculated the same way as the existing base/hover-capable
+       values above (cover top offset + half the cover/button height
+       difference), which keeps the same 20px gap between the two that
+       already existed. */
+    .qi-book-carousel__track {
+        grid-auto-columns: minmax(160px, 34vw);
+    }
+
+    .qi-book-carousel__nav {
+        margin-top: 192px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 980px) and (hover: hover) and (pointer: fine) {
+    .qi-book-carousel__nav {
+        margin-top: 212px;
     }
 }
 

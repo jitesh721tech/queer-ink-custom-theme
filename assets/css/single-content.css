@@ -202,6 +202,25 @@ body.admin-bar .qi-single-book__cover {
     margin-top: 1.25rem;
 }
 
+/* Article only — .entry-header's shared padding-top (style.css, tuned for
+   generic WP pages where it sits directly under the sticky site header)
+   stacked on top of this page's own back-link gap, leaving the title far
+   below the top of .qi-single-book__cover even though both columns start
+   at the same grid row. Zeroing it (same override already used for
+   .qi-page-boxed .entry-header) brings the title back up level with the
+   image, and halving the back-link's own margin tightens that gap too —
+   both scoped to body.single-qi_article so Book/Timeline/Collection,
+   which reuse this exact markup, are unaffected. No media query needed:
+   the extra specificity here already outranks style.css's own 680px
+   .entry-header override at every width. */
+body.single-qi_article .qi-single-book__back.qi-single-book__back--top {
+    margin: 0 0 0.75rem;
+}
+
+body.single-qi_article .qi-single-book__body .entry-header {
+    padding-top: 0;
+}
+
 /* Desktop only: .site-content.container now supplies its own 32px page
    gutter, so drop this wrapper's own left/right padding here to avoid
    doubling it (was 32+32=64px inset vs. 32px everywhere else). Vertical
