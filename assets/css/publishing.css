@@ -573,6 +573,19 @@ html:has(body.page-id-11) {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    /* Single source of truth for .qi-book-carousel__nav's margin-top below:
+       the cover's own min-width (matches grid-auto-columns' min bound,
+       which is what the covers actually render at in practice once a
+       realistic number of books overflows the track) and the track's own
+       padding-top. Both vary only by hover-capability/width tier, set via
+       the media queries further down instead of duplicating the whole
+       calc() per breakpoint. Because margin-top is a plain static value —
+       never affected by a sibling's own height — the arrows land in this
+       exact same spot whether the track (with real covers) or the empty-
+       state message (.publishing-empty) renders here; the message's
+       height never enters into it. */
+    --qi-cover-ref-w: 160px;
+    --qi-track-pad-top: 1rem;
 }
 
 .qi-book-carousel__track {
@@ -597,12 +610,13 @@ html:has(body.page-id-11) {
     align-self: flex-start;
     /* .qi-book-carousel used align-items: center, which centers against
        the whole card (cover + title/author text below it), landing the
-       buttons visibly below the covers' own centre. Pinned to the top
-       and nudged down by roughly half the cover's height instead, so
-       they align with the covers specifically. Re-declared inside the
-       hover-capable media query below since that context adds extra
-       top padding to the track for the hover-zoom effect. */
-    margin-top: 116px;
+       buttons visibly below the covers' own centre. Pinned to the top and
+       nudged down by half the reference cover's height (--qi-cover-ref-w,
+       aspect-ratio 2/3, same as .qi-book-carousel__cover) plus the track's
+       own top padding, minus half this button's own height, instead of a
+       hand-tuned pixel guess — so it tracks the real cover size/track
+       padding at every breakpoint/hover state from one shared formula. */
+    margin-top: calc(var(--qi-track-pad-top, 1rem) + var(--qi-cover-ref-w, 160px) * 0.75 - 20px);
     width: 40px;
     height: 40px;
     display: flex;
@@ -658,13 +672,15 @@ html:has(body.page-id-11) {
        scrollbox — overflow-x: auto forces overflow-y to an effective
        "auto" too, which otherwise clips anything past the track's edge.
        Scoped to this media query so book spacing on touch devices (where
-       the zoom never triggers) is unaffected. */
-    .qi-book-carousel__track {
-        padding: 2.25rem 1rem 2rem;
+       the zoom never triggers) is unaffected. Updating --qi-track-pad-top
+       here too keeps .qi-book-carousel__nav's margin-top formula matching
+       this extra padding automatically, with no separate nav override. */
+    .qi-book-carousel {
+        --qi-track-pad-top: 2.25rem;
     }
 
-    .qi-book-carousel__nav {
-        margin-top: 136px;
+    .qi-book-carousel__track {
+        padding: 2.25rem 1rem 2rem;
     }
 
     .qi-book-carousel__item:hover {
@@ -1254,20 +1270,6 @@ body.post-type-archive-qi_book .qi-page-back {
         width: 42px;
     }
 
-    /* Recentres the carousel's prev/next arrows against the covers —
-       same recalculation as the existing tablet-portrait fix above
-       (cover top offset + half the cover/button height difference), this
-       time for the desktop-sized 200px cover this width still renders
-       (>980px, so none of the tablet/mobile cover-size rules apply). */
-    .qi-book-carousel__nav {
-        margin-top: 146px;
-    }
-}
-
-@media (min-width: 981px) and (max-width: 1024px) and (hover: hover) and (pointer: fine) {
-    .qi-book-carousel__nav {
-        margin-top: 166px;
-    }
 }
 
 /* ---------------- Tablet ---------------- */
@@ -1400,25 +1402,13 @@ body.post-type-archive-qi_book .qi-page-back {
     /* Portrait tablet only — the general ≤980px rule's 42vw covers (used
        from tablet landscape down through mobile) read oversized at this
        width specifically; a slightly narrower 34vw is still comfortably
-       tappable while showing more of the next cover as a scroll hint.
-       .qi-book-carousel__nav's margin-top re-centers it against the
-       resulting shorter cover (was tuned for the wider/taller 42vw cover)
-       — recalculated the same way as the existing base/hover-capable
-       values above (cover top offset + half the cover/button height
-       difference), which keeps the same 20px gap between the two that
-       already existed. */
+       tappable while showing more of the next cover as a scroll hint. The
+       min-width bound (160px) is unchanged, so .qi-book-carousel__nav's
+       shared margin-top formula (which keys off that min, since that's
+       what actually renders once a realistic number of books overflows
+       the track) needs no override here. */
     .qi-book-carousel__track {
         grid-auto-columns: minmax(160px, 34vw);
-    }
-
-    .qi-book-carousel__nav {
-        margin-top: 192px;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 980px) and (hover: hover) and (pointer: fine) {
-    .qi-book-carousel__nav {
-        margin-top: 212px;
     }
 }
 
@@ -1558,6 +1548,10 @@ body.post-type-archive-qi_book .qi-page-back {
 
     .qi-book-carousel {
         gap: 0.5rem;
+        /* Narrower cover min-width at this breakpoint (140px, matching
+           grid-auto-columns below) — keeps .qi-book-carousel__nav's shared
+           margin-top formula matching the smaller mobile cover. */
+        --qi-cover-ref-w: 140px;
     }
 
     .qi-book-carousel__track {
@@ -1570,7 +1564,10 @@ body.post-type-archive-qi_book .qi-page-back {
         width: 34px;
         height: 34px;
         font-size: 1.1rem;
-        margin-top: 124px;
+        /* Same shared formula as the base rule, just subtracting half of
+           this breakpoint's smaller 34px button height (17px) instead of
+           the base rule's 40px (20px). */
+        margin-top: calc(var(--qi-track-pad-top, 1rem) + var(--qi-cover-ref-w, 140px) * 0.75 - 17px);
     }
 
     .publishing-grid--current-list {

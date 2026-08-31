@@ -475,6 +475,10 @@ HTML
 <p>The Archiving Pathway helps individuals, families, organisations and communities preserve the stories, records and memories that shape our collective history. Through ethical, relationship-centred archiving, we ensure today's lives remain discoverable for future generations.</p>
 <!-- /wp:paragraph -->
 
+<!-- wp:html -->
+<button type="button" class="qi-arc-hero__readmore" aria-expanded="false">Read More</button>
+<!-- /wp:html -->
+
 <!-- wp:paragraph {"className":"qi-arc-hero__note"} -->
 <p class="qi-arc-hero__note"><em>Established 2023. Oral histories, photographs, correspondence, organisational records, zines, newsletters, ephemera, legal documents, and creative work — held in trust for the future.</em></p>
 <!-- /wp:paragraph -->

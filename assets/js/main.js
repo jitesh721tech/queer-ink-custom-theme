@@ -330,6 +330,29 @@
     }
 
     try {
+        // ---------------- Archiving hero: mobile "Read More" ----------------
+        // Mobile only (see archiving.css) — .qi-arc-hero__note (the hero's
+        // second paragraph) stays hidden until expanded, so both hero
+        // buttons fit without scrolling on first load. Desktop/tablet never
+        // render the link (archiving.css hides it), so this is a no-op
+        // there even though the listener is always attached. Same toggle
+        // mechanism as the About page's founder "Read More" above, but a
+        // one-way reveal (the link hides itself once expanded) rather than
+        // a collapsible Read Less, since the note isn't meant to re-hide.
+        var archHeroToggle = document.querySelector( '.qi-arc-hero__readmore' );
+        var archHeroSection = archHeroToggle ? archHeroToggle.closest( '.qi-arc-hero' ) : null;
+
+        if ( archHeroToggle && archHeroSection ) {
+            archHeroToggle.addEventListener( 'click', function () {
+                archHeroSection.classList.add( 'is-expanded' );
+                archHeroToggle.setAttribute( 'aria-expanded', 'true' );
+            } );
+        }
+    } catch ( archHeroToggleError ) {
+        // Non-visibility-critical.
+    }
+
+    try {
         var toggle = document.querySelector( '.menu-toggle' );
         var nav = document.querySelector( '.primary-navigation' );
 

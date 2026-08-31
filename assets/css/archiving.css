@@ -26,6 +26,49 @@ html:has(body.page-id-16) {
     color: #000000;
 }
 
+/* Mobile-only "Read More" toggle for the hero's second paragraph
+   (.qi-arc-hero__note) — same mechanism as the About page's founder
+   "Read More" (about.css/main.js): hidden here, shown only within the
+   mobile media query below. Desktop/tablet keep both paragraphs visible
+   as before, so this is a no-op there even though main.js's listener is
+   always attached. */
+.qi-arc-hero__readmore {
+    display: none;
+}
+
+@media (max-width: 680px) {
+    /* Collapsed by default: only the first hero paragraph plus the
+       buttons show initially, so both buttons fit without scrolling.
+       Nothing is removed — .qi-arc-hero__note just stays hidden until
+       the "Read More" toggle below expands it (main.js toggles
+       .is-expanded on .qi-arc-hero). */
+    .qi-arc-hero__note {
+        display: none;
+    }
+
+    .qi-arc-hero__readmore {
+        display: inline-block;
+        margin: 0 0 0.85rem;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--qi-color-primary);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .qi-arc-hero.is-expanded .qi-arc-hero__note {
+        display: block;
+        margin-bottom: 0.85rem;
+    }
+
+    .qi-arc-hero.is-expanded .qi-arc-hero__readmore {
+        display: none;
+    }
+}
+
 /* The shared .qi-pub-hero rule (publishing.css) draws a full-bleed
    border-bottom under every pathway hero. The Archiving page sits a
    second, container-width divider directly beneath it (.qi-timeline's
